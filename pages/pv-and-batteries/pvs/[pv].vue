@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
 import { getUrl, uniqueName } from "#imports";
+import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
 import { inverterPeakPowerPvZod, peakPowerPvZod, sideLengthPvZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
@@ -198,7 +198,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				suffix-text="m"
 			>
 				<GovDetails summary-text="Help with this input">
-					<img src="/img/elevation-heigh-of-pv.png" alt="Diagram showing elevational height of PV at its base" class="govuk-!-margin-bottom-3">
+					<img src="/img/elevation-height-of-pv.png" alt="Diagram showing elevational height of PV at its base" class="govuk-!-margin-bottom-3">
 				</GovDetails>
 			</FormKit>
 			<FormKit

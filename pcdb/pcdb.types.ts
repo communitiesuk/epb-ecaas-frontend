@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { objectKeys } from "ts-extras";
-import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
+import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod, fuelTypeZod } from "~/stores/zod";
 
 const IntString = z.string().regex(/^\d+$/);
 
@@ -114,6 +114,7 @@ export const heatPumpProductZod = BaseProduct.extend({
 	testData: z.array(heatPumpTestDataZod),
 	technologyType: spaceHeatingHeatPumpProductTypes,
 	technologyGroup: z.literal("heatPump"),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type HeatPumpProduct = z.infer<typeof heatPumpProductZod>;
@@ -124,7 +125,7 @@ export const hybridHeatPumpProductZod = BaseProduct.extend({
 	minModulationRate55: z.optional(z.number()),
 	minModulationRate35: z.optional(z.number()),
 	tempReturnFeedMax: z.optional(z.number()),
-	fuel: z.optional(z.string()),
+	fuel: z.optional(fuelTypeZod),
 	tempLowerOperatingLimit: z.optional(z.number()),
 	powerOff: z.optional(z.number()),
 	modulatingControl: z.boolean(),
@@ -148,7 +149,7 @@ export type HybridHeatPumpProduct = z.infer<typeof hybridHeatPumpProductZod>;
 export const hotWaterOnlyHeatPumpProductZod = BaseProduct.extend({
 	technologyType: z.literal("HotWaterOnlyHeatPump"),
 	productID: z.number(),
-	fuel: z.string(),
+	fuel: fuelTypeZod,
 	dataType: z.string(),
 	type: z.string(),
 	powerMax: z.number(),
@@ -181,6 +182,7 @@ export const boilerBase = BaseProduct.extend({
 	erpSpaceEfficiencyPerc: z.nullable(z.number()),
 	powerBottomRange: z.nullable(z.number()),
 	burnerControl: z.nullable(z.string()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export const combiBoilerZod = boilerBase.extend({
@@ -218,6 +220,7 @@ export const heatBatteryPcmZod = BaseProduct.extend({
 	heatStorageKJPerKAbovePhaseTransition: z.nullable(z.number()),
 	velocityInHEXTubeAt1LPerMinMPerS: z.nullable(z.number()),
 	simultaneousChargingAndDischarging: z.nullable(z.number()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type HeatBatteryPcmProduct = z.infer<typeof heatBatteryPcmZod>;
@@ -231,6 +234,7 @@ export const heatBatteryDryCoreZod = BaseProduct.extend({
 	ratedPowerInstant: z.nullable(z.number()),
 	electricityStandby: z.nullable(z.number()),
 	pwrIn: z.nullable(z.number()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type HeatBatteryDryCoreProduct = z.infer<typeof heatBatteryDryCoreZod>;
@@ -254,6 +258,7 @@ export const fancoilZod = BaseProduct.extend({
 	numberOfFanSpeeds: z.nullable(z.number()),
 	numberOfTestPointDeltaT: z.nullable(z.number()),
 	fracConvective: z.nullable(z.number()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type FanCoilProduct = z.infer<typeof fancoilZod>;
@@ -271,6 +276,7 @@ export const electricStorageHeaterZod = BaseProduct.extend({
 	outputPower: z.nullable(z.number()),
 	highHeatRetention: z.nullable(z.number()),
 	controlType: z.nullable(z.string()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZod>;

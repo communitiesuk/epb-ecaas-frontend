@@ -1,9 +1,9 @@
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import Ductwork from "./[ductwork].vue";
-import userEvent from "@testing-library/user-event";
 import { within } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { SchemaDuctShape } from "~/schema/aliases";
+import Ductwork from "./[ductwork].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -18,8 +18,14 @@ const populateValidForm = async (ductShape: SchemaDuctShape) => {
 		screen.getByTestId(`ductworkCrossSectionalShape_${ductShape}`),
 	);
 	await user.click(screen.getByTestId("ductType_intake"));
-	await user.type(screen.getByTestId("internalDiameterOfDuctwork"), "300");
-	await user.type(screen.getByTestId("externalDiameterOfDuctwork"), "1000");
+
+	if (ductShape === "circular") {
+		await user.type(screen.getByTestId("internalDiameterOfDuctwork"), "300");
+		await user.type(screen.getByTestId("externalDiameterOfDuctwork"), "1000");
+	} else {
+		await user.type(screen.getByTestId("internalPerimeterOfDuctwork"), "1000");
+	}
+	
 	await user.type(screen.getByTestId("insulationThickness"), "100");
 	await user.type(screen.getByTestId("lengthOfDuctwork"), "100");
 	await user.type(
@@ -30,7 +36,11 @@ const populateValidForm = async (ductShape: SchemaDuctShape) => {
 };
 
 describe("ductwork form", async () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const addStoreData = () => {
 		store.$patch({
@@ -72,8 +82,7 @@ describe("ductwork form", async () => {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		ductworkCrossSectionalShape: "rectangular",
-		internalDiameterOfDuctwork: 300,
-		externalDiameterOfDuctwork: 1000,
+		internalPerimeterOfDuctwork: 1000,
 		ductType: "intake",
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
@@ -111,14 +120,24 @@ describe("ductwork form", async () => {
 		expect(form.getByTestId("ductType_extract")).toBeDefined();
 		expect(form.getByTestId("ductType_intake")).toBeDefined();
 		expect(form.getByTestId("ductType_exhaust")).toBeDefined();
-		expect(screen.getByTestId("internalDiameterOfDuctwork")).toBeDefined();
-		expect(screen.getByTestId("externalDiameterOfDuctwork")).toBeDefined();
+		expect(screen.queryByTestId("internalDiameterOfDuctwork")).toBeNull();
+		expect(screen.queryByTestId("externalDiameterOfDuctwork")).toBeNull();
+		expect(screen.queryByTestId("internalPerimeterOfDuctwork")).toBeNull();
 		expect(form.getByText("Insulation thickness")).toBeDefined();
 		expect(form.getByText("Length of ductwork")).toBeDefined();
 		expect(
 			form.getByText("Thermal conductivity of ductwork insulation"),
 		).toBeDefined();
 		expect(form.getByText("Surface reflectivity")).toBeDefined();
+
+		await user.click(screen.getByTestId("ductworkCrossSectionalShape_circular"));
+
+		expect(await screen.findByTestId("internalDiameterOfDuctwork")).toBeDefined();
+		expect(await screen.findByTestId("externalDiameterOfDuctwork")).toBeDefined();
+
+		await user.click(screen.getByTestId("ductworkCrossSectionalShape_rectangular"));
+
+		expect(await screen.findByTestId("internalPerimeterOfDuctwork")).toBeDefined();
 	});
 
 	it("should list MVHR units previously added", async() => {

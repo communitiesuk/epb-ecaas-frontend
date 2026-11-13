@@ -1,18 +1,26 @@
-import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import Products from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
+import Products from "./index.vue";
 
+const INFILTRATION_AND_VENTILATION_MECHANICAL_VENTILATION_PATH = "/infiltration-and-ventilation/mechanical-ventilation";
+
+const { mockFetch, mockRoute } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+}));
 describe("Mechanical ventilation products page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-	}));
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(INFILTRATION_AND_VENTILATION_MECHANICAL_VENTILATION_PATH, mockRoute));
 
 	afterEach(() => {
 		mockFetch.mockReset();

@@ -1,18 +1,21 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import HeatSourceForm from "./index.vue";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen, within } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
+import type { BoilerProduct, DisplayProduct, HotWaterOnlyHeatPumpProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import type { DomesticHotWaterHeatSourceData, HeatNetworkData } from "~/stores/ecaasStore.schema";
-import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import { litre } from "~/utils/units/volume";
 import type { HeatSourceData, WaterStorageData } from "../../../../stores/ecaasStore.schema";
+import HeatSourceForm from "./index.vue";
 
 vi.mock("uuid");
 
+// The router only resolves links against full page paths
+// so to prevent validation warnings we use full path routes rather than params
+const heatSourceRoute = (index: string) => `/domestic-hot-water/heat-sources/${index}`;
+
 const user = userEvent.setup();
-const store = useEcaasStore();
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
@@ -22,22 +25,6 @@ const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 mockNuxtImport("navigateTo", () => navigateToMock);
 mockNuxtImport("useFetch", () => mockFetch);
 
-afterEach(() => {
-	store.$reset();
-	mockFetch.mockReset();
-	navigateToMock.mockReset();
-});
-
-
-
-mockNuxtImport("useFetch", () => mockFetch);
-
-const product: Partial<Product> = {
-	id: "1000",
-	brandName: "HEM Default",
-	modelName: "Model Name",
-};
-
 beforeEach(() => {
 	mockFetch.mockReturnValue({
 		data: ref(product),
@@ -45,9 +32,15 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	store.$reset();
 	mockFetch.mockReset();
+	navigateToMock.mockReset();
 });
+
+const product: Partial<Product> = {
+	id: "1000",
+	brandName: "HEM Default",
+	modelName: "Model Name",
+};
 
 const existingHeatPumpSpaceHeating1: HeatSourceData = {
 	id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
@@ -85,11 +78,24 @@ const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 	energySupply: "electricity",
 };
 
+const hotWaterOnlyHeatPump: DomesticHotWaterHeatSourceData = {
+	isExistingHeatSource: false,
+	heatSourceId: "NEW_HEAT_SOURCE",
+	id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+	name: "Hot Water Only",
+	typeOfHeatSource: "heatPump",
+	typeOfHeatPump: "hotWaterOnly",
+	productReference: "1000",
+	packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
+	maxFlowTemp: unitValue(7, celsius),
+	energySupply: "electricity",
+};
+
 const hybridHeatPump: DomesticHotWaterHeatSourceData = {
 	isExistingHeatSource: false,
 	heatSourceId: "NEW_HEAT_SOURCE",
 	id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-	name: "Heat pump 1",
+	name: "Hybrid Heat Pump",
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "hybridHeatPump",
 	productReference: "1000",
@@ -110,9 +116,20 @@ const backupBoiler: DomesticHotWaterHeatSourceData = {
 	needsSpecifiedLocation: true,
 	packagedProductReference: "1000",
 	maxFlowTemp: unitValue(32, celsius),
+	energySupply: "mains_gas",
 };
 
 describe("Heat Source Page", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	test("only allows user to choose a hui when a communal heat network is already added", async () => {
 		const heatNetwork: EcaasForm<HeatNetworkData> = {
 			data: {
@@ -214,11 +231,7 @@ describe("Heat Source Page", () => {
 			},
 		});
 		
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`));
 		
@@ -307,11 +320,7 @@ describe("Heat Source Page", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		[createdHeatPump.heatSourceId, "NEW_HEAT_SOURCE"].forEach(option => {
 			expect(screen.getByTestId<HTMLInputElement>(`heatSourceId_${option}`).disabled).toBe(true);
@@ -352,11 +361,7 @@ describe("Heat Source Page", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect(screen.getByTestId("spaceHeatingHeatSourceWithCylinderInset")).toBeDefined();
 	});
@@ -448,11 +453,7 @@ describe("Heat Source Page", () => {
 						heatSources: { data: [{ data: heatSource }] },
 					} });
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("saveAndComplete"));
 				const nameError = await screen.findByTestId("name_error");
@@ -486,7 +487,6 @@ describe("Heat Source Page", () => {
 			productReference: "100",
 			maxFlowTemp: unitValue(7, celsius),
 			numberOfUnits: 1,
-			energySupply: "electricity",
 		};
 
 		const dhwWithExistingBattery: DomesticHotWaterHeatSourceData = {
@@ -511,11 +511,7 @@ describe("Heat Source Page", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 				expect(screen.getByTestId("maxFlowTemp")).toBeDefined();
 			});
@@ -537,17 +533,23 @@ describe("Heat Source Page", () => {
 			}),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 	});
 });
 
 describe("Boiler section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	it("disables input fields when boiler is packaged with a heat pump", async () => {
 		store.$patch({
 			spaceHeating: {
@@ -587,11 +589,7 @@ describe("Boiler section", () => {
 			data: ref(backupBoilerProduct),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		Object.keys(coldWaterSourceOptions).forEach(option => {
 			expect(screen.getByTestId<HTMLInputElement>(`coldWaterSource_${option}`).disabled).toBe(true);
@@ -613,14 +611,92 @@ describe("Boiler section", () => {
 			expect(screen.getByTestId<HTMLInputElement>(`specifiedLocation_${location}`).disabled).toBe(true);
 		});
 	});
+
+	describe("boiler energy supply", () => {
+		const backupBoilerProduct: Partial<BoilerProduct> = {
+			id: "2000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "CombiBoiler",
+		};
+
+		beforeEach(async () => {
+			mockFetch.mockReturnValueOnce({
+				data: ref(backupBoilerProduct),
+			});
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{
+								data: {
+									...backupBoiler,
+									energySupply: undefined,
+								},
+							},
+						],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "mains_gas", "LPG_bottled"],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+		});
+
+		afterEach(() => {
+			mockFetch.mockReset();
+		});
+
+		it("only displays gaseous energy supplies when packaged with a heat pump", async () => {
+			expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
+			expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
+		});
+	
+		it("requires energy supply when packaged with a heat pump", async () => {
+			await user.click(screen.getByTestId("saveAndComplete"));
+	
+			expect(screen.getByTestId("energySupply_error")).toBeDefined();
+		});
+	});
 });
 
 describe("Heat pump section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const heatPumpProductWithCylinder: Partial<DisplayProduct> = {
 		id: "1001",
 		brandName: "Brand",
 		technologyType: "AirSourceHeatPump",
 		vesselType: "Integral",
+	};
+
+	const hotWaterOnlyHeatPumpProductWithFuelType: Partial<HotWaterOnlyHeatPumpProduct> = {
+		id: "1001",
+		brandName: "Brand",
+		technologyType: "HotWaterOnlyHeatPump",
+		fuel: "LPG_condition_11F",
+	};
+
+	const hybridHeatPumpProductWithFuelType: Partial<HybridHeatPumpProduct> = {
+		id: "1000",
+		brandName: "Brand",
+		technologyType: "HybridHeatPump",
+		fuel: "LPG_bottled",
 	};
 
 	const heatPumpWithCylinder: Partial<DomesticHotWaterHeatSourceData> = {
@@ -674,11 +750,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			expect((await screen.findByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`)).hasAttribute("checked")).toBe(true);
 		});
@@ -697,11 +769,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			expect((await screen.findByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`)).hasAttribute("checked")).toBe(true);
 		});
@@ -738,16 +806,12 @@ describe("Heat pump section", () => {
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("create") });
 			await populateValidHeatPumpForm();
 
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/heat-pump");
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0/heat-pump");
 
 		});
 
@@ -782,11 +846,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
@@ -802,11 +862,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated heat pump");
@@ -903,11 +959,7 @@ describe("Heat pump section", () => {
 				},
 			},
 		});
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "1" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("1") });
 		const backUpBolerInStoreBeforeChange = store.domesticHotWater.heatSources.data.find(hs => hs.data.id === backupBoiler.id);
 		expect(backUpBolerInStoreBeforeChange).toBeDefined();
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
@@ -931,11 +983,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect(screen.getByTestId("waterCylinderConfiguration")).toBeDefined();
 
@@ -948,7 +996,12 @@ describe("Heat pump section", () => {
 		store.$patch({
 			domesticHotWater: {
 				heatSources: {
-					data: [{ data: heatPumpWithCylinder }],
+					data: [{
+						data: {
+							...heatPumpWithCylinder,
+							heatExchangerSurfaceAreaDeclared: 1,
+						},
+					}],
 				},
 			},
 		});
@@ -957,11 +1010,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("waterCylinderConfiguration_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveProgress"));
@@ -971,6 +1020,8 @@ describe("Heat pump section", () => {
 			name: "Hot water cylinder",
 			typeOfWaterStorage: "hotWaterCylinder",
 			packagedProductReference: heatPumpProductWithCylinder.id,
+			areaOfHeatExchangerInPcdb: true,
+			areaOfHeatExchanger: 1,
 		};
 
 		expect(waterStorageData.length).toBe(1);
@@ -990,11 +1041,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
 		await user.click(screen.getByTestId("saveProgress"));
@@ -1023,11 +1070,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
 
@@ -1066,11 +1109,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 		await user.click(screen.getByTestId("saveProgress"));
@@ -1079,9 +1118,252 @@ describe("Heat pump section", () => {
 
 		expect(waterStorageData.length).toBe(0);
 	});
+
+	test("shows an error when the selected hot water only heat pump product uses an energy source that has not been added to general details", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const error = screen.getByTestId("incompatibleEnergySourceError");
+		expect(error).toBeDefined();
+		expect(error.textContent).toContain(
+			"This product uses LPG (Liquid petroleum gas) - condition 11F which hasn't been added as an energy source for this dwelling.",
+		);
+
+		const link = screen.getByRole("link", { name: "General details" });
+		expect(link).toBeDefined();
+		expect(link.getAttribute("href")).toBe("/dwelling-details/general-details");
+
+		const errorSummary = screen.getByTestId("heatSourceErrorSummary");
+		const errorSummaryLink = within(errorSummary).getByRole("link", {
+			name: /This product uses LPG \(Liquid petroleum gas\) - condition 11F/,
+		});
+		expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
+	});
+
+	test("shows an error when the selected hybrid heat pump product uses an energy source that has not been added to general details", async () => {
+		const hybridHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Hybrid Heat Pump",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "hybridHeatPump",
+			productReference: "1002",
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hybridHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hybridHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const error = screen.getByTestId("incompatibleEnergySourceError");
+		expect(error).toBeDefined();
+		expect(error.textContent).toContain(
+			"This product uses LPG (Liquid petroleum gas) - bottled which hasn't been added as an energy source for this dwelling.",
+		);
+
+		const link = screen.getByRole("link", { name: "General details" });
+		expect(link).toBeDefined();
+		expect(link.getAttribute("href")).toBe("/dwelling-details/general-details");
+
+		const errorSummary = screen.getByTestId("heatSourceErrorSummary");
+		const errorSummaryLink = within(errorSummary).getByRole("link", {
+			name: /This product uses LPG \(Liquid petroleum gas\) - bottled/,
+		});
+		expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
+	});
+
+	test("shows both validation errors and incompatible energy source error", async () => {
+		const hotWaterOnlyHeatPumpWithoutMaxFlowTemp: Partial<NewDomesticHotWaterHeatSourceData> = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat pump 1",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "hotWaterOnly",
+			isExistingHeatSource: false,
+			productReference: "HEATPUMP-SMALL",
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPumpWithoutMaxFlowTemp }],
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
+
+		expect(errorSummary.textContent).toContain(
+			"Maximum flow temperature is required",
+		);
+
+		expect(errorSummary.textContent).toContain(
+			"This product uses LPG (Liquid petroleum gas) - condition 11F which hasn't been added as an energy source for this dwelling.",
+		);
+	});
+
+	test("does not show an error when the hot water only heat pump product fuel has been added to general details", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity", "LPG_condition_11F"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(
+			screen.queryByTestId("incompatibleEnergySourceError"),
+		).toBeNull();
+	});
+
+	test("does not show an error when the hybrid heat pump product fuel has been added to general details", async () => {
+		const hybridHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Hybrid Heat Pump",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "hybridHeatPump",
+			productReference: "1002",
+		};
+		
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hybridHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity", "LPG_bottled"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hybridHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(
+			screen.queryByTestId("incompatibleEnergySourceError"),
+		).toBeNull();
+	});
+
+	test("does not show an error when the product fuel is electricity", async () => {
+		const heatPumpProductWithElectricityFuelType: Partial<HotWaterOnlyHeatPumpProduct> = {
+			id: "1001",
+			brandName: "Brand",
+			technologyType: "HotWaterOnlyHeatPump",
+			fuel: "electricity",
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(heatPumpProductWithElectricityFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(
+			screen.queryByTestId("incompatibleEnergySourceError"),
+		).toBeNull();
+	});
 });
 
 describe("Immersion heater section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const populateValidImmersionHeaterForm = async () => {
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 		await user.click(screen.getByTestId("typeOfHeatSource_immersionHeater"));
@@ -1141,11 +1423,7 @@ describe("Immersion heater section", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect((await screen.findByTestId("typeOfHeatSource_immersionHeater")).hasAttribute("checked"));
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Immersion heater");
@@ -1162,11 +1440,7 @@ describe("Immersion heater section", () => {
 		});
 
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Updated immersion heater");
@@ -1195,6 +1469,16 @@ describe("Immersion heater section", () => {
 });
 
 describe("Point of use section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	beforeEach(() => {
 		store.$patch({
 			dwellingDetails: {
@@ -1270,11 +1554,7 @@ describe("Point of use section", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect((await screen.findByTestId("typeOfHeatSource_pointOfUse")).hasAttribute("checked"));
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point of use");
@@ -1290,11 +1570,7 @@ describe("Point of use section", () => {
 		});
 
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Updated point of use");
@@ -1388,6 +1664,16 @@ describe("Point of use section", () => {
 });
 
 describe("Heat Networks", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+	
 	const communalHeatNetwork: Partial<HeatNetworkData> = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c13",
 		name: "Communal Heat Network",

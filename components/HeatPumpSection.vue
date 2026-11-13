@@ -10,12 +10,13 @@ import { waterCylinderConfigurationDisplay } from "~/utils/display";
 const route = useRoute();
 const store = useEcaasStore();
 
-const { model, onProductLoaded = undefined } = defineProps<{
+const { model, onProductLoaded = undefined, onIncompatibleEnergySource = undefined } = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 	index: number;
 	boilers: [string, string][];
 	addBoilerPageId: PageId;
 	page: HeatSourceSectionPage;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
@@ -49,15 +50,9 @@ const greaterThanZero = (node: FormKitNode) => {
 		:heat-source="model"
 		:page-url="route.fullPath"
 		:page-index="index"
+		:on-incompatible-energy-source="onIncompatibleEnergySource"
 		@product-loaded="onProductLoaded"
 	/>
-	<!-- <FormKit 
-		id="isConnectedToHeatNetwork"
-		type="govBoolean"
-		:name="'isConnectedToHeatNetwork'"
-		:label="'Is this heat pump connected to a heat network?'"
-		:value="model.isConnectedToHeatNetwork"
-	/> -->
 	<FormKit
 		v-if="model.typeOfHeatPump === 'booster'"
 		id="associatedHeatNetwork"

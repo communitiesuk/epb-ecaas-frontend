@@ -1,7 +1,7 @@
-import Appliances from "./appliances.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import Appliances from "./appliances.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -22,7 +22,12 @@ const appliancesState: AppliancesData = {
 };
 
 describe("Appliances", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	afterEach(() => {
@@ -83,7 +88,7 @@ describe("Appliances", () => {
 		const errorSummary = await screen.findByTestId("appliancesErrorSummary");
 
 		expect(
-			errorSummary.textContent.includes("Fridge or Fridge-freezer is required."),
+			errorSummary.textContent.includes("Fridge or Fridge-freezer is required"),
 		).toBe(true);
 	});
 

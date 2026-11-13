@@ -110,8 +110,54 @@ Many common UI components have been abstracted in an attempt to make code and co
 - Gov: VueJS versions of GovUK components
 - FormKit: Custom FormKit components
 
-## ECaaS API Integration
+## Composables
+Composables contain reusable functionality which depend on Vue/Nuxt features such as reactivity, or access to state management.
 
+## Routing
+Routing is automatically handled by Nuxt using the file structure in the ./pages directory. However, breadcrumbs and links are generated using the data in `./data/pages/pages.ts`.
+Each page has an id, title, url, type and parent Id. When rendering a link to a page, rather than hardcoding the link, there is a `page` utility function in pages.ts which takes a page Id as a parameter. This should be the preferred way of retrieving page URLs so that if any need to be changed, it can be done in a single place rather than across the codebase.
+
+## Mapping
+The mapping folder contains functionality to map data saved in the store to the FHS schema. Each section of the Check Part L tool has a corresponding mapping file.
+
+## Pages
+
+This is where the pages and forms for Check Part L live. The file and folder structure forms the URLs of each page. Each page should have a corresponding test file containing component / unit tests for that page.
+
+## PCDB
+
+The PCDB data is stored in DynamoDB which can be setup locally following instructions [here](https://github.com/communitiesuk/epb-ecaas-pcdb-sync).
+
+Communication with the database is done server-side via internal API endpoints. These communicate with the database via the pcdb_client.ts. This will return an object which implements the `PcdbClient` interface, depending on if a database is accessible. If running in production, or a local instance of the PCDB is running and the `LOCAL_DYNAMODB_ENDPOINT` env variable is pointing to that instance, then the Dynamo DB client (`./pcdb/clients/dynamodb_client.ts`) will be used. Otherwise, the no-op client (`./pcdb/clients/no-op_client.ts`) will be used which will simply read data from a local JSON file.
+
+## Event handlers
+
+There are several instances of custom hooks and event handlers for when hooks are invoked. These are used to respond to certain events but where handlers should be decoupled from the code triggering the event. E.g. if a cold water source is removed, it also needs to be removed from where it's referenced.
+
+Custom hooks are registered in `common.types.ts` by extending the `RuntimeNuxtHooks` interface. Handlers for these hooks can then be registered as part of a plugin (added to the ./plugins directory).
+
+## Server
+All server-side code lives in the `./server` directory. This contains the following folders:
+
+`/api`: API endpoints for performing a calculation, saving and retrieving session data and reading data from PCDB.
+
+`/routes`: Server routes (currently just used for authentication with Cognito).
+
+`/services`: Business logic used by API endpoints.
+
+`/plugins`: Plugins to extend Nitro's runtime. Currently contains a plugin to configure a DynamoDB storage driver for reading and saving session data.
+
+`/utils`: Utility functions used on the server
+
+## State management
+
+The Check Part L front-end uses [Pinia](https://pinia.vuejs.org/ssr/nuxt.html) for managing state. This is a store where form data will be collated and saved in memory in the browser. The state conforms to a schema defined by [Zod](https://zod.dev/) with each form has a corresponding Zod schema. TypeScript types are then inferred from the Zod schema.
+
+Pinia is configured to save its state to an entry in the browser's local storage (with the key `ecaas`).
+
+There are 2 plugins (load-store.client.ts and update-cache.client.ts) which are responsible for retrieving and sending the state the server to be saved into a session table in DynamoDB. This is to persist session data on the server so that if local storage is cleared, it can be hydrated with data from the server.
+
+## ECaaS API Integration
 Requests to the ECaaS API to perform calculations are performed server-to-server via a Nuxt API endpoint (`check-compliance.post.ts`).
 
 Form data is mapped from the stored format, to the format required by the ECaaS API.

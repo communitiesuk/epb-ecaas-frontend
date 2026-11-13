@@ -1,13 +1,13 @@
 import type { ValidateFunction } from "ajv/dist/2020";
-import { ajv } from "../schema/validator";
-import { mapFhsInputData } from "./fhsInputMapper";
-import type { FhsInputSchema } from "./fhsInputMapper";
-import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
-import { centimetre, metre, millimetre } from "../utils/units/length";
+import { resolveState } from "~/stores/resolve";
 import { unitValue } from "~/utils/units";
+import { millimetresSquare } from "~/utils/units/area";
 import { celsius } from "~/utils/units/temperature";
-
+import { ajv } from "../schema/validator";
+import { centimetre, metre, millimetre } from "../utils/units/length";
+import type { FhsInputSchema } from "./fhsInputMapper";
+import { mapFhsInputData } from "./fhsInputMapper";
 
 const baseForm = {
 	data: [],
@@ -24,6 +24,8 @@ const expectedHouseInput: FhsInputSchema = {
 		"Fridge-Freezer": "Default",
 		"Hobs": "Default",
 		"Oven": "Not Installed",
+		"Microwave": "Not Installed",
+		"Kettle": "Not Installed",
 	},
 	ColdWaterSource: {
 		"mains water": {
@@ -35,6 +37,8 @@ const expectedHouseInput: FhsInputSchema = {
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
+			is_export_capable: true,
+			power_limit_export: 50,
 		},
 	},
 	Events: {},
@@ -192,7 +196,6 @@ const expectedHouseInput: FhsInputSchema = {
 	BuildingWidth: 20,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
-	NumberOfSanitaryAccommodations: 1,
 	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 1,
@@ -223,6 +226,16 @@ const expectedHouseInput: FhsInputSchema = {
 					"product_reference": "UFH-123",
 					"wet_emitter_type": "ufh",
 					"emitter_floor_area": 50,
+				},
+				{
+					"product_reference": "RAD-456",
+					"wet_emitter_type": "radiator",
+					"length": 4,
+				},
+				{
+					"product_reference": "RAD-456",
+					"wet_emitter_type": "radiator",
+					"length": 4,
 				},
 			],
 			"temp_diff_emit_dsgn": 5,
@@ -294,6 +307,25 @@ const expectedHouseInput: FhsInputSchema = {
 					thickness_walls: 0.08,
 					floor_type: "Slab_no_edge_insulation",
 				},
+				"Suspended Floor (floor)": {
+					type: "BuildingElementGround",
+					area: 40,
+					total_area: 50,
+					u_value: 1,
+					thermal_resistance_floor_construction: 1,
+					areal_heat_capacity: "Very light",
+					mass_distribution_class: "I: Mass concentrated at internal side",
+					perimeter: 100,
+					psi_wall_floor_junc: 0,
+					thickness_walls: 0.08,
+					floor_type: "Suspended_floor",
+					height_upper_surface: 0.1,
+					area_per_perimeter_vent: 0.0001,
+					thermal_resist_insul: 1,
+					thermal_transm_walls: 1,
+					smart_air_bricks: true,
+					vents_open_during_airtightness_test: true,
+				},
 			},
 			Lighting: {
 				bulbs: [{
@@ -322,6 +354,8 @@ const expectedFlatInput: FhsInputSchema = {
 		"Fridge-Freezer": "Default",
 		"Hobs": "Not Installed",
 		"Oven": "Not Installed",
+		"Microwave": "Not Installed",
+		"Kettle": "Not Installed",
 	},
 	BuildingLength: 10,
 	BuildingWidth: 20,
@@ -335,6 +369,7 @@ const expectedFlatInput: FhsInputSchema = {
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
+			is_export_capable: false,
 			ElectricBattery: {
 				capacity: 12,
 				charge_discharge_efficiency_round_trip: 1,
@@ -436,7 +471,6 @@ const expectedFlatInput: FhsInputSchema = {
 	General: {
 		build_type: "flat",
 		storeys_in_building: 6,
-		storey_of_dwelling: 1,
 		storeys_in_dwelling: 1,
 	},
 	HeatingControlType: "SeparateTempControl",
@@ -651,7 +685,6 @@ const expectedFlatInput: FhsInputSchema = {
 	PartO_active_cooling_required: true,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
-	NumberOfSanitaryAccommodations: 1,
 	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 2,
@@ -776,6 +809,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Medium",
 					mass_distribution_class: "M: Mass concentrated inside",
 					pitch: 180,
+					is_adjacent_space_within_dwelling: true,
 				},
 				"exposed floor 1 (floor)": {
 					height: 5,
@@ -796,7 +830,8 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "E: Mass concentrated at external side",
 					pitch: 90,
 					type: "BuildingElementPartyWall",
-					u_value: 1,
+					u_value_whole_wall: 1,
+					thermal_resistance_construction: 2.5,
 					party_wall_cavity_type: "solid",
 				},
 				"external wall 1 (wall)": {
@@ -821,6 +856,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 1,
+					is_adjacent_space_within_dwelling: true,
 				},
 				"front door (door)": {
 					area: 3.12,
@@ -840,11 +876,8 @@ const expectedFlatInput: FhsInputSchema = {
 				"external glazed door (door)": {
 					base_height: 0.2,
 					frame_area_fraction: 0.3,
-					free_area_height: 2,
 					g_value: 0.5,
 					height: 3,
-					max_window_open_area: 3,
-					mid_height: 2.5,
 					orientation360: 30,
 					pitch: 45,
 					security_risk: false,
@@ -881,10 +914,9 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 1,
 					window_part_list: [
 						{
-							mid_height_air_flow_path: 2.5,
-						},
-						{
-							mid_height_air_flow_path: 3,
+							free_area_height: 2,
+							max_window_open_area: 3,
+							mid_height: 3,
 						},
 					],
 				},
@@ -897,24 +929,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					u_value: 1,
 				},
-				"ceiling to heated space (ceiling)": {
-					type: "BuildingElementAdjacentConditionedSpace",
-					area: 16,
-					areal_heat_capacity: "Light",
-					mass_distribution_class: "I: Mass concentrated at internal side",
-					pitch: 0,
-					u_value: 1,
-				},
-				"ceiling to unheated space (ceiling)": {
-					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-					area: 20,
-					areal_heat_capacity: "Very light",
-					mass_distribution_class: "IE: Mass divided over internal and external side",
-					pitch: 45,
-					thermal_resistance_unconditioned_space: 2.7,
-					u_value: 2.2,
-				},
-				"roof 1 (roof)": {
+				"roof 1": {
 					pitch: 20,
 					orientation360: 180,
 					height: 2.5,
@@ -936,6 +951,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 1,
+					is_adjacent_space_within_dwelling: false, // we're assuming all doors are to an outside corridor for now
 				},
 				"door to garage (door)": {
 					area: 1.4,
@@ -953,16 +969,17 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2,
 					width: 2,
 					base_height: 1,
-					free_area_height: 1,
 					u_value: 0.1,
 					g_value: 0.2,
 					security_risk: true,
-					mid_height: 2,
-					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8) 
-					max_window_open_area: 1,
-					window_part_list: [{
-						mid_height_air_flow_path: 1,
-					}],
+					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8)
+					window_part_list: [
+						{
+							free_area_height: 1,
+							max_window_open_area: 1,
+							mid_height: 1,
+						},
+					],
 					shading: [
 						{
 							type: "overhang",
@@ -1044,7 +1061,11 @@ expect.extend({
 });
 
 describe("FHS input mapper", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => store.$reset());
 
@@ -1067,6 +1088,7 @@ describe("FHS input mapper", () => {
 					buildingWidth: 20,
 					fuelType: ["electricity"],
 					canExportToGrid: "yes",
+					maxPowerExported: { amount: 50, unit: "kilowatt" },
 					isPartGCompliant: false,
 					partOActiveCoolingRequired: true,
 				},
@@ -1135,7 +1157,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: unitValue(7500, millimetresSquare),
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,
@@ -1156,6 +1178,7 @@ describe("FHS input mapper", () => {
 				data: {
 					testPressure: "Standard",
 					airTightnessTestResult: 4,
+					smartAirBricksOpen: true,
 				},
 			},
 		};
@@ -1205,6 +1228,27 @@ describe("FHS input mapper", () => {
 							thicknessOfWalls: unitValue(80, millimetre),
 							typeOfGroundFloor: "Slab_no_edge_insulation",
 						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "a0209d6e-b8de-4bc0-a760-4c6f19932657",
+							name: "Suspended Floor",
+							surfaceArea: 40,
+							totalArea: 50,
+							uValue: 1,
+							thermalResistance: 1,
+							arealHeatCapacity: "Very light",
+							massDistributionClass: "I",
+							perimeter: 100,
+							thicknessOfWalls: unitValue(80, millimetre),
+							typeOfGroundFloor: "Suspended_floor",
+							heightOfFloorUpperSurface: 100,
+							underfloorSpaceThermalResistance: 1,
+							thermalTransmittanceOfWallsAboveGround: 1,
+							ventilationOpeningsArea: 100,
+							smartAirBricks: true,
+						},
 					}],
 				},
 				dwellingSpaceInternalFloor: {
@@ -1217,6 +1261,9 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 				dwellingSpaceFloorOfHeatedBasement: {
+					...baseForm,
+				},
+				dwellingSpacePartyFloor: {
 					...baseForm,
 				},
 			},
@@ -1257,13 +1304,8 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
-			dwellingSpaceCeilingsAndRoofs: {
-				dwellingSpaceCeilings: {
-					...baseForm,
-				},
-				dwellingSpaceRoofs: {
-					...baseForm,
-				},
+			dwellingSpaceRoofs: {
+				...baseForm,
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: {
@@ -1319,13 +1361,25 @@ describe("FHS input mapper", () => {
 						designFlowRate: 200,
 						hasVariableFlowRate: false,
 						percentageRecirculated: 20,
-						emitters: [{
-							name: "Underfloor heating 1",
-							id: "ufh1",
-							productReference: "UFH-123",
-							typeOfHeatEmitter: "underFloorHeating",
-							areaOfUnderFloorHeating: 50,
-						}],
+						emitters: [
+							{
+								name: "Underfloor heating 1",
+								id: "ufh1",
+								productReference: "UFH-123",
+								typeOfHeatEmitter: "underFloorHeating",
+								areaOfUnderFloorHeating: 50,
+							},
+							{
+								typeOfHeatEmitter: "radiator",
+								id: "rad1",
+								productReference: "RAD-456",
+								numOfRadiators: 2,
+								length: {
+									unit: "metres",
+									amount: 4,
+								},
+							},
+						],
 						designTempDiffAcrossEmitters: 5,
 						designFlowTemp: 40,
 						ecoDesignControllerClass: "1",
@@ -1514,7 +1568,6 @@ describe("FHS input mapper", () => {
 				data: {
 					typeOfDwelling: "flat",
 					storeysInDwelling: 1,
-					// storeyOfFlat: 1,
 					storeysInBuilding: 6,
 					numOfBedrooms: 2,
 					numOfBathrooms: 1,
@@ -1682,7 +1735,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: unitValue(7500, millimetresSquare),
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,
@@ -1778,6 +1831,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: "c70c9862-f536-45b4-9d45-58c5cb612d9c",
 								name: "internal floor 1",
 								typeOfInternalFloor: "unheatedSpace",
 								surfaceAreaOfElement: 6,
@@ -1785,17 +1839,22 @@ describe("FHS input mapper", () => {
 								massDistributionClass: "IE",
 								thermalResistanceOfAdjacentUnheatedSpace: 1,
 								uValue: 0.5,
+								pitchOption: "180",
+								pitch: 180,
 							},
 						},
 						{
 							...baseForm,
 							data: {
+								id: "a95f3cb2-62cc-405f-9eb6-bee5d6b6b747",
 								name: "internal floor 2",
 								typeOfInternalFloor: "heatedSpace",
 								surfaceAreaOfElement: 4,
 								arealHeatCapacity: "Medium",
 								massDistributionClass: "M",
 								uValue: 0.5,
+								pitchOption: "180",
+								pitch: 180,
 							},
 						},
 					],
@@ -1824,6 +1883,10 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [],
 				},
+				dwellingSpacePartyFloor: {
+					...baseForm,
+					data: [],
+				},
 			},
 			dwellingSpaceWalls: {
 				dwellingSpacePartyWall: {
@@ -1836,7 +1899,8 @@ describe("FHS input mapper", () => {
 							pitchOption: "90",
 							pitch: 90,
 							surfaceArea: 15,
-							uValue: 1,
+							uValueWholeWall: 1,
+							thermalResistanceHalfWall: 2.5,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "E",
 							partyWallCavityType: "solid",
@@ -1903,60 +1967,26 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
-			dwellingSpaceCeilingsAndRoofs: {
-				dwellingSpaceCeilings: {
+			dwellingSpaceRoofs: {
+				...baseForm,
+				data: [{
 					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "26e6be91-d436-4ccf-a106-feddaf625edb",
-							name: "ceiling to heated space",
-							type: "heatedSpace",
-							surfaceArea: 16,
-							arealHeatCapacity: "Light",
-							massDistributionClass: "I",
-							pitchOption: "0",
-							uValue: 1,
-						},
+					data: {
+						id: "85343964-1c5f-416b-b4af-0d16c06d3046",
+						name: "roof 1",
+						typeOfRoof: "flatAboveHeatedSpace",
+						pitch: 20,
+						orientation: 180,
+						length: 2.5,
+						width: 10,
+						elevationalHeightOfElement: 0,
+						surfaceArea: 25,
+						uValue: 0.1,
+						colour: "Dark",
+						arealHeatCapacity: "Very light",
+						massDistributionClass: "I",
 					},
-					{
-						...baseForm,
-						data: {
-							id: "1d60a23a-789e-4843-8da4-ab4b90609280",
-							name: "ceiling to unheated space",
-							type: "unheatedSpace",
-							surfaceArea: 20,
-							arealHeatCapacity: "Very light",
-							massDistributionClass: "IE",
-							pitch: 45,
-							pitchOption: "custom",
-							thermalResistanceOfAdjacentUnheatedSpace: 2.7,
-							uValue: 2.2,
-						},
-					},
-					],
-				},
-				dwellingSpaceRoofs: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "85343964-1c5f-416b-b4af-0d16c06d3046",
-							name: "roof 1",
-							typeOfRoof: "flatAboveHeatedSpace",
-							pitch: 20,
-							orientation: 180,
-							length: 2.5,
-							width: 10,
-							elevationalHeightOfElement: 0,
-							surfaceArea: 25,
-							uValue: 0.1,
-							colour: "Dark",
-							arealHeatCapacity: "Very light",
-							massDistributionClass: "I",
-						},
-					}],
-				},
+				}],
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: {
@@ -1991,9 +2021,13 @@ describe("FHS input mapper", () => {
 							solarTransmittance: 0.5,
 							elevationalHeight: 0.2,
 							openingToFrameRatio: 0.7,
-							midHeightOpenablePart1: 3,
-							maximumOpenableArea: 3,
-							freeAreaHeight: 2,
+							openableParts: [
+								{
+									maximumOpenableArea: 3,
+									freeAreaHeight: 2,
+									midHeight: 3,
+								},
+							],
 							securityRisk: false,
 							uValue: 10,
 							numberOpenableParts: "1",
@@ -2083,15 +2117,19 @@ describe("FHS input mapper", () => {
 						solarTransmittance: 0.2,
 						elevationalHeight: 1,
 						numberOpenableParts: "1",
-						freeAreaHeight: 1,
+						openableParts: [
+							{
+								maximumOpenableArea: 1,
+								freeAreaHeight: 1,
+								midHeight: 1,
+							},
+						],
 						curtainsOrBlinds: true,
 						treatmentType: "curtains",
 						treatmentControls: "manual",
 						thermalResistivityIncrease: 1,
 						solarTransmittanceReduction: 0.1,
-						midHeightOpenablePart1: 1,
 						openingToFrameRatio: 0.8,
-						maximumOpenableArea: 1,
 						depthOfReveal: 200,
 						distanceFromGlassToStartOfReveal: 100,
 						hasShading: true,

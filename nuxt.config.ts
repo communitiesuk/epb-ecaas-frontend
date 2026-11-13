@@ -71,6 +71,9 @@ export default defineNuxtConfig({
 						@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
 				},
 			},
+			lightningcss: {
+				errorRecovery: true,
+			},
 		},
 	},
 

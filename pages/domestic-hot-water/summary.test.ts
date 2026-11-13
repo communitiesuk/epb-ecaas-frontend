@@ -1,15 +1,15 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import Summary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
-import { litre } from "~/utils/units/volume";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PipeworkData, PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
+import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
+import { degrees } from "~/utils/units/angle";
+import { metresSquare } from "~/utils/units/area";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
-import { metresSquare } from "~/utils/units/area";
-import { degrees } from "~/utils/units/angle";
-import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PipeworkData, PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
-import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity.js";
+import { litre } from "~/utils/units/volume";
+import Summary from "./summary.vue";
 
 const { mockFetch, mockNavigateTo } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -35,7 +35,11 @@ const verifyDataInSection = async (
 };
 
 describe("Domestic hot water summary", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const hotWaterCylinder: HotWaterCylinderData = {
 		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
@@ -910,7 +914,6 @@ describe("Domestic hot water summary", () => {
 			needsSpecifiedLocation: true,
 			specifiedLocation: "external",
 			maxFlowTemp: unitValue(12, celsius),
-
 		};
 
 		const dhwWithNewHeatBattery: DomesticHotWaterHeatSourceData = {

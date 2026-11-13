@@ -1,14 +1,18 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import HotWaterOutlets from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { Product } from "~/pcdb/pcdb.types.js";
+import HotWaterOutlets from "./index.vue";
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
 	navigateToMock: vi.fn(),
 }));
+
+// The router only resolves links against full page paths
+// so to prevent validation warnings we use full path routes rather than params
+const hotWaterOutletRoute = (index: string) => `/domestic-hot-water/hot-water-outlets/${index}`;
 
 mockNuxtImport("useFetch", () => mockFetch);
 mockNuxtImport("navigateTo", () => navigateToMock);
@@ -16,7 +20,12 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 vi.mock("uuid");
 
 describe("hot water outlets", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const wwhrs: EcaasForm<WwhrsData> = {
@@ -213,11 +222,7 @@ describe("hot water outlets", () => {
 			},
 		});
 
-		await renderSuspended(HotWaterOutlets, {
-			route: {
-				params: { "hotWaterOutlet": "0" },
-			},
-		});
+		await renderSuspended(HotWaterOutlets, { route: hotWaterOutletRoute("0") });
 
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Updated mixer");
@@ -271,11 +276,7 @@ describe("hot water outlets", () => {
 			},
 		});
 
-		await renderSuspended(HotWaterOutlets, {
-			route: {
-				params: { "outlet": "0" },
-			},
-		});
+		await renderSuspended(HotWaterOutlets, { route: hotWaterOutletRoute("0") });
 
 		expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 	});
@@ -342,11 +343,7 @@ describe("hot water outlets", () => {
 					},
 				});
 
-				await renderSuspended(HotWaterOutlets, {
-					route: {
-						params: { "hotWaterOutlet": "0" },
-					},
-				});
+				await renderSuspended(HotWaterOutlets, { route: hotWaterOutletRoute("0") });
 
 				expect(
 					(await screen.findByTestId<HTMLInputElement>(`typeOfHotWaterOutlet_${type}`)).checked,
@@ -438,9 +435,7 @@ describe("hot water outlets", () => {
 				},
 			});
 
-			await renderSuspended(HotWaterOutlets, {
-				route: { params: { "hotWaterOutlet": "0" } },
-			});
+			await renderSuspended(HotWaterOutlets, { route: hotWaterOutletRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -458,9 +453,7 @@ describe("hot water outlets", () => {
 				},
 			});
 
-			await renderSuspended(HotWaterOutlets, {
-				route: { params: { "hotWaterOutlet": "0" } },
-			});
+			await renderSuspended(HotWaterOutlets, { route: hotWaterOutletRoute("0") });
 
 			expect((await screen.findByTestId<HTMLInputElement>("typeOfHotWaterOutlet_mixedShower")).checked).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("isAirPressureShower_yes")).checked).toBe(true);
@@ -521,11 +514,7 @@ describe("hot water outlets", () => {
 					},
 				},
 			});
-			await renderSuspended(HotWaterOutlets, {
-				route: {
-					params: { "hotWaterOutlet": "0" },
-				},
-			});
+			await renderSuspended(HotWaterOutlets, { route: hotWaterOutletRoute("0") });
 
 			expect(store.domesticHotWater.hotWaterOutlets.complete).toBe(true);
 
@@ -547,9 +536,7 @@ describe("hot water outlets", () => {
 				},
 			});
 
-			await renderSuspended(HotWaterOutlets, {
-				route: { params: { "hotWaterOutlet": "0" } },
-			});
+			await renderSuspended(HotWaterOutlets, { route: hotWaterOutletRoute("0") });
 
 			await user.type(screen.getByTestId("name"), " Changed");
 			await user.tab();

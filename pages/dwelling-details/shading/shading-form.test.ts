@@ -1,13 +1,19 @@
-import ShadingForm from "./[shading].vue";
-import type { ShadingData } from "~/stores/ecaasStore.schema";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
+import type { ShadingData } from "~/stores/ecaasStore.schema";
+import ShadingForm from "./[shading].vue";
+
+const navigateToMock = vi.hoisted(() => vi.fn());
 
 describe("shading form", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	const shading1: ShadingData = {
 		name: "Big Tree",
@@ -165,12 +171,14 @@ describe("shading form", () => {
 		await user.clear(screen.getByTestId("name"));
 
 		await user.type(screen.getByTestId("name"), "Small Tree");
-		await user.type(screen.getByTestId("startAngle"), "10");
+		await user.clear(screen.getByTestId("startAngle"));
+		await user.type(screen.getByTestId("startAngle"), "20");
+		await user.tab();
 
 		const { data } = store.dwellingDetails.shading;
 
 		expect(data[0]?.data.name).toBe("Small Tree");
-		expect(data[0]?.data.startAngle).toBe(10);
+		expect(data[0]?.data.startAngle).toBe(20);
 	});
 	
 	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
@@ -181,6 +189,8 @@ describe("shading form", () => {
 		});
 		
 		await user.type(screen.getByTestId("startAngle"), "10");
+		await user.tab();
+
 		await user.type(screen.getByTestId("endAngle"), "20");
 		await user.tab();
 

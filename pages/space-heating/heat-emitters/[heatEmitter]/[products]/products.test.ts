@@ -1,19 +1,28 @@
-import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import Products from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
+import Products from "./index.vue";
+
+const SPACE_HEATING_HEAT_EMITTERS_PATH = "/space-heating/heat-emitters";
+
+const { mockFetch, mockRoute } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+}));
 
 describe("Heat emitter products page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-	}));
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(SPACE_HEATING_HEAT_EMITTERS_PATH, mockRoute));
 
 	afterEach(() => {
 		mockFetch.mockReset();
@@ -219,7 +228,9 @@ describe("Heat emitter products page", () => {
 		});
 		await renderSuspended(Products);
 
-		expect(screen.getByRole("link", { name: "More details" }).getAttribute("href")).toBe("/0/electric-storage-heater/1000?emitterIndex=0");
+		expect(screen.getByRole("link", { name: "More details" })
+			.getAttribute("href"))
+			.toBe(`${SPACE_HEATING_HEAT_EMITTERS_PATH}/0/electric-storage-heater/1000?emitterIndex=0`);
 	});
 
 	test("'Back to heat emitters' navigates user to the heat source at the correct index", async () => {

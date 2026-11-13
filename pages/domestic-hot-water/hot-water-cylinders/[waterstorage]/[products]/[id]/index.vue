@@ -49,7 +49,7 @@ const selectProduct = () => {
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<WaterStorageProductDetailsPage :product="(data as Product)" :water-storage-type="waterStorageType" />
+	<WaterStorageProductDetailsPage v-if="waterStorageType" :product="(data as Product)" :water-storage-type="waterStorageType" />
 
 	<div class="govuk-button-group">
 		<GovButton

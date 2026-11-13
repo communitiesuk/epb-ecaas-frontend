@@ -20,12 +20,30 @@ function isEmptyValue(value: unknown): boolean {
 	return false;
 }
 
+export function formatValidationMessage(message: string): string {
+	const trimmedMessage = message.trim();
+
+	if (/\?\s+is required\.$/.test(trimmedMessage)) {
+		return trimmedMessage.replace(/\.$/, "");
+	}
+
+	const sentenceCount = (
+		trimmedMessage.match(/[.!?](?=\s|$)/g) ?? []
+	).length;
+
+	if (sentenceCount <= 1) {
+		return trimmedMessage.replace(/\.$/, "");
+	}
+
+	return trimmedMessage;
+}
+
 export const unitValidationMessages = {
-	zodUnitNumber: ({ name }: ValidationMessageContext) => `${name} must be a number.`,
-	zodUnitMin: ({ name, args }: ValidationMessageContext) => `${name} must be no less than ${args[0]}.`,
-	zodUnitMax: ({ name, args }: ValidationMessageContext) => `${name} must be no more than ${args[0]}.`,
-	zodUnitGreaterThan: ({ name, args }: ValidationMessageContext) => `${name} must be greater than ${args[0]}.`,
-	zodUnitLessThan: ({ name, args }: ValidationMessageContext) => `${name} must be less than ${args[0]}.`,
+	zodUnitNumber: ({ name }: ValidationMessageContext) => `${name} must be a number`,
+	zodUnitMin: ({ name, args }: ValidationMessageContext) => `${name} must be no less than ${args[0]}`,
+	zodUnitMax: ({ name, args }: ValidationMessageContext) => `${name} must be no more than ${args[0]}`,
+	zodUnitGreaterThan: ({ name, args }: ValidationMessageContext) => `${name} must be greater than ${args[0]}`,
+	zodUnitLessThan: ({ name, args }: ValidationMessageContext) => `${name} must be less than ${args[0]}`,
 };
 
 export const unitValidationRules = {

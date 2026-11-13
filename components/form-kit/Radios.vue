@@ -6,6 +6,10 @@ export type RadioOption = {
 	label: string;
 	hint?: string;
 	disabled?: boolean;
+	conditionalInput?: {
+		label: string;
+		type: string;
+	}
 };
 
 const props = defineProps<{
@@ -54,5 +58,8 @@ const optionsMap = computed(() => {
 		:disabled="disabled"
 	>
 		<slot />
+		<template #conditionalOption="{ option }">
+			<slot name="conditionalOption" :option="option" />
+		</template>
 	</GovRadios>
 </template>

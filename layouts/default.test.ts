@@ -1,9 +1,13 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import DefaultPage from "./default.vue";
 import { screen } from "@testing-library/vue";
+import DefaultPage from "./default.vue";
 
 describe("nav bar with ductwork", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",

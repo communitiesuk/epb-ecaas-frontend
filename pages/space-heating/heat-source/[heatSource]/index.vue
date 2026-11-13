@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { heatSourceTypesWithDisplay } from "~/utils/display";
-import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
-import { hasPackagedProduct } from "~/utils/products";
+import { v4 as uuidv4 } from "uuid";
 import PackagedProductInset from "~/components/PackagedProductInset.vue";
-import type { ErrorName } from "~/errors.types";
 import { useHeatSources } from "~/composables/heatSources";
+import type { ErrorName } from "~/errors.types";
+import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
+import { heatSourceTypesWithDisplay } from "~/utils/display";
+import { hasPackagedProduct } from "~/utils/products";
 
 const title = "Heat source";
 const store = useEcaasStore();
 const route = useRoute();
+const { handleInvalidSubmit, errorMessages, addError, clearErrors } = useErrorSummary();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 const { createWaterCylinder } = useHeatSources();
@@ -44,13 +45,39 @@ export type HeatInterfaceUnitModelType = Extract<HeatSourceData, { typeOfHeatSou
 
 const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
+const incompatibleEnergySource = ref(false);
+const incompatibleEnergySourceFuel = ref<string | undefined>();
 
 if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
 	packagedProduct.value = packagedProductData ?? undefined;
 }
 
+const addIncompatibleEnergySourceError = () => {
+	if (!incompatibleEnergySource.value) return;
+
+	addError({
+		id: "incompatibleEnergySource",
+		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn't been added as an energy source for this dwelling. To change this go to General details.`,		
+	});
+};
+
+const handleSubmitInvalid = (node: FormKitNode) => {
+	handleInvalidSubmit(node);
+	addIncompatibleEnergySourceError();
+
+	window.scrollTo(0, 0);
+};
+
 const saveForm = () => {
+	clearErrors();
+
+	if (incompatibleEnergySource.value) {
+		addIncompatibleEnergySourceError();
+		window.scrollTo(0, 0);
+		return;
+	}
+
 	store.$patch((state) => {
 		const { heatSource } = state.spaceHeating;
 		const heatSourceItem = heatSource.data[index];
@@ -58,8 +85,8 @@ const saveForm = () => {
 		if (!heatSourceItem) {
 			throw new Error("No heat source found to save");
 		}
-		
-		heatSource.data[index]!.complete = true;
+
+		heatSourceItem.complete = true;
 		heatSource.complete = false;
 	});
 
@@ -144,6 +171,11 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
+function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
+	incompatibleEnergySource.value = value;
+	incompatibleEnergySourceFuel.value = fuel;
+}
+
 const heatNetwork = computed(() => store.spaceHeating.heatNetworks.data[0]?.data);
 
 function isCommunalHeatNetworkWithoutBoosterHeatPump() {
@@ -201,7 +233,6 @@ const boilers = heatSourceStoreData
 
 const { mounted } = useMounted();
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -238,7 +269,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit">
+		@submit-invalid="handleSubmitInvalid">
 		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary" />
 		<FormKit
 			id="typeOfHeatSource"
@@ -258,6 +289,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:boilers="boilers"
 				add-boiler-page-id="heatSourceCreate"
 				page="space heating"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
 				@update-heat-pump-model="updateHeatSource"
 				@product-loaded="handleProductLoaded"
 			/>
@@ -267,14 +299,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:model="(model as BoilerModelType)"
 			:index="index"
 			page="space heating"
+			:on-incompatible-energy-source="handleIncompatibleEnergySource"
 			@update-boiler-model="updateHeatSource"
-			@product-loaded="handleProductLoaded"
-		/>
+			@product-loaded="handleProductLoaded"		/>
 		<HeatBatterySection
 			v-if="mounted && model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
 			page="space heating"
+			:on-incompatible-energy-source="handleIncompatibleEnergySource"
 			@update-heat-battery-model="updateHeatSource"
 			@product-loaded="handleProductLoaded"
 		/>

@@ -1,15 +1,22 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import userEvent from "@testing-library/user-event";
-import Windows from "./index.vue";
-import WindowsForm from "./[window].vue";
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
+import { millimetresSquare } from "~/utils/units/area.js";
+import WindowsForm from "./[window].vue";
+import Windows from "./index.vue";
+
+const navigateToMock = vi.hoisted(() => vi.fn());
 
 describe("windows", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -42,7 +49,6 @@ describe("windows", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.2,
 			curtainsOrBlinds: false,
 			securityRisk: false,
@@ -150,7 +156,7 @@ describe("windows", () => {
 			data: {
 				name: "Vent 1",
 				associatedItemId: window2.data.id,
-				effectiveVentilationArea: 10,
+				effectiveVentilationArea: unitValue(10, millimetresSquare),
 				openingRatio: 1,
 				midHeightOfZone: 1,
 				hasAssociatedItem: true,
@@ -228,9 +234,9 @@ describe("windows", () => {
 		);
 	});
 
-	describe("Mark section as complete", () => {
+	describe("Mark as complete", () => {
 
-		test("disables the Mark section as complete button when window element is incomplete", async () => {
+		test("disables the Mark as complete button when window element is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {
@@ -243,7 +249,7 @@ describe("windows", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
-		test("enables the Mark section as complete button when all window items are complete", async () => {
+		test("enables the Mark as complete button when all window items are complete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {

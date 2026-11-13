@@ -9,9 +9,7 @@ const { onError } = defineProps<{ onError: (errors?: CorrectedJsonApiError[] | b
 const store = useEcaasStore();
 const calculatePending = ref(false);
 
-const formIsComplete = hasCompleteState(store.$state);
-
-const isDisabled = calculatePending.value || !formIsComplete;
+const isDisabled = computed(() => calculatePending.value || !hasCompleteState(store.$state));
 
 const emit = defineEmits<{
 	loading: [],
@@ -23,33 +21,33 @@ const calculate = async () => {
 	let calculateError: CorrectedJsonApiError[] | boolean | undefined;
 
 	try {
-		const inputPayload = mapFhsInputData(resolveState(store.$state));
-
-		console.log(JSON.stringify(inputPayload));
-
-		// nix the stored lastResult before sending a request
 		store.$patch({
 			lastResult: undefined,
 		});
 
-		const response = await $fetch<FhsComplianceResponseIncludingErrors>("/api/check-compliance", {
-			method: "POST",
-			body: inputPayload,
-			async onRequest() {
-				emit("loading");
-			},
-		});
+		const inputPayload = mapFhsInputData(resolveState(store.$state));
 
-		console.log("Compliance check response", response);
+		const response = await $fetch<FhsComplianceResponseIncludingErrors>(
+			"/api/check-compliance",
+			{
+				method: "POST",
+				body: inputPayload,
+				async onRequest() {
+					emit("loading");
+				},
+			},
+		);
 
 		store.$patch({
-			lastResult: (!("errors" in response)) ? {
-				resultType: "ok",
-				response: response.data,
-			} : {
-				resultType: "err",
-				errors: response.errors,
-			},
+			lastResult: !("errors" in response)
+				? {
+					resultType: "ok",
+					response: response.data,
+				}
+				: {
+					resultType: "err",
+					errors: response.errors,
+				},
 		});
 
 		if ("errors" in response) {
@@ -79,6 +77,7 @@ const calculate = async () => {
 
 	navigateTo("/outputs");
 };
+
 </script>
 
 <template>

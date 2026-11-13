@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
 import type { SchemaWaterPipeContentsType } from "~/schema/aliases";
-import { tankPrimaryPipeworkLengthZod } from "~/stores/ecaasStore.schema";
+import { pipeworkDiameterZod, tankPrimaryPipeworkLengthZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -134,7 +134,7 @@ const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterS
 			label="Internal diameter of pipework"
 			help="Enter the nominal internal width of the pipe. Typically between 13 and 25mm."
 			name="internalDiameter"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(pipeworkDiameterZod)"
 			suffix-text="mm"
 			data-field="HotWaterSource['hw cylinder'].pipework.*.internal_diameter_mm" />
 		<FormKit
@@ -143,7 +143,7 @@ const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterS
 			label="External diameter of pipework"
 			help="Enter the nominal external width of the pipe. Typically between 15 and 28mm."
 			name="externalDiameter"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(pipeworkDiameterZod)"
 			suffix-text="mm"
 			data-field="HotWaterSource['hw cylinder'].pipework.*.external_diameter_mm" />
 		<FormKit
@@ -159,7 +159,7 @@ const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterS
 			id="insulationThickness"
 			type="govInputWithSuffix"
 			label="Insulation thickness"
-			help="Enter the thickness of insulation around the pipe. Typically 13-25mm or 32mm plus for high performance or external pipework"
+			help="Enter the thickness of insulation around the pipe. Typically 13-25mm or 32mm plus for high performance or external pipework."
 			name="insulationThickness"
 			validation="required | number"
 			suffix-text="mm"

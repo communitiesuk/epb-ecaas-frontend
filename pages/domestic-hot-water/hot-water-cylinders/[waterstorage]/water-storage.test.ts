@@ -1,11 +1,15 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import WaterStorage from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
-import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
+import { litre } from "~/utils/units/volume";
+import WaterStorage from "./index.vue";
+
+// The router only resolves links against full page paths
+// so to prevent validation warnings we use full path routes rather than params
+const waterStorageRoute = (index: string) => `/domestic-hot-water/hot-water-cylinders/${index}`;
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -18,7 +22,12 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 vi.mock("uuid");
 
 describe("water storage", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
@@ -243,11 +252,7 @@ describe("water storage", () => {
 			});
 
 			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			expect(
 				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_hotWaterCylinder`)).checked,
@@ -286,6 +291,26 @@ describe("water storage", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 				.toBe("Standard water cylinder");
 		});
+
+		test("area of heat exchanger field is hidden when value is populated from the PCDB", async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [{
+							...hotWaterCylinder,
+							data: {
+								...hotWaterCylinder.data,
+								areaOfHeatExchangerInPcdb: true,
+							},
+						}],
+					},
+				},
+			});
+			
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
+
+			expect(screen.queryByTestId("areaOfHeatExchanger")).toBeNull();
+		});
 	});
 
 	describe("Smart Hot Water Tank", () => {
@@ -299,7 +324,7 @@ describe("water storage", () => {
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/smart-hot-water-tank");
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-cylinders/0/smart-hot-water-tank");
 		});
 
 		test("data is saved to store state when form is valid", async () => {
@@ -318,11 +343,7 @@ describe("water storage", () => {
 					.productReference = "42";
 			});
 
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -350,11 +371,7 @@ describe("water storage", () => {
 			});
 
 			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			expect(
 				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_smartHotWaterTank`))
@@ -388,11 +405,7 @@ describe("water storage", () => {
 					.productReference = "42";
 			});
 
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { waterStorage: "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			navigateToMock.mockClear();
 
@@ -432,11 +445,7 @@ describe("water storage", () => {
 
 			addHeatPumpStoreData();
 	
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterstorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 	
 			expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 		});

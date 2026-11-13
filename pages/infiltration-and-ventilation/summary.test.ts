@@ -1,15 +1,15 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
-import Summary from "./summary.vue";
-import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
-import { centimetresSquare, metresSquare } from "~/utils/units/area";
-import { metre, millimetre } from "~/utils/units/length";
-import { degrees } from "~/utils/units/angle";
-import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
-import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
+import { screen } from "@testing-library/vue";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
+import { degrees } from "~/utils/units/angle";
+import { metresSquare, millimetresSquare } from "~/utils/units/area";
+import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
+import { metre, millimetre } from "~/utils/units/length";
+import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
+import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
+import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
+import Summary from "./summary.vue";
 
 vi.mock("uuid");
 
@@ -139,6 +139,18 @@ const ductworkData: DuctworkData = {
 	surfaceReflectivity: true,
 };
 
+const ductworkData2: DuctworkData = {
+	name: "Ducktwork 2",
+	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+	ductworkCrossSectionalShape: "rectangular",
+	ductType: "intake",
+	internalPerimeterOfDuctwork: 1000,
+	insulationThickness: 100,
+	lengthOfDuctwork: 100,
+	thermalInsulationConductivityOfDuctwork: 10,
+	surfaceReflectivity: true,
+};
+
 const externalWall: ExternalWallData = {
 	id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
 	name: "External wall 1",
@@ -165,7 +177,7 @@ const roof: Partial<RoofData> = {
 const ventData: VentData = {
 	name: "Vent 1",
 	associatedItemId: externalWall.id,
-	effectiveVentilationArea: 10,
+	effectiveVentilationArea: unitValue(10, millimetresSquare),
 	openingRatio: 1,
 	midHeightOfZone: 1,
 	hasAssociatedItem: true,
@@ -184,9 +196,10 @@ const airPermeabilityData: AirPermeabilityData = {
 };
 
 describe("Infiltration and ventilation summary", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		mockFetch.mockReset();
 		mockBatchFetchProducts(mockFetch, "Vent Product");
 	});
@@ -253,10 +266,8 @@ describe("Infiltration and ventilation summary", () => {
 						data: [{ data: externalWall }],
 					},
 				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof as RoofData }],
-					},
+				dwellingSpaceRoofs: {
+					data: [{ data: roof as RoofData }],
 				},
 			},
 			infiltrationAndVentilation: {
@@ -337,10 +348,8 @@ describe("Infiltration and ventilation summary", () => {
 						data: [{ data: externalWall }],
 					},
 				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof as RoofData }],
-					},
+				dwellingSpaceRoofs: {
+					data: [{ data: roof as RoofData }],
 				},
 			},
 			infiltrationAndVentilation: {
@@ -444,10 +453,8 @@ describe("Infiltration and ventilation summary", () => {
 	it("should display associated roof orientation and pitch for Intermittent MEV", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof }],
-					},
+				dwellingSpaceRoofs: {
+					data: [{ data: roof }],
 				},
 			},
 			infiltrationAndVentilation: {
@@ -698,6 +705,44 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
+	it("should display the correct data for the ductwork section if cross sectional shape is rectangular", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: { ...mvhrData, typeOfMechanicalVentilationOptions: "Centralised MV" } },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData2 },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Ducktwork 2",
+			"MVHR or centralised MV unit": "Mechanical name 1",
+			"Duct type": "Intake",
+			"Ductwork cross sectional shape": "Rectangular",
+			"Internal perimeter of ductwork": `1000 ${millimetre.suffix}`,
+			"Length of ductwork": `100 ${metre.suffix}`,
+			"Insulation thickness": `100 ${millimetre.suffix}`,
+			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": "Reflective",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+
+			const lineResult = (await screen.findByTestId(`summary-ductwork-${hyphenate(key)}`));
+
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
 	it("should not display the ductwork section when there are no mechanical ventilations created of type mvhr or centralised mv", async () => {
 		const user = userEvent.setup();
 		store.$patch({
@@ -742,7 +787,7 @@ describe("Infiltration and ventilation summary", () => {
 		const expectedResult = {
 			Name: "Vent 1",
 			"Associated wall or window": "External wall 1 (Wall)",
-			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
+			"Effective ventilation area": `10 ${millimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
 			Pitch: `90 ${degrees.suffix}`,
@@ -779,7 +824,7 @@ describe("Infiltration and ventilation summary", () => {
 		const expectedResult = {
 			Name: "Vent 1",
 			"Associated wall or window": "-",
-			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
+			"Effective ventilation area": `10 ${millimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
 			Pitch: `90 ${degrees.suffix}`,
@@ -875,7 +920,82 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
-	it("should display the correct data for the air permeability section", async () => {
+	it("should display the correct data for the air permeability section with smart air bricks open during air tightness test as true", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						data: [{ data: {
+							typeOfGroundFloor: "Suspended_floor",
+							smartAirBricks: true,
+						} as Partial<GroundFloorData>,
+						}],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: {
+						...airPermeabilityData,
+						smartAirBricksOpen: true, 
+					},
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of infiltration pressure test": "Blower door (test pressure is 50Pa)",
+			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
+			"Were the smart air bricks open during the air tightness test?": "Yes",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the air permeability section with smart air bricks open during air tightness test as false", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						data: [{ data: {
+							typeOfGroundFloor: "Suspended_floor",
+							smartAirBricks: true,
+						} as Partial<GroundFloorData>,
+						}],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: {
+						...airPermeabilityData,
+						smartAirBricksOpen: false, 
+					},
+				},
+			},
+		});
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of infiltration pressure test": "Blower door (test pressure is 50Pa)",
+			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
+			"Were the smart air bricks open during the air tightness test?": "No",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the air permeability section if there are no smart air bricks at all", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {

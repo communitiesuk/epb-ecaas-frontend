@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { getErrorMessage, getUrl, hasModelDetails, isPackagedProduct, showErrorState, type HeatSourceData, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { isBoilerProduct } from "~/utils/boiler";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
-import { heatPumpTypes } from "~/utils/display";
+import { displayFuelType, heatPumpTypes } from "~/utils/display";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 
 const store = useEcaasStore();
@@ -25,6 +26,8 @@ const {
 		"page-index": index,
 		"emitter-index": emitterIndex,
 		"on-product-loaded": onProductLoaded,
+		"on-incompatible-energy-source": onIncompatibleEnergySource,
+		"show-incompatible-energy-source-error": showIncompatibleEnergySourceErrorProp,
 		"on-choose-product": onChooseProduct,
 	},
 	node: { props: { disabled } },
@@ -33,7 +36,10 @@ const {
 async function fetchProduct(reference: string) {
 	const response = await useFetch<AnyPcdbProduct>(`/api/products/${reference}`);
 	productData.value = response?.data?.value;
-	onProductLoaded?.(productData.value);
+
+	if (productData.value) {
+		onProductLoaded?.(productData.value);
+	}
 }
 
 function buildProductsPageUrl(url: string, index: number | undefined, productType: string, emitterIndex?: number) {
@@ -89,6 +95,55 @@ watch(props.context, async ({ attrs: {
 
 	productData.value = undefined;
 });
+
+function getProductFuel(product: AnyPcdbProduct | undefined | null) {
+	
+	if (!product || !("fuel" in product)) {
+		return undefined;
+	}
+
+	return product.fuel;
+}
+
+const productFuelDisplay = computed(() => {
+	const fuel = getProductFuel(productData.value);
+
+	return fuel ? displayFuelType(fuel) : undefined;
+});
+
+const incompatibleEnergySource = computed(() => {
+	const fuel = getProductFuel(productData.value);
+
+	if (!fuel || fuel === "electricity") {
+		return false;
+	}
+
+	const dwellingFuelTypes =
+		store.dwellingDetails.generalSpecifications.data?.fuelType ?? [];
+
+	return !dwellingFuelTypes.includes(fuel);
+});
+
+const showIncompatibleEnergySourceError = computed(() =>
+	incompatibleEnergySource.value &&
+	(
+		props.context.state.submitted ||
+		showIncompatibleEnergySourceErrorProp
+	),
+);
+
+watch(
+	incompatibleEnergySource,
+	(value) => {
+		const fuel = getProductFuel(productData.value);
+
+		onIncompatibleEnergySource?.(
+			value,
+			fuel ? displayFuelType(fuel) : undefined,
+		);
+	},
+	{ immediate: true },
+);
 
 const isHeatPumpSummary = computed(() => isHeatPump(heatSource));
 const isBoilerSummary = computed(() => heatSource?.typeOfHeatSource === "boiler");
@@ -237,11 +292,30 @@ function handleChooseProduct(event: Event) {
 
 <template>
 	<div class="govuk-form-group">
-		<div :data-testid="id" :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
+		<div
+			:data-testid="id"
+			:class="`govuk-form-group ${
+				showErrorState(props.context) || showIncompatibleEnergySourceError
+					? 'govuk-form-group--error'
+					: ''
+			}`">
 			<label class="govuk-label govuk-label--m">
 				{{ label }}
 			</label>
 			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">{{ help }}</div>
+			<p
+				v-if="showIncompatibleEnergySourceError"
+				id="incompatibleEnergySource"
+				class="govuk-error-message"
+				data-testid="incompatibleEnergySourceError"
+			>
+				<span class="govuk-visually-hidden">Error:</span>
+				This product uses {{ productFuelDisplay }} which hasn't been added as an energy source for this dwelling.
+				To change this go to
+				<NuxtLink :href="getUrl('generalSpecifications')" class="govuk-link govuk-error-link">
+					General details
+				</NuxtLink>.
+			</p>
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
@@ -276,6 +350,11 @@ function handleChooseProduct(event: Event) {
 							<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>
 							<li>Model: <span class="bold">{{ productData.modelName }}</span></li>
 							<li>Model Qualifier: <span class="bold">{{ productData.modelQualifier ?? '-' }}</span></li>
+
+							<li v-if="isBoilerProduct(productData)">
+								Fuel: <span class="bold">{{ productFuelDisplay ?? '-' }}</span>
+							</li>
+
 							<li v-if="isHeatPumpSummary">Heat pump type: <span class="bold" data-testid="productData_heatPumpType">{{ getHeatPumpType() }}</span></li>
 							<li v-if="isHeatPumpSummary || isBoilerSummary || isMechanicalVentilationSummary">Packaged products: <span class="bold" data-testid="productData_packagedProducts">{{ getPackagedProductType() }}</span></li>
 						</template>
@@ -311,5 +390,9 @@ govuk-list {
 .more-details-link {
 	font-size: 1.1875rem;
 	line-height: 1.3157894737;
+}
+
+.govuk-error-link {
+	color: inherit;
 }
 </style>

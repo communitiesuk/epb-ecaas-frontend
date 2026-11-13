@@ -39,9 +39,14 @@ const saveForm = (fields: DuctworkData) => {
 			lengthOfDuctwork: fields.lengthOfDuctwork,
 			thermalInsulationConductivityOfDuctwork: fields.thermalInsulationConductivityOfDuctwork,
 			surfaceReflectivity: fields.surfaceReflectivity,
-			ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
-			internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
-			externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
+			...(fields.ductworkCrossSectionalShape === "circular" ? {
+				ductworkCrossSectionalShape: "circular",
+				internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
+				externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
+			} : {
+				ductworkCrossSectionalShape: "rectangular",
+				internalPerimeterOfDuctwork: fields.internalPerimeterOfDuctwork,
+			}),
 		};
 
 		ductwork.data[index] = {
@@ -157,24 +162,39 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.cross_section_shape	"
 		/>
+		<template v-if="model?.ductworkCrossSectionalShape && model.ductworkCrossSectionalShape === 'circular'">
+			<FormKit
+				id="internalDiameterOfDuctwork"
+				type="govInputWithSuffix"
+				suffix-text="mm"
+				label="Internal diameter of ductwork"
+				name="internalDiameterOfDuctwork"
+				help="Enter the average inner diameter of the duct. Typically between 60mm and 175mm."
+				validation="required | number | min:0 | max:1000"
+				data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm"
+			/>
+			<FormKit
+				id="externalDiameterOfDuctwork"
+				type="govInputWithSuffix"
+				suffix-text="mm"
+				label="External diameter of ductwork"
+				name="externalDiameterOfDuctwork"
+				help="Enter the average outer diameter of the duct. Typically between 75mm and 200mm."
+				validation="required | number | min:0 | max:1000"
+				data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm"
+			/>
+		</template>
 		<FormKit
-			id="internalDiameterOfDuctwork"
+			v-if="model?.ductworkCrossSectionalShape && model.ductworkCrossSectionalShape === 'rectangular'"
+			id="internalPerimeterOfDuctwork"
 			type="govInputWithSuffix"
 			suffix-text="mm"
-			label="Internal diameter of ductwork"
-			name="internalDiameterOfDuctwork"
-			help="Enter the average inner diameter of the duct. Typically between 60mm and 175mm."
+			label="Internal perimeter of ductwork"
+			name="internalPerimeterOfDuctwork"
+			help="Enter the average inner perimeter of the cross section of the duct"
 			validation="required | number | min:0 | max:1000"
-			data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm" />
-		<FormKit
-			id="externalDiameterOfDuctwork"
-			type="govInputWithSuffix"
-			suffix-text="mm"
-			label="External diameter of ductwork"
-			name="externalDiameterOfDuctwork"
-			help="Enter the average outer diameter of the duct. Typically between 75mm and 200mm."
-			validation="required | number | min:0 | max:1000"
-			data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm" />
+			data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm"
+		/>
 		<FormKit
 			id="lengthOfDuctwork"
 			type="govInputWithSuffix"

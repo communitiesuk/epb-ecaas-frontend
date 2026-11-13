@@ -1,10 +1,10 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
-import { mapFhsInputData } from "~/mapping/fhsInputMapper";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { FhsInputSchema } from "~/mapping/fhsInputMapper";
+import { mapFhsInputData } from "~/mapping/fhsInputMapper";
 import type { FhsComplianceResponseIncludingErrors } from "~/server/server.types";
 import Index from "./index.vue";
-import { screen } from "@testing-library/vue";
-import userEvent from "@testing-library/user-event";
 
 const mocks = vi.hoisted(() => {
 	return {
@@ -22,20 +22,39 @@ vi.mock("~/mapping/fhsInputMapper", () => {
 
 vi.mock(import("~/stores/ecaasStore"), async (importOriginal) => {
 	const actual = await importOriginal();
+
 	return {
 		...actual,
-		hasCompleteState: vi.fn(),
+		hasCompleteState: mocks.hasCompleteState,
 	};
 });
 
-vi.stubGlobal("$fetch", mocks.$fetch);
+mockNuxtImport("$fetch", () => mocks.$fetch);
+
+vi.mocked(hasCompleteState).mockReturnValue(true);
 
 describe("Homepage", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
-	it("shows error summary when client error has occurred", async () => {
-		vi.mocked(hasCompleteState).mockReturnValue(true);
+	beforeEach(() => {
+		vi.clearAllMocks();
 
+		mocks.$fetch.mockResolvedValue({
+			data: {},
+		});
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
+	it("shows error summary when client error has occurred", async () => {
 		vi.mocked(mapFhsInputData).mockImplementation(() => {
 			throw Error("Mapping error");
 		});
@@ -72,20 +91,18 @@ describe("Homepage", () => {
 			return {} as FhsInputSchema;
 		});
 
-		vi.mocked(global.$fetch<FhsComplianceResponseIncludingErrors>).mockReturnValue(new Promise((resolve) => {
-			resolve({
-				errors: [{
-					id: "testId",
-					detail: "API error",
-				}],
-				meta: {
-					hem_version: "",
-					hem_version_date: "",
-					fhs_version: "",
-					fhs_version_date: "",
-				},
-			});
-		}));
+		mocks.$fetch.mockResolvedValue({
+			errors: [{
+				id: "testId",
+				detail: "API error",
+			}],
+			meta: {
+				hem_version: "",
+				hem_version_date: "",
+				fhs_version: "",
+				fhs_version_date: "",
+			},
+		} satisfies FhsComplianceResponseIncludingErrors);
 
 		await renderSuspended(Index);
 

@@ -1,0 +1,523 @@
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
+import { screen, within } from "@testing-library/vue";
+import { v4 as uuidv4 } from "uuid";
+import { unitValue } from "~/utils/units";
+import { metre, millimetre } from "~/utils/units/length";
+import GroundFloor from "./[floor].vue";
+
+vi.mock("uuid");
+
+const navigateToMock = vi.hoisted(() => vi.fn());
+mockNuxtImport("navigateTo", () => {
+	return navigateToMock;
+});
+
+const user = userEvent.setup();
+
+const groundFloor = {
+	id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
+	name: "Ground 1",
+	surfaceArea: 5,
+	totalArea: 7,
+	uValue: 1,
+	thermalResistance: 1,
+	arealHeatCapacity: "Very light",
+	massDistributionClass: "I",
+	perimeter: 0,
+	thicknessOfWalls: unitValue(80, millimetre),
+	typeOfGroundFloor: "Slab_no_edge_insulation",
+} as const satisfies GroundFloorData;
+
+const groundFloorWithHorizontalEdgeInsulation = {
+	...groundFloor,
+	typeOfGroundFloor: "Slab_edge_insulation",
+	edgeInsulationType: ["horizontal"] as ["horizontal"],
+	horizontalEdgeInsulationWidth: unitValue(1, metre),
+	horizontalEdgeInsulationThermalResistance: 0,
+} as const satisfies GroundFloorData;
+
+const groundFloorWithVerticalEdgeInsulation = {
+	...groundFloor,
+	typeOfGroundFloor: "Slab_edge_insulation",
+	edgeInsulationType: ["vertical"] as ["vertical"],
+	verticalEdgeInsulationDepth: unitValue(1, metre),
+	verticalEdgeInsulationThermalResistance: 0,
+} as const satisfies GroundFloorData;
+
+const groundFloorWithCombinedEdgeInsulation = {
+	...groundFloor,
+	typeOfGroundFloor: "Slab_edge_insulation",
+	edgeInsulationType: ["horizontal", "vertical"] as ["horizontal", "vertical"],
+	horizontalEdgeInsulationWidth: unitValue(1, metre),
+	horizontalEdgeInsulationThermalResistance: 0,
+	verticalEdgeInsulationDepth: unitValue(1, metre),
+	verticalEdgeInsulationThermalResistance: 0,
+} as const satisfies GroundFloorData;
+
+const groundFloorWithSuspendedFloor = {
+	...groundFloor,
+	typeOfGroundFloor: "Suspended_floor",
+	heightOfFloorUpperSurface: 0,
+	underfloorSpaceThermalResistance: 0,
+	thermalTransmittanceOfWallsAboveGround: 0,
+	ventilationOpeningsArea: 0,
+	smartAirBricks: true,
+} as const satisfies GroundFloorData;
+
+vi.mocked(uuidv4).mockReturnValue(groundFloor.id as unknown as Buffer);
+
+describe("ground floor", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
+	const populateValidForm = async () => {
+		await user.type(screen.getByTestId("name"), "Ground 1");
+		await user.type(screen.getByTestId("surfaceArea"), "5");
+		await user.type(screen.getByTestId("totalArea"), "7");
+		await user.type(screen.getByTestId("uValue"), "1");
+		await user.type(screen.getByTestId("thermalResistance"), "1");
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
+		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.type(screen.getByTestId("perimeter"), "0");
+		await user.type(screen.getByTestId("thicknessOfWalls"), "80");
+		await user.click(screen.getByTestId("typeOfGroundFloor_Slab_no_edge_insulation"));
+	};
+
+	describe("when type of ground floor is slab no edge insulation", () => {
+		test("data is saved to store state and marked as complete when form is valid", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" },
+				},
+			});
+
+			await populateValidForm();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const actual = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[0];
+			expect(actual?.data).toEqual(groundFloor);
+			expect(actual?.complete).toBe(true);
+		});
+
+		test("form is prepopulated when data exists in state", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloor }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "0" },
+				},
+			});
+
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ground 1");
+			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
+			expect((await screen.findByTestId<HTMLInputElement>("totalArea")).value).toBe("7");
+			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
+			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("perimeter")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("80");
+			expect((await screen.findByTestId("typeOfGroundFloor_Slab_no_edge_insulation")).hasAttribute("checked")).toBe(true);
+		});
+
+		test("required error messages are displayed when empty form is submitted", async () => {
+			await renderSuspended(GroundFloor);
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect((await screen.findByTestId("name_error"))).toBeDefined();
+			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("totalArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
+			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
+			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
+			expect((await screen.findByTestId("perimeter_error"))).toBeDefined();
+			expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
+			expect((await screen.findByTestId("typeOfGroundFloor_error"))).toBeDefined();
+		});
+
+		test("floor areal heat capacity table is displayed in help with input dropdown", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" },
+				},
+			});
+
+			const table = screen.getByTestId("floorArealHeatCapacityTable");
+
+			expect(table).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity")).toBeDefined();
+			expect(within(table).getByText("Type of construction layer")).toBeDefined();
+		});
+	});
+
+	describe("when type of ground floor is slab edge insulation", () => {
+		test("data is saved to store state and marked as complete when form is valid", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" },
+				},
+			});
+			await populateValidForm();
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
+			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
+			await user.type(screen.getByTestId("horizontalEdgeInsulationWidth"), "1");
+			await user.type(screen.getByTestId("horizontalEdgeInsulationThermalResistance"), "0");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const actual = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[0];
+			expect(actual?.data).toEqual(groundFloorWithHorizontalEdgeInsulation);
+			expect(actual?.complete).toBe(true);
+		});
+
+		test("form is prepopulated with horizontal edge insulation when data exists in state", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithHorizontalEdgeInsulation }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "0" },
+				},
+			});
+
+			expect((await screen.findByTestId("typeOfGroundFloor_Slab_edge_insulation")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("edgeInsulationType_horizontal")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("edgeInsulationType_vertical")).hasAttribute("checked")).toBe(false);
+			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationWidth")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationThermalResistance")).value).toBe("0");
+		});
+
+		test("form is prepopulated with vertical edge insulation when data exists in state", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithVerticalEdgeInsulation }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "0" },
+				},
+			});
+
+			expect((await screen.findByTestId("typeOfGroundFloor_Slab_edge_insulation")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("edgeInsulationType_horizontal")).hasAttribute("checked")).toBe(false);
+			expect((await screen.findByTestId("edgeInsulationType_vertical")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationDepth")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationThermalResistance")).value).toBe("0");
+		});
+
+		test("form is prepopulated with horizontal and vertical edge insulation when data exists in state", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithCombinedEdgeInsulation }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "0" },
+				},
+			});
+
+			expect((await screen.findByTestId("typeOfGroundFloor_Slab_edge_insulation")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("edgeInsulationType_horizontal")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("edgeInsulationType_vertical")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationWidth")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationThermalResistance")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationDepth")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationThermalResistance")).value).toBe("0");
+		});
+
+		test("required error messages are displayed when empty form is submitted", async () => {
+			await renderSuspended(GroundFloor);
+
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect((await screen.findByTestId("edgeInsulationType_error"))).toBeDefined();
+		});
+		test("edge insulation fields are conditionally displayed based on edge insulation type selected", async () => {
+			await renderSuspended(GroundFloor);
+
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
+			expect(screen.queryByTestId("edgeInsulationWidth")).toBeNull();
+			expect(screen.queryByTestId("edgeInsulationThermalResistance")).toBeNull();
+
+			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
+			expect(screen.queryByTestId("horizontalEdgeInsulationWidth")).toBeDefined();
+			expect(screen.queryByTestId("horizontalEdgeInsulationThermalResistance")).toBeDefined();
+			expect(screen.queryByTestId("verticalEdgeInsulationDepth")).toBeNull();
+			expect(screen.queryByTestId("verticalEdgeInsulationThermalResistance")).toBeNull();
+
+			await user.click(screen.getByTestId("edgeInsulationType_vertical"));
+			expect(screen.queryByTestId("verticalEdgeInsulationDepth")).toBeDefined();
+			expect(screen.queryByTestId("verticalEdgeInsulationThermalResistance")).toBeDefined();
+
+			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
+			expect(screen.queryByTestId("horizontalEdgeInsulationWidth")).toBeNull();
+			expect(screen.queryByTestId("horizontalEdgeInsulationThermalResistance")).toBeNull();
+			expect(screen.queryByTestId("verticalEdgeInsulationDepth")).toBeDefined();
+			expect(screen.queryByTestId("verticalEdgeInsulationThermalResistance")).toBeDefined();
+		});
+
+		test("error is shown when horizontal edge insulation width is 0", async () => {
+			await renderSuspended(GroundFloor, {
+				route: { params: { floor: "create" } },
+			});
+
+			await populateValidForm();
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
+			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
+			await user.type(screen.getByTestId("horizontalEdgeInsulationWidth"), "0");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("horizontalEdgeInsulationWidth_error")).toBeDefined();
+		});
+
+		test("error is shown when vertical edge insulation depth is 0", async () => {
+			await renderSuspended(GroundFloor, {
+				route: { params: { floor: "create" } },
+			});
+
+			await populateValidForm();
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
+			await user.click(screen.getByTestId("edgeInsulationType_vertical"));
+			await user.type(screen.getByTestId("verticalEdgeInsulationDepth"), "0");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("verticalEdgeInsulationDepth_error")).toBeDefined();
+		});
+	});
+
+	describe("when type of ground floor is suspended floor", () => {
+		test("data is saved to store state and marked as complete when form is valid", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" },
+				},
+			});
+
+			await populateValidForm();
+			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
+			await user.type(screen.getByTestId("heightOfFloorUpperSurface"), "0");
+			await user.type(screen.getByTestId("underfloorSpaceThermalResistance"), "0");
+			await user.type(screen.getByTestId("thermalTransmittanceOfWallsAboveGround"), "0");
+			await user.type(screen.getByTestId("ventilationOpeningsArea"), "0");
+			await user.click(screen.getByTestId("smartAirBricks_yes"));
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const actual = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[0];
+			expect(actual?.data).toEqual(groundFloorWithSuspendedFloor);
+			expect(actual?.complete).toBe(true);
+		});
+
+		test("form is prepopulated when data exists in state", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithSuspendedFloor }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "0" },
+				},
+			});
+
+			expect((await screen.findByTestId("typeOfGroundFloor_Suspended_floor")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("heightOfFloorUpperSurface")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("80");
+			expect((await screen.findByTestId<HTMLInputElement>("underfloorSpaceThermalResistance")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("thermalTransmittanceOfWallsAboveGround")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("ventilationOpeningsArea")).value).toBe("0");
+			expect((await screen.findByTestId("smartAirBricks_yes")).hasAttribute("checked")).toBe(true);
+		});
+
+		test("required error messages are displayed when empty form is submitted", async () => {
+			await renderSuspended(GroundFloor);
+
+			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect((await screen.findByTestId("heightOfFloorUpperSurface_error"))).toBeDefined();
+			expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
+			expect((await screen.findByTestId("underfloorSpaceThermalResistance_error"))).toBeDefined();
+			expect((await screen.findByTestId("thermalTransmittanceOfWallsAboveGround_error"))).toBeDefined();
+			expect((await screen.findByTestId("ventilationOpeningsArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("smartAirBricks_error"))).toBeDefined();
+		});
+	});
+
+	test("ground floor section is marked as 'not complete' after form is saved and marked as complete", async () => {
+		// Arrange
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						data: [{ data: groundFloorWithSuspendedFloor, complete: true }],
+						complete: true,
+					},
+				},
+			},
+		});
+
+		await renderSuspended(GroundFloor, {
+			route: {
+				params: { floor: "0" },
+			},
+		});
+
+		// Act
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		// Assert
+		expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete).not.toBe(true);
+	});
+
+	describe("partially saving data", () => {
+		test("new form data is automatically saved to store with given name", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" },
+				},
+			});
+
+			await user.type(screen.getByTestId("name"), "Ground floor");
+			await user.type(screen.getByTestId("uValue"), "1");
+			await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
+			await user.click(screen.getByTestId("massDistributionClass_I"));
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_no_edge_insulation"));
+			await user.tab();
+
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.uValue).toBe(1);
+			expect(data[0]!.data.arealHeatCapacity).toBe("Very light");
+			expect(data[0]!.data.massDistributionClass).toBe("I");
+			expect(data[0]!.data.typeOfGroundFloor).toBe("Slab_no_edge_insulation");
+		});
+
+		test("new form data is automatically saved to store with default name", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" },
+				},
+			});
+
+			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.tab();
+
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.surfaceArea).toBe(170);
+		});
+
+		test("updated form data is automatically saved to store", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithSuspendedFloor }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: 0 },
+				},
+			});
+
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+
+			expect(data[0]!.data.name).toBe("Ground 1");
+			expect(data[0]!.data.surfaceArea).toBe(5);
+
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Ground floor");
+			await user.clear(screen.getByTestId("surfaceArea"));
+			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.tab();
+
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.surfaceArea).toBe(170);
+		});
+
+		test("ground floor and ground floor section are set as 'not complete' after user edits a ground floor", async () => {
+			// Arrange
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithSuspendedFloor, complete: true }],
+							complete: true,
+						},
+					},
+				},
+			});
+
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "0" },
+				},
+			});
+
+			// Act
+			await user.type(screen.getByTestId("name"), "Ground floor 1");
+			await user.tab();
+
+			// Assert
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[0]?.complete).not.toBe(true);
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete).not.toBe(true);
+		});
+
+		test("app navigates to floors overview page on clicking Save progress", async () => {
+			await renderSuspended(GroundFloor);
+			await user.click(screen.getByTestId("saveProgress"));
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
+		});
+	});
+});

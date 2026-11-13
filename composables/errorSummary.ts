@@ -32,14 +32,22 @@ export function useErrorSummary() {
 
 		clearErrors();
 
+		const rawErrors: ErrorSummaryItem[] = [];
+
 		validationErrors.forEach(messages => {
 			const errors = messages.map(message => ({
 				id: message.meta.i18nArgs![0].node.props.id,
 				text: message.value?.toString(),
 			}));
 
-			errorMessages.value = errorMessages.value.concat(errors);
+			rawErrors.push(...errors);
 		});
+
+		const uniqueErrors = rawErrors.filter((error, index, self) =>
+			index === self.findIndex(e => e.text === error.text),
+		);
+
+		errorMessages.value = uniqueErrors;
 
 		scrollToErrors();
 	};

@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { getUrl, standardPitchOptions, uniqueName, type EcaasForm, type InternalDoorData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
-import { standardPitchOptions, getUrl, uniqueName, type InternalDoorData, type EcaasForm } from "#imports";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
@@ -28,7 +28,12 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
 				uValue: fields.uValue,
-				arealHeatCapacity: fields.arealHeatCapacity,
+				...(fields.arealHeatCapacity === "Custom" ? {
+					arealHeatCapacity: fields.arealHeatCapacity,
+					arealHeatCapacityCustom: fields.arealHeatCapacityCustom,
+				} : {
+					arealHeatCapacity: fields.arealHeatCapacity,
+				}),
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
@@ -132,9 +137,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:3"
 		>
 			<GovDetails summary-text="Help with this input">
-				<p>The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The <br>U-value is the inverse of the total thermal resistance of a building element.</p>
-				<p>See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.</p>
-				<p>The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.</p>
+				<p class="govuk-body">The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The <br>U-value is the inverse of the total thermal resistance of a building element.</p>
+				<p class="govuk-body">See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.</p>
+				<p class="govuk-body">The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.</p>
 			</GovDetails>
 		</FormKit>
 		<div class="govuk-button-group">

@@ -15,6 +15,15 @@ const testPressureOptions = {
 	"Pulse test only": "Pulse test (test pressure is 4Pa)",
 } as const satisfies Record<SchemaLeaksTestPressure, string>;
 
+const hasSmartAirBricks = computed(() =>
+	store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.some(
+		({ data }) =>
+			data.typeOfGroundFloor === "Suspended_floor" &&
+			"smartAirBricks" in data &&
+			data.smartAirBricks === true,
+	),
+);
+
 const saveForm = (fields: AirPermeabilityData) => {
 	store.$patch({
 		infiltrationAndVentilation: {
@@ -22,6 +31,7 @@ const saveForm = (fields: AirPermeabilityData) => {
 				data: {
 					testPressure: fields.testPressure,
 					airTightnessTestResult: fields.airTightnessTestResult,
+					smartAirBricksOpen: fields.smartAirBricksOpen,
 				},
 				complete: true,
 			},
@@ -69,6 +79,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="airTightnessTestResult"
 			validation="required | number"
 			suffix-text="m³/(h·m²)"
+		/>
+		<FormKit
+			v-if="hasSmartAirBricks"
+			id="smartAirBricksOpen"
+			type="govBoolean"
+			label="Were the smart air bricks open during the air tightness test?"
+			help="If the test hasn’t been done yet and this is for an as-designed BREL, select yes"
+			name="smartAirBricksOpen"
+			validation="required"
 		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

@@ -1,7 +1,8 @@
 describe("extractSectionItems", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		store.$reset();
 	});
 
@@ -70,16 +71,13 @@ describe("extractSectionItems", () => {
 
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [roof1, roof2],
-					},
+				dwellingSpaceRoofs: {
+					data: [roof1, roof2],
 				},
 			},
 		});
 
-		const { dwellingSpaceRoofs } =
-			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 		const actual = extractSectionItems(dwellingSpaceRoofs);
 
@@ -102,16 +100,13 @@ describe("extractSectionItems", () => {
 
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [roof1],
-					},
+				dwellingSpaceRoofs: {
+					data: [roof1],
 				},
 			},
 		});
 
-		const { dwellingSpaceRoofs } =
-			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 		const actual = extractSectionItems(dwellingSpaceRoofs);
 
@@ -121,18 +116,15 @@ describe("extractSectionItems", () => {
 	});
 
 	test("when there is no section data", () => {
-
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [],
-					},
+				dwellingSpaceRoofs: {
+					data: [],
 				},
 			},
 		});
-		const { dwellingSpaceRoofs } =
-			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+		const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 		const actual = extractSectionItems(dwellingSpaceRoofs);
 

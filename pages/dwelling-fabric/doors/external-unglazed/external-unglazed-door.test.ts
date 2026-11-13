@@ -8,8 +8,17 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("~/composables/banner", () => ({
+	useBanner: () => ref({ type: "update-front-door" }),
+}));
+
 describe("external unglazed door", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const externalWall: ExternalWallData = {
@@ -507,7 +516,6 @@ describe("external unglazed door", () => {
 		});
 
 		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async () => {
-
 			const roof: EcaasForm<RoofData> = {
 				data: {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
@@ -524,12 +532,11 @@ describe("external unglazed door", () => {
 					massDistributionClass: "I",
 				},
 			};
+
 			store.$patch({
 				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceRoofs: {
-							data: [roof],
-						},
+					dwellingSpaceRoofs: {
+						data: [roof],
 					},
 				},
 			});
@@ -609,10 +616,7 @@ describe("external unglazed door", () => {
 		});
 
 		test("displays banner when banner is set to 'update-front-door", async () => {
-
-			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door" }),
-			}));
+			// mock moved to top level of file
 
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
@@ -631,7 +635,7 @@ describe("external unglazed door", () => {
 			},
 		});
 	
-		const table = screen.getByTestId("doorArealHeatCapacityTable");
+		const table = screen.getByTestId("constructionBuildUpTable");
 	
 		expect(table).toBeDefined();
 		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();

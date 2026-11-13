@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import ClearData from "./clear-data.vue";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import ClearData from "./clear-data.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -9,6 +9,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("clear data page", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
 	it("renders page correctly", async () => {
 		await renderSuspended(ClearData);
 
@@ -19,7 +25,17 @@ describe("clear data page", () => {
 	});
 
 	it("clears state and navigates to task list when clear data button is clicked", async () => {
-		const store = useEcaasStore();
+		beforeEach(() => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceZoneParameters: {
+						data: state,
+						complete: true,
+					},
+				},
+			});
+		});
+	
 		const user = userEvent.setup();
 
 		const state: DwellingSpaceZoneParametersData = {
@@ -28,16 +44,7 @@ describe("clear data page", () => {
 			groundFloorArea: 12,
 			restOfDwellingArea: 8,
 
-		};
-
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceZoneParameters: {
-					data: state,
-					complete: true,
-				},
-			},
-		});
+		};		
 
 		await renderSuspended(ClearData);
 

@@ -4,6 +4,7 @@ defineProps<{
 	name?: string;
 	label?: string;
 	help?: string;
+	dataField?: string;
 }>();
 </script>
 
@@ -16,6 +17,6 @@ defineProps<{
 		:help="help ?? 'This is the steady thermal transmittance of the building element'"
 		:name="name ?? 'uValue'"
 		validation="required | number | min:0.01 | max:10"
-		data-field="Zone.BuildingElement.*.u_value"
+		:data-field="dataField ?? 'Zone.BuildingElement.*.u_value'"
 	/>
 </template>

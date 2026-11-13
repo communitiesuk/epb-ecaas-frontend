@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SchemaTerrainClass, SchemaVentilationShieldClass } from "~/schema/aliases";
 import { getUrl } from "#imports";
+import type { SchemaTerrainClass, SchemaVentilationShieldClass } from "~/schema/aliases";
 
 const title = "External factors";
 const store = useEcaasStore();
@@ -70,6 +70,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the number of metres the dwelling is above sea level"
 			data-field="InfiltrationVentilation.altitude">
 			<GovDetails summary-text="Help with this input">
+				<p>This is the altitude of the dwelling itself. Each storey in a block of flats will have a different altitude. </p>
 				<p>There are free online tools which can help estimate this.</p>
 			</GovDetails>
 		</FormKit>

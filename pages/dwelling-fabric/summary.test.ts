@@ -1,18 +1,19 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import Summary from "./summary.vue";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type {
-	CeilingsAndRoofsData,
 	DoorsData,
-	FloorsData,
+	DwellingSpaceLightingData,
 	DwellingSpaceZoneParametersData,
+	ExternalGlazedDoorData,
+	FloorsData,
+	RoofData,
 	ThermalBridgingData,
 	WallsData,
 	WindowData,
-	DwellingSpaceLightingData,
-	ExternalGlazedDoorData,
 } from "~/stores/ecaasStore.schema";
+import { degrees } from "~/utils/units/angle";
+import { metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import {
 	squareMeterKelvinPerWatt,
@@ -20,9 +21,8 @@ import {
 	wattsPerMeterKelvin,
 	wattsPerSquareMeterKelvin,
 } from "~/utils/units/thermalConductivity";
-import { degrees } from "~/utils/units/angle";
-import { metresSquare } from "~/utils/units/area";
 import { cubicMetre } from "~/utils/units/volume";
+import Summary from "./summary.vue";
 
 const user = userEvent.setup();
 
@@ -88,8 +88,22 @@ const floorsData: FloorsData = {
 					unit: "metres" as const,
 				},
 				verticalEdgeInsulationThermalResistance: 2,
+			},
+		},
+		{
+			data: {
+				name: "Ground 3 suspended floor",
+				surfaceArea: 5,
+				totalArea: 5,
+				uValue: 1,
+				thermalResistance: 1,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				perimeter: 0,
+				thicknessOfWalls: unitValue(30, millimetre),
+				typeOfGroundFloor: "Suspended_floor",
 
-
+				smartAirBricks: true,
 			},
 		}],
 	},
@@ -101,6 +115,8 @@ const floorsData: FloorsData = {
 				surfaceAreaOfElement: 5,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				pitchOption: "180",
+				pitch: 180,
 			},
 		}],
 	},
@@ -152,6 +168,18 @@ const floorsData: FloorsData = {
 				thermalResistanceOfBasementWalls: 0.5,
 				thermalTransmittanceOfBasementWalls: 1,
 				thermalTransmittanceOfFoundations: 1.5,
+			},
+		}],
+	},
+	dwellingSpacePartyFloor: {
+		data: [{
+			data: {
+				id: "1a997f84-d070-4835-a74b-ef0135b44a90",
+				name: "Party floor 1",
+				surfaceArea: 45,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "I",
+				uValue: 0.25,
 			},
 		}],
 	},
@@ -217,7 +245,8 @@ const wallsData: WallsData = {
 				pitchOption: "90",
 				pitch: 90,
 				surfaceArea: 10,
-				uValue: 1,
+				uValueWholeWall: 1,
+				thermalResistanceHalfWall: 2.5,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				partyWallCavityType: "unfilled_sealed",
@@ -242,52 +271,37 @@ const wallsData: WallsData = {
 	},
 };
 
-const ceilingsAndRoofsData: CeilingsAndRoofsData = {
-	dwellingSpaceCeilings: {
-		data: [{
-			data: {
-				type: "heatedSpace",
-				name: "Ceiling 1",
-				surfaceArea: 5,
-				arealHeatCapacity: "Very light",
-				massDistributionClass: "I",
-				pitchOption: "custom",
-				pitch: 180,
-			},
-		}],
-	},
-	dwellingSpaceRoofs: {
-		data: [{
-			data: {
-				name: "Flat roof",
-				typeOfRoof: "flatAboveHeatedSpace",
-				pitch: 0,
-				length: 1,
-				width: 1,
-				elevationalHeightOfElement: 2,
-				surfaceArea: 1,
-				uValue: 1,
-				arealHeatCapacity: "Very light",
-				massDistributionClass: "I",
-			},
+const roofsData: EcaasFormList<RoofData> = {
+	data: [{
+		data: {
+			name: "Flat roof",
+			typeOfRoof: "flatAboveHeatedSpace",
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			uValue: 1,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
 		},
-		{
-			data: {
-				name: "Pitched roof",
-				typeOfRoof: "pitchedInsulatedAtRoof",
-				pitch: 180,
-				orientation: 30,
-				length: 1,
-				width: 1,
-				elevationalHeightOfElement: 2,
-				surfaceArea: 1,
-				uValue: 1,
-				arealHeatCapacity: "Very light",
-				massDistributionClass: "I",
-			},
-		},
-		],
 	},
+	{
+		data: {
+			name: "Pitched roof",
+			typeOfRoof: "pitchedInsulatedAtRoof",
+			pitch: 180,
+			orientation: 30,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			uValue: 1,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+		},
+	},
+	],
 };
 
 const externalGlazedDoorData = {
@@ -300,11 +314,15 @@ const externalGlazedDoorData = {
 	elevationalHeight: 1,
 	openingToFrameRatio: 0.2,
 	numberOpenableParts: "1",
-	maximumOpenableArea: 1,
-	midHeightOpenablePart1: 1,
+	openableParts: [
+		{
+			maximumOpenableArea: 1,
+			freeAreaHeight: 2,
+			midHeight: 1,
+		},
+	],
 	uValue: 10,
 	securityRisk: false,
-	freeAreaHeight: 2,
 	curtainsOrBlinds: true,
 	treatmentType: "blinds",
 	treatmentControls: "manual",
@@ -368,7 +386,6 @@ const windowData: EcaasForm<WindowData> = {
 		elevationalHeight: 1,
 		openingToFrameRatio: 0.2,
 		numberOpenableParts: "0",
-		freeAreaHeight: 0,
 		curtainsOrBlinds: true,
 		treatmentType: "blinds",
 		treatmentControls: "manual",
@@ -428,14 +445,18 @@ const thermalBridgingData: ThermalBridgingData = {
 		],
 	},
 };
-const store = useEcaasStore();
 
-afterEach(() => {
-	store.$reset();
-	navigateToMock.mockClear();
-});
 describe("Dwelling space fabric summary", () => {
+	let store: ReturnType<typeof useEcaasStore>;
 
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockClear();
+	});
 
 	describe("Dwelling space zone parameters", () => {
 		it("should contain the correct tabs for dwelling space zone parameters", async () => {
@@ -532,10 +553,11 @@ describe("Dwelling space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			expect(screen.getByRole("link", { name: "Ground floors" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Internal floors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal floors / ceilings" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Exposed floors" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Floors above an unheated basement" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Floors of a heated basement" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Party floors / ceilings" })).not.toBeNull();
 		});
 	});
 
@@ -631,11 +653,29 @@ describe("Dwelling space fabric summary", () => {
 			"Vertical edge insulation depth": `0.3 ${metre.suffix}`,
 			"Vertical edge insulation thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
 		};
+
+		const expectedResultSuspendedWithSmartAirBricks = {
+			"Name": "Ground 3 suspended floor",
+			"Net surface area": `5 ${metresSquare.suffix}`,
+			"Total area": `5 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Exposed perimeter": `0 ${metre.suffix}`,
+			"Thickness of walls at the edge of the floor": `30 ${millimetre.suffix}`,
+			"Type of ground floor": "Suspended floor",
+			"Does this floor have smart air bricks as the underfloor vents?": "Yes",
+		};
 		for (const [key, value] of Object.entries(expectedResult)) {
 			await assertValueInSummaryColumn(key, value);
 		}
 		for (const [key, value] of Object.entries(expectedResultWithEdgeInsulation)) {
 			await assertValueInSummaryColumn(key, value, 1);
+		}
+
+		for (const [key, value] of Object.entries(expectedResultSuspendedWithSmartAirBricks)) {
+			await assertValueInSummaryColumn(key, value, 2);
 		}
 	});
 
@@ -651,8 +691,9 @@ describe("Dwelling space fabric summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Type of internal floor": "Internal floor to heated space",
+			"Type of internal floor": "Internal floor / ceiling to heated space",
 			"Name": "Internal 1",
+			"Pitch": "180 °",
 			"Net surface area of element": `5 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
@@ -730,9 +771,46 @@ describe("Dwelling space fabric summary", () => {
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
 	});
+
+	it("should display the correcy data for the party floors / ceilings section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpacePartyFloor: floorsData.dwellingSpacePartyFloor,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Party floor 1",
+			"Net surface area": `45 ${metresSquare.suffix}`,
+			"Areal heat capacity": "Medium",
+			"Mass distribution class": "Internal",
+			"U-value": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpacePartyFloor-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
 });
 
 describe("Dwelling space walls", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockClear();
+	});
+
 	it("should contain the correct tabs for dwelling space walls", async () => {
 		await renderSuspended(Summary);
 
@@ -844,7 +922,8 @@ describe("Dwelling space walls", () => {
 			"Name": "Party wall 1",
 			"Pitch": `90 ${degrees.suffix}`,
 			"Net surface area": `10 ${metresSquare.suffix}`,
-			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"U-value of whole wall": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance of half wall": `2.5 ${squareMeterKelvinPerWatt.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 		};
@@ -1062,51 +1141,32 @@ describe("Dwelling space walls", () => {
 });
 
 describe("dwelling space ceilings and roofs", () => {
-	it("should contain the correct tabs for dwelling space walls", async () => {
-		await renderSuspended(Summary);
+	let store: ReturnType<typeof useEcaasStore>;
 
-		expect(screen.getByRole("link", { name: "Ceilings" })).not.toBeNull();
-		expect(screen.getByRole("link", { name: "Roofs" })).not.toBeNull();
+	beforeEach(() => {
+		store = useEcaasStore();
 	});
 
-	it("should display the correct data for the ceilings section", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: ceilingsAndRoofsData.dwellingSpaceCeilings,
-				},
-			},
-		});
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockClear();
+	});
 
+	it("should contain the correct tabs for roofs", async () => {
 		await renderSuspended(Summary);
 
-		const expectedResult = {
-			"Type of ceiling": "Ceiling to heated space",
-			"Name": "Ceiling 1",
-			"Net surface area": `5 ${metresSquare.suffix}`,
-			"Areal heat capacity": "Very light",
-			"Mass distribution class": "Internal",
-			"Pitch": `180 ${degrees.suffix}`,
-		};
-
-
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceCeilings-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-		}
+		expect(screen.getByRole("link", { name: "Roofs" })).not.toBeNull();
 	});
 
 	it("should display the correct data for the roof section", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: ceilingsAndRoofsData.dwellingSpaceRoofs,
-				},
+				dwellingSpaceRoofs: roofsData,
 			},
 		});
 
 		await renderSuspended(Summary);
+
 		const expectedFlatRoof = {
 			"Name": "Flat roof",
 			"Type of roof": "Flat above heated space",
@@ -1149,6 +1209,17 @@ describe("dwelling space ceilings and roofs", () => {
 });
 
 describe("dwelling space doors", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockClear();
+	});
+
 	it("should contain the correct tabs for dwelling space doors", async () => {
 		await renderSuspended(Summary);
 
@@ -1244,6 +1315,16 @@ describe("dwelling space doors", () => {
 	});
 
 	describe("external glazed doors section", () => {
+		let store: ReturnType<typeof useEcaasStore>;
+
+		beforeEach(() => {
+			store = useEcaasStore();
+		});
+
+		afterEach(() => {
+			store.$reset();
+		});
+
 		it("should display the correct data for an item without a tagged wall ", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -1260,13 +1341,17 @@ describe("dwelling space doors", () => {
 									solarTransmittance: 0.1,
 									elevationalHeight: 1,
 									openingToFrameRatio: 0.2,
-									maximumOpenableArea: 1,
+									openableParts: [
+										{
+											maximumOpenableArea: 1,
+											freeAreaHeight: 2,
+											midHeight: 1,
+										},
+									],
 									numberOpenableParts: "1",
-									midHeightOpenablePart1: 1,
 									uValue: 10,
 									isTheFrontDoor: true,
 									securityRisk: false,
-									freeAreaHeight: 2,
 									curtainsOrBlinds: true,
 									treatmentType: "blinds",
 									treatmentControls: "auto_motorised",
@@ -1291,7 +1376,9 @@ describe("dwelling space doors", () => {
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"Pitch": `72 ${degrees.suffix}`,
-				"Free area height": `2 ${metre.suffix}`,
+				"Free area height for openable part 1": `2 ${metre.suffix}`,
+				"Maximum openable area for openable part 1": `1 ${metresSquare.suffix}`,
+				"Mid height of the air flow path for openable part 1": `1 ${metre.suffix}`,
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
@@ -1333,7 +1420,7 @@ describe("dwelling space doors", () => {
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"Pitch": `90 ${degrees.suffix}`,
-				"Free area height": `2 ${metre.suffix}`,
+				"Free area height for openable part 1": `2 ${metre.suffix}`,
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
@@ -1354,7 +1441,6 @@ describe("dwelling space doors", () => {
 		});
 
 		it("displays the correct data when shading is added", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -1386,7 +1472,7 @@ describe("dwelling space doors", () => {
 				"Width": `1 ${metre.suffix}`,
 				"Pitch": `90 ${degrees.suffix}`,
 				"Transmittance of solar energy": "0.1",
-				"Free area height": `2 ${metre.suffix}`,
+				"Free area height for openable part 1": `2 ${metre.suffix}`,
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Is this the front door?": "-",
@@ -1438,7 +1524,6 @@ describe("dwelling space doors", () => {
 		});
 
 		it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -1558,6 +1643,17 @@ describe("dwelling space doors", () => {
 });
 
 describe("dwelling space windows", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockClear();
+	});
+
 	it("should contain the correct tabs for dwelling space windows", async () => {
 		await renderSuspended(Summary);
 
@@ -1590,7 +1686,6 @@ describe("dwelling space windows", () => {
 			"Transmittance of solar energy": "0.1",
 			"Elevational height of building element at its base": `1 ${metre.suffix}`,
 			"Number of openable parts": "0",
-			"Free area height": `0 ${metre.suffix}`,
 			"Curtains or blinds": "Blinds",
 			"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Solar transmittance reduction": "0.1",
@@ -1638,7 +1733,6 @@ describe("dwelling space windows", () => {
 	});
 
 	it("should display the correct data for the windows section when there is more than one window", async () => {
-		const store = useEcaasStore();
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
@@ -1700,281 +1794,7 @@ describe("dwelling space windows", () => {
 		}	
 	});
 
-	// it("should display height/transparency but not depth when only obstacle shading exists (single window)", async () => {
-	// 	const store = useEcaasStore();
-
-	// 	store.$patch({
-	// 		dwellingFabric: {
-	// 			dwellingSpaceWindows: {
-	// 				data: [{
-	// 					data: {
-	// 						...windowData.data,
-	// 						hasShading: true,
-	// 						shading: [
-	// 							{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
-	// 							{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 4, height: 26, transparency: 40 },
-	// 						],
-	// 					},
-	// 				}],
-	// 			},
-	// 			dwellingSpaceWalls: {
-	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-	// 			},
-	// 		},
-	// 	});
-
-	// 	await renderSuspended(Summary);
-
-	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
-	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
-
-	// 	expect(screen.queryByText(/Height of shading 2/i)).not.toBeNull();
-	// 	expect(screen.queryByText(/Transparency of shading 2/i)).not.toBeNull();
-
-	// 	expect(screen.queryByText(/Depth of shading/i)).toBeNull();
-	// });
-
-	// it("should display depth but not height/transparency when only non-obstacle shading exists (single window)", async () => {
-	// 	const store = useEcaasStore();
-
-	// 	store.$patch({
-	// 		dwellingFabric: {
-	// 			dwellingSpaceWindows: {
-	// 				data: [{
-	// 					data: {
-	// 						...windowData.data,
-	// 						hasShading: true,
-	// 						shading: [
-	// 							{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
-	// 							{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
-	// 						],
-	// 					},
-	// 				}],
-	// 			},
-	// 			dwellingSpaceWalls: {
-	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-	// 			},
-	// 		},
-	// 	});
-
-	// 	await renderSuspended(Summary);
-
-	// 	expect(screen.queryByText(/Depth of shading 1/i)).not.toBeNull();
-	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
-
-	// 	expect(screen.queryByText(/Height of shading/i)).toBeNull();
-	// 	expect(screen.queryByText(/Transparency of shading/i)).toBeNull();
-	// });
-
-	// it("should display both obstacle and non-obstacle fields when mixed shading exists (single window)", async () => {
-	// 	const store = useEcaasStore();
-
-	// 	store.$patch({
-	// 		dwellingFabric: {
-	// 			dwellingSpaceWindows: {
-	// 				data: [{
-	// 					data: {
-	// 						...windowData.data,
-	// 						hasShading: true,
-	// 						shading: [
-	// 							{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
-	// 							{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
-	// 						],
-	// 					},
-	// 				}],
-	// 			},
-	// 			dwellingSpaceWalls: {
-	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-	// 			},
-	// 		},
-	// 	});
-
-	// 	await renderSuspended(Summary);
-
-	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
-	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
-
-	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
-	// });
-
-	// it("should display height/transparency but not depth when only obstacle shading exists (multiple windows)", async () => {
-	// 	const store = useEcaasStore();
-
-	// 	store.$patch({
-	// 		dwellingFabric: {
-	// 			dwellingSpaceWindows: {
-	// 				data: [
-	// 					{
-	// 						data: {
-	// 							...windowData.data,
-	// 							hasShading: true,
-	// 							shading: [
-	// 								{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
-	// 								{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
-	// 							],
-	// 						},
-	// 					},
-	// 					{
-	// 						data: {
-	// 							...windowData.data,
-	// 							id: "test-id-2",
-	// 							name: "Window 2",
-	// 							hasShading: true,
-	// 							shading: [
-	// 								{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
-	// 								{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
-	// 							],
-	// 						},
-	// 					},
-	// 				],
-	// 			},
-	// 			dwellingSpaceWalls: {
-	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-	// 			},
-	// 		},
-	// 	});
-
-	// 	await renderSuspended(Summary);
-
-	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
-	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
-
-	// 	expect(screen.queryByText(/Height of shading 2/i)).not.toBeNull();
-	// 	expect(screen.queryByText(/Transparency of shading 2/i)).not.toBeNull();
-
-	// 	expect(screen.queryByText(/Depth of shading/i)).toBeNull();
-	// });
-
-	// it("should display depth but not height/transparency when only non-obstacle shading exists (multiple windows)", async () => {
-	// 	const store = useEcaasStore();
-
-	// 	store.$patch({
-	// 		dwellingFabric: {
-	// 			dwellingSpaceWindows: {
-	// 				data: [
-	// 					{
-	// 						data: {
-	// 							...windowData.data,
-	// 							hasShading: true,
-	// 							shading: [
-	// 								{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
-	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
-	// 							],
-	// 						},
-	// 					},
-	// 					{
-	// 						data: {
-	// 							...windowData.data,
-	// 							id: "test-id-2",
-	// 							name: "Window 2",
-	// 							hasShading: true,
-	// 							shading: [
-	// 								{ name: "Overhang", typeOfShading: "overhang", distance: 1, depth: 11 },
-	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 4, depth: 20 },
-	// 							],
-	// 						},
-	// 					},
-	// 				],
-	// 			},
-	// 			dwellingSpaceWalls: {
-	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-	// 			},
-	// 		},
-	// 	});
-
-	// 	await renderSuspended(Summary);
-
-	// 	expect(screen.queryByText(/Depth of shading 1/i)).not.toBeNull();
-	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
-
-	// 	expect(screen.queryByText(/Height of shading/i)).toBeNull();
-	// 	expect(screen.queryByText(/Transparency of shading/i)).toBeNull();
-	// });
-
-	// it("should display both obstacle and non-obstacle fields when mixed shading exists (multiple windows)", async () => {
-	// 	const store = useEcaasStore();
-
-	// 	store.$patch({
-	// 		dwellingFabric: {
-	// 			dwellingSpaceWindows: {
-	// 				data: [
-	// 					{
-	// 						data: {
-	// 							...windowData.data,
-	// 							hasShading: true,
-	// 							shading: [
-	// 								{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
-	// 								{ name: "Obstacle", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
-	// 							],
-	// 						},
-	// 					},
-	// 					{
-	// 						data: {
-	// 							...windowData.data,
-	// 							id: "test-id-2",
-	// 							name: "Window 2",
-	// 							hasShading: true,
-	// 							shading: [
-	// 								{ name: "Overhang", typeOfShading: "overhang", distance: 1, depth: 11 },
-	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 4, depth: 20 },
-	// 							],
-	// 						},
-	// 					},
-	// 				],
-	// 			},
-	// 			dwellingSpaceWalls: {
-	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-	// 			},
-	// 		},
-	// 	});
-
-	// 	await renderSuspended(Summary);
-
-	// 	const window1Shading2Expected = {
-	// 		"Name of shading 2": "Obstacle",
-	// 		"Type of shading 2": "Obstacle",
-	// 		"Distance of shading 2 from glass": `2 ${metre.suffix}`,
-	// 		"Height of shading 2": `26 ${metre.suffix}`,
-	// 		"Transparency of shading 2": "34 %",
-	// 		"Depth of shading 2": "-",
-	// 	};
-
-	// 	for (const [key, value] of Object.entries(window1Shading2Expected)) {
-	// 		const lineResult = await screen.findByTestId(
-	// 			`summary-dwellingSpaceWindows-${hyphenate(key)}`,
-	// 		);
-
-	// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-
-	// 		const ddCells = lineResult.querySelectorAll("dd");
-
-	// 		expect(ddCells[0]?.textContent).toBe(value);
-	// 	}
-
-	// 	const window2Shading2Expected = {
-	// 		"Name of shading 2": "Right fin",
-	// 		"Type of shading 2": "Right side fin",
-	// 		"Distance of shading 2 from glass": `4 ${metre.suffix}`,
-	// 		"Height of shading 2": "-",
-	// 		"Transparency of shading 2": "-",
-	// 		"Depth of shading 2": `20 ${metre.suffix}`,
-	// 	};
-
-	// 	for (const [key, value] of Object.entries(window2Shading2Expected)) {
-	// 		const lineResult = await screen.findByTestId(
-	// 			`summary-dwellingSpaceWindows-${hyphenate(key)}`,
-	// 		);
-
-	// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-
-	// 		const ddCells = lineResult.querySelectorAll("dd");
-
-	// 		expect(ddCells[1]?.textContent).toBe(value);
-	// 	}
-	// });
-
 	it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
-		const store = useEcaasStore();
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
@@ -2019,6 +1839,17 @@ describe("dwelling space windows", () => {
 });
 
 describe("dwelling space thermal bridges", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockClear();
+	});
+
 	it("should contain the correct tabs for dwelling space thermal bridges", async () => {
 		await renderSuspended(Summary);
 

@@ -1,11 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import ExternalGlazedDoor from "./[door].vue";
 import { v4 as uuidv4 } from "uuid";
+import ExternalGlazedDoor from "./[door].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-const store = useEcaasStore();
 const user = userEvent.setup();
 
 mockNuxtImport("navigateTo", () => {
@@ -14,10 +13,9 @@ mockNuxtImport("navigateTo", () => {
 
 vi.mock("uuid");
 
-afterEach(() => {
-	store.$reset();
-	navigateToMock.mockReset();
-});
+vi.mock("~/composables/banner", () => ({
+	useBanner: () => ref({ type: "update-front-door" }),
+}));
 
 const externalWall: ExternalWallData = {
 	id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
@@ -46,9 +44,13 @@ const doorForState = {
 	solarTransmittance: 0.1,
 	elevationalHeight: 14,
 	openingToFrameRatio: 0.2,
-	freeAreaHeight: 1,
-	maximumOpenableArea: 13,
-	midHeightOpenablePart1: 11,
+	openableParts: [
+		{
+			maximumOpenableArea: 13,
+			freeAreaHeight: 1,
+			midHeight: 11,
+		},
+	],
 	uValue: 10,
 	numberOpenableParts: "1",
 	curtainsOrBlinds: true,
@@ -67,14 +69,14 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId(`isTheFrontDoor_no`));
 	await user.type(screen.getByTestId("height"), "14");
 	await user.type(screen.getByTestId("width"), "48");
-	await user.type(screen.getByTestId("maximumOpenableArea"), "13");
+	await user.click(screen.getByTestId("numberOpenableParts_1"));
+	await user.type(screen.getByTestId("maximumOpenableArea_0"), "13");
 	await user.type(screen.getByTestId("uValue"), "10");
 	await user.click(screen.getByTestId("securityRisk_no"));
 	await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 	await user.type(screen.getByTestId("elevationalHeight"), "14");
-	await user.click(screen.getByTestId("numberOpenableParts_1"));
-	await user.type(screen.getByTestId("freeAreaHeight"), "1");
-	await user.type(screen.getByTestId("midHeightOpenablePart1"), "11");
+	await user.type(screen.getByTestId("freeAreaHeight_0"), "1");
+	await user.type(screen.getByTestId("midHeightOpenable_0"), "11");
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.2");
 	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 	await user.click(screen.getByTestId("treatmentType_blinds"));
@@ -87,6 +89,17 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 };
 
 describe("external glazed door", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockReset();
+	});
+
 	const state: EcaasForm<ExternalGlazedDoorData> = {
 		data: doorForState,
 	};
@@ -283,6 +296,7 @@ describe("external glazed door", () => {
 
 		test("data is saved to store state when form is valid", async () => {
 			vi.mocked(uuidv4).mockReturnValue("mock-uuid" as unknown as Buffer);
+
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
@@ -334,11 +348,11 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("openingToFrameRatio")).value).toBe("0.2");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
-			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeight_0")).value).toBe("1");
 			expect((await screen.findByTestId("securityRisk_no")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea")).value).toBe("13");
-			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("11");
+			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea_0")).value).toBe("13");
+			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenable_0")).value).toBe("11");
 			expect((await screen.findByTestId("hasShading")).hasAttribute("checked")).toBe(false);
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("treatmentControls_auto_motorised")).hasAttribute("checked")).toBe(true);
@@ -360,9 +374,13 @@ describe("external glazed door", () => {
 				solarTransmittance: 0.1,
 				elevationalHeight: 14,
 				openingToFrameRatio: 0.2,
-				freeAreaHeight: 14,
-				maximumOpenableArea: 13,
-				midHeightOpenablePart1: 11,
+				openableParts: [
+					{
+						maximumOpenableArea: 13,
+						freeAreaHeight: 14,
+						midHeight: 11,
+					},
+				],
 				uValue: 10,
 				numberOpenableParts: "1",
 				curtainsOrBlinds: true,
@@ -406,11 +424,18 @@ describe("external glazed door", () => {
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
 			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_3_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_3_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_3_error"))).toBeDefined();
 		});
 
 		test("does not require the mid height of more parts than have been selected", async () => {
@@ -423,10 +448,10 @@ describe("external glazed door", () => {
 			await user.click(screen.getByTestId("numberOpenableParts_1"));
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
-			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-			expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
-			expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
-			expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
+			expect((await screen.findByTestId("midHeightOpenable_0_error"))).toBeDefined();
+			expect((screen.queryByTestId("midHeightOpenable_1_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenable_2_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenable_3_error"))).toBeNull();
 		});
 
 		test("only required error messages are displayed when empty form is submitted", async () => {
@@ -444,7 +469,6 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 			expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
 			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("numberOpenableParts_error"))).toBeDefined();
 			expect((await screen.findByTestId("curtainsOrBlinds_error"))).toBeDefined();
 			expect((await screen.findByTestId("hasShading_error"))).toBeDefined();
@@ -604,10 +628,8 @@ describe("external glazed door", () => {
 			};
 			store.$patch({
 				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceRoofs: {
-							data: [roof],
-						},
+					dwellingSpaceRoofs: {
+						data: [roof],
 					},
 				},
 			});
@@ -687,11 +709,6 @@ describe("external glazed door", () => {
 		});
 
 		test("displays banner when banner type is set to 'update-front-door", async () => {
-
-			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door" }),
-			}));
-
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { door: "create" },
@@ -1098,9 +1115,13 @@ describe("external glazed door", () => {
 				solarTransmittance: 0.1,
 				elevationalHeight: 14,
 				openingToFrameRatio: 0.2,
-				freeAreaHeight: 14,
-				maximumOpenableArea: 13,
-				midHeightOpenablePart1: 11,
+				openableParts: [
+					{
+						maximumOpenableArea: 13,
+						freeAreaHeight: 14,
+						midHeight: 11,
+					},
+				],
 				uValue: 10,
 				numberOpenableParts: "1",
 				curtainsOrBlinds: true,

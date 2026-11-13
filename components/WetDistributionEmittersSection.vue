@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { ConvectorRadiatorProduct, Product, AnyPcdbProduct, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
+import type { AnyPcdbProduct, ConvectorRadiatorProduct, Product, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
+import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, wetDistributionSystemEmittersFields, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 import { millimetre, type Length } from "~/utils/units/length";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const props = defineProps<{
 	index: number;
+	autoOpenIndex?: number | null;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string, emitterIndex?: number) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
@@ -29,6 +31,10 @@ const emitterTypeOptions = {
 const heatEmitterTypes = emitterTypeOptions;
 type EmitterType = keyof typeof emitterTypeOptions;
 
+const getDefaultEmitterName = (type: unknown): string => {
+	return emitterTypeOptions[type as EmitterType] ?? "";
+};
+
 const emitters = computed(() => {
 	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
 	if (heatEmitter && "emitters" in heatEmitter.data) {
@@ -37,24 +43,94 @@ const emitters = computed(() => {
 	return [];
 });
 
+const allEmittersComplete = computed(() => {
+	return (
+		emitters.value.length > 0 &&
+		emitters.value.every(
+			(emitter) =>
+				wetDistributionSystemEmittersFields.safeParse(emitter).success,
+		)
+	);
+});
+
+const emit = defineEmits<{
+	(e: "validity-change", isValid: boolean): void;
+}>();
+
+watch(
+	allEmittersComplete,
+	(isValid) => {
+		emit("validity-change", isValid);
+	},
+	{ immediate: true },
+);
+
+watch(
+	() => props.autoOpenIndex,
+	(newIndex) => {
+		if (newIndex != null) {
+			if (newIndex !== editIndex.value) {
+				openEmitter(newIndex);
+			}
+			showIncompatibleEnergySourceError.value = true;
+		}
+	},
+	{ immediate: true },
+);
+
 const formModel = ref<Record<string, unknown>>({});
 const editIndex = ref<number | null>(null);
 const addingEmitterIndex = ref<number | null>(null);
-const isEditing = computed(() => editIndex.value !== null);
+const isEmitterBeingEdited = computed(() => editIndex.value !== null);
 const showAddForm = ref(false);
 const emitterCards = ref<HTMLElement[]>([]);
 
-const queryEmitterIndex = route.query.emitterIndex != null ? Number(route.query.emitterIndex) : null;
+const queryEmitterIndex =
+	route.query.emitterIndex != null
+		? Number(route.query.emitterIndex)
+		: null;
+
+const openEmitter = (emitterIndex: number) => {
+	const emitter = emitters.value[emitterIndex];
+
+	if (!emitter) {
+		return;
+	}
+
+	editIndex.value = emitterIndex;
+	formModel.value = { ...emitter };
+};
+
 if (queryEmitterIndex != null && emitters.value[queryEmitterIndex]) {
-	editIndex.value = queryEmitterIndex;
-	formModel.value = { ...emitters.value[queryEmitterIndex] };
+	openEmitter(queryEmitterIndex);
 }
 
 onMounted(() => {
 	if (queryEmitterIndex != null && emitterCards.value[queryEmitterIndex]) {
-		emitterCards.value[queryEmitterIndex].scrollIntoView({ behavior: "instant", block: "start" });
-	}	
+		emitterCards.value[queryEmitterIndex].scrollIntoView({
+			behavior: "instant",
+			block: "start",
+		});
+
+		return;
+	}
+
+	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
+
+	if (heatEmitter?.complete) {
+		return;
+	}
+
+	const incompleteEmitterIndex = emitters.value.findIndex(
+		(emitter) =>
+			!wetDistributionSystemEmittersFields.safeParse(emitter).success,
+	);
+
+	if (incompleteEmitterIndex !== -1) {
+		openEmitter(incompleteEmitterIndex);
+	}
 });
+
 const productDetails = ref<Record<string, string[]>>({});
 
 const fetchProductName = async (productReference: string) => {
@@ -146,7 +222,7 @@ const addEmitter = (type: unknown) => {
 	const newEmitter = {
 		id,
 		typeOfHeatEmitter: type,
-		name: emitterTypeOptions[type as EmitterType] ?? type,
+		name: getDefaultEmitterName(type) || type,
 	};
 
 	store.$patch((state) => {
@@ -166,6 +242,11 @@ const addEmitter = (type: unknown) => {
 };
 
 const removeEmitter = (emitterIndex: number) => {
+
+	if (editIndex.value !== null && editIndex.value !== emitterIndex) {
+		return;
+	}
+
 	store.$patch((state) => {
 		const heatEmitter = state.spaceHeating.heatEmitters.data[props.index];
 		if (heatEmitter && "emitters" in heatEmitter.data) {
@@ -183,6 +264,10 @@ const removeEmitter = (emitterIndex: number) => {
 };
 
 const startEdit = (emitterIndex: number) => {
+	if (editIndex.value !== null) {
+		return;
+	}
+
 	addingEmitterIndex.value = null;
 	editIndex.value = emitterIndex;
 	formModel.value = { ...emitters.value[emitterIndex]! };
@@ -211,10 +296,23 @@ const isAddEmitterCard = (emitterIndex: number) => addingEmitterIndex.value === 
 watch(
 	() => formModel.value.typeOfHeatEmitter,
 	(newType, oldType) => {
-		if (oldType && newType !== oldType) {
-			const { id, name } = formModel.value;
-			formModel.value = { id, name, typeOfHeatEmitter: newType };
+		if (newType === oldType) {
+			return;
 		}
+
+		const currentName = formModel.value.name as string | undefined;
+		const oldDefaultName = getDefaultEmitterName(oldType);
+
+		const nameIsAutomatic =
+			!currentName || currentName === oldDefaultName;
+
+		formModel.value = {
+			...formModel.value,
+			typeOfHeatEmitter: newType,
+			...(nameIsAutomatic
+				? { name: getDefaultEmitterName(newType) }
+				: {}),
+		};
 	},
 );
 
@@ -238,15 +336,31 @@ watch(
 );
 
 const saveEmitter = () => {
+	if (incompatibleEnergySource.value) {
+		showIncompatibleEnergySourceError.value = true;
+		return;
+	}
+
 	addingEmitterIndex.value = null;
 	editIndex.value = null;
 	formModel.value = {};
 	clearEmitterIndexFromUrl();
 };
+
+const incompatibleEnergySource = ref(false);
+const showIncompatibleEnergySourceError = ref(false);
+
+function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
+	incompatibleEnergySource.value = value;
+	props.onIncompatibleEnergySource?.(value, fuel);
+}
 </script>
 
 <template>
-	<div data-testid="emittersSection">
+	<div
+		id="emittersSection"
+		data-testid="emittersSection"
+	>
 		<h2 class="govuk-heading-l">Emitters</h2>
 		<div
 			v-for="(emitter, i) in emitters"
@@ -256,14 +370,21 @@ const saveEmitter = () => {
 			class="govuk-summary-card"
 		>
 			<div class="govuk-summary-card__title-wrapper">
-				<h2 v-if="editIndex === i" class="govuk-summary-card__title">{{ isAddEmitterCard(i) ? "Add emitter" : "Edit emitter" }}</h2>
-				<h2 v-else class="govuk-summary-card__title">{{ emitter.name }}</h2>
+				<h2
+					v-if="editIndex === i"
+					class="govuk-summary-card__title"
+					:data-testid="`emitter-editor-${i}`"
+				>
+					{{ isAddEmitterCard(i) ? "Add emitter" : "Edit emitter" }}
+				</h2>				<h2 v-else class="govuk-summary-card__title">{{ emitter.name }}</h2>
 				<ul v-if="editIndex !== i" class="govuk-summary-card__actions">
 					<li class="govuk-summary-card__action">
 						<a
 							href="#"
 							class="govuk-link govuk-body-s"
 							:data-testid="`emitter_edit_${i}`"
+							:aria-disabled="isEmitterBeingEdited"
+							:class="{ 'emitter-action--disabled': isEmitterBeingEdited }"
 							@click.prevent="startEdit(i)"
 						>
 							Edit
@@ -274,6 +395,8 @@ const saveEmitter = () => {
 							href="#"
 							class="govuk-link govuk-body-s"
 							:data-testid="`emitter_remove_${i}`"
+							:aria-disabled="isEmitterBeingEdited"
+							:class="{ 'emitter-action--disabled': isEmitterBeingEdited }"
 							@click.prevent="removeEmitter(i)"
 						>
 							Remove
@@ -316,7 +439,7 @@ const saveEmitter = () => {
 							label="Product reference"
 							name="productReference"
 							validation="required"
-							help="Select the radiator type from the PCDB using the button below."
+							help="Select the radiator type from the PCDB using the button below"
 							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="radiator"
 							:page-url="route.fullPath"
@@ -343,12 +466,14 @@ const saveEmitter = () => {
 					<template v-if="formModel.typeOfHeatEmitter === 'fanCoil'">
 						<FieldsSelectPcdbProduct
 							:id="`selectFanCoil_${i}`"
-							help="Select the fan coil type from the PCDB using the button below."
+							help="Select the fan coil type from the PCDB using the button below"
 							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="fanCoil"
 							:page-url="route.fullPath"
 							:page-index="props.index"
 							:emitter-index="i"
+							:on-incompatible-energy-source="handleIncompatibleEnergySource"
+							:show-incompatible-energy-source-error="showIncompatibleEnergySourceError"
 							@product-loaded="onProductLoaded"
 						/>
 						<FormKit
@@ -366,7 +491,7 @@ const saveEmitter = () => {
 							label="Product reference"
 							name="productReference"
 							validation="required"
-							help="Select the underfloor heating type from the PCDB using the button below."
+							help="Select the underfloor heating type from the PCDB using the button below"
 							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="underFloorHeating"
 							:page-url="route.fullPath"
@@ -404,7 +529,7 @@ const saveEmitter = () => {
 		</div>
 
 		<GovButton
-			v-if="emitters.length > 0 && !showAddForm && !isEditing"
+			v-if="emitters.length > 0 && !showAddForm && !isEmitterBeingEdited"
 			secondary
 			test-id="addEmitterButton"
 			:click="() => { showAddForm = true }"
@@ -412,7 +537,7 @@ const saveEmitter = () => {
 			Add another emitter
 		</GovButton>
 
-		<div v-if="(showAddForm || emitters.length === 0) && !isEditing" class="govuk-summary-card">
+		<div v-if="(showAddForm || emitters.length === 0) && !isEmitterBeingEdited" class="govuk-summary-card">
 			<div class="govuk-summary-card__title-wrapper">
 				<h2 class="govuk-summary-card__title">Add emitter</h2>
 				<ul v-if="emitters.length > 0" class="govuk-summary-card__actions">
@@ -434,7 +559,7 @@ const saveEmitter = () => {
 						id="typeOfHeatEmitter"
 						type="govRadios"
 						label="Type of emitter"
-						help="Please note, underfloor heating is not currently available, but will be in future releases."
+						help="Please note, underfloor heating is not currently available, but will be in future releases"
 						:options="heatEmitterTypes"
 						name="emitterTypeSelection"
 						@input="addEmitter"
@@ -455,5 +580,11 @@ const saveEmitter = () => {
 :deep(.govuk-body--m),
 :deep(.govuk-label--m) {
 	font-size: 1.1875rem !important;
+}
+
+.emitter-action--disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	text-decoration: none;
 }
 </style>

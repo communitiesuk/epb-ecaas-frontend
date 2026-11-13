@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
-import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
+import { surfaceAreaAdjacentSpaceZod, type InternalDoorData } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Internal door";
@@ -16,17 +16,28 @@ const model = ref(doorData?.data);
 const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
-const saveForm = () => {
+const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceInternalDoor: doors } = state.dwellingFabric.dwellingSpaceDoors;
 		const currentDoor = doors.data[index];
+
 		if (!currentDoor) {
 			throw new Error("No internal door found to save");
 		}
+
+		doors.data[index]!.data = {
+			...currentDoor.data,
+			...(fields.arealHeatCapacity === "Custom" ? {
+				arealHeatCapacity: fields.arealHeatCapacity,
+				arealHeatCapacityCustom: fields.arealHeatCapacityCustom,
+			} : {
+				arealHeatCapacity: fields.arealHeatCapacity,
+			}),
+		};
+
 		currentDoor.complete = true;
 		doors.complete = false;
 	});
@@ -42,13 +53,6 @@ autoSaveElementForm<InternalDoorData>({
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	},
-});
-
-const taggedWithCeiling = computed(() => {
-	return store.getTaggedItem(
-		[dwellingSpaceCeilings],
-		model.value?.associatedItemId,
-	) ? true : false;
 });
 
 const tagHasValidPitch = computed(() => {
@@ -87,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govRadios"
 			:options="typeOfInternalDoorOptions"
 			label="Type"
-			help="This affects which inputs are necessary."
+			help="This affects which inputs are necessary"
 			name="typeOfInternalDoor"
 			validation="required" />
 		<template v-if="mounted && !!model?.typeOfInternalDoor">
@@ -128,14 +132,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsUValue v-if="model.typeOfInternalDoor === 'unheatedSpace'" help="Enter the U-value of the full thickness of the door build up" />
 			<FieldsUValue v-else help="Enter the U-value of half the thickness of the door build up" />
 			<FieldsArealHeatCapacity 
-				v-if="model.typeOfInternalDoor === 'unheatedSpace'" 
 				help="For doors, this is usually very light"
-				:show-door-guidance="true"
-			/>
-			<FieldsArealHeatCapacity 
-				v-else
-				help="For doors, this is usually very light" 
-				:show-door-guidance="true"
+				show-construction-build-up-guidance
 			/>
 			<FieldsMassDistributionClass v-if="model.typeOfInternalDoor === 'unheatedSpace'" help="This is the distribution of mass in the full thickness of the door build up" />
 			<FieldsMassDistributionClass v-else help="This is the distribution of mass in half the thickness of the door build up" />
@@ -151,13 +149,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:3"
 			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">
+				<p class="govuk-body">
 					The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The U-value is the inverse of the total thermal resistance of a building element.
 				</p>
-				<p class="govuk-hint">
+				<p class="govuk-body">
 					See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.
 				</p>
-				<p class="govuk-hint">
+				<p class="govuk-body">
 					The maximum thermal resistance of an unheated space is 2.5
 					(m²·K)/W. This is when the facing wall is not exposed.
 				</p>
@@ -165,7 +163,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</FormKit>
 		<FieldsFrontDoor
 			v-if="mounted && model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' &&
-				(taggedWithCeiling === false && tagHasValidPitch || !model?.associatedItemId)"
+				(tagHasValidPitch || !model?.associatedItemId)"
 			:index="index"
 			door-type="Internal"
 		/>

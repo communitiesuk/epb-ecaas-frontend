@@ -9,19 +9,19 @@
 		<tbody class="govuk-table__body">
 			<tr class="govuk-table__row">
 				<td class="govuk-table__cell">0⁰</td>
-				<td class="govuk-table__cell">The external surface is facing up, for example ceilings</td>
+				<td class="govuk-table__cell">The external surface is facing up, for example ceilings.</td>
 			</tr>
 		</tbody>
 		<tbody class="govuk-table__body">
 			<tr class="govuk-table__row">
 				<td class="govuk-table__cell">90⁰</td>
-				<td class="govuk-table__cell">The external surface is vertical</td>
+				<td class="govuk-table__cell">The external surface is vertical.</td>
 			</tr>
 		</tbody>
 		<tbody class="govuk-table__body">
 			<tr class="govuk-table__row">
 				<td class="govuk-table__cell">180⁰</td>
-				<td class="govuk-table__cell">The external surface is facing down, for example floors</td>
+				<td class="govuk-table__cell">The external surface is facing down, for example floors.</td>
 			</tr>
 		</tbody>
 	</table>

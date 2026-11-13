@@ -1,23 +1,39 @@
 <script setup lang="ts">
 import type { HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
+import type { AnyPcdbProduct, BoilerProduct } from "~/pcdb/pcdb.types";
 import type { SchemaBoilerLocationType } from "~/schema/aliases";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
 import { hasPackagedProduct } from "~/utils/products";
 import { celsius } from "~/utils/units/temperature";
-import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const route = useRoute();
 const store = useEcaasStore();
 
-defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
+const props = defineProps<{
+	model: Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 	index: number;
 	page: HeatSourceSectionPage;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
+const boilerProduct = ref<BoilerProduct>();
+
 const heatSources = getCombinedHeatSources(store);
+
+const handleProductLoaded = (product: AnyPcdbProduct) => {
+	if (
+		product.technologyType === "CombiBoiler" ||
+    product.technologyType === "RegularBoiler"
+	) {
+		boilerProduct.value = product;
+	}
+
+	props.onProductLoaded?.(product);
+};
+
+const showLpgEnergySource = computed(() => boilerProduct.value?.fuel === "LPG_bulk");
 
 const locationOfBoilerOptions = {
 	"internal": "Heated space",
@@ -54,17 +70,17 @@ const emit = defineEmits(["update-boiler-model"]);
 		/>
 		<FieldsSelectPcdbProduct
 			v-if="model.typeOfBoiler"
-			id="selectBoiler"
+			id="productReference"
 			label="Select a boiler"
-			help="Select the boiler model from the PCDB using the button below."
+			help="Select the boiler model from the PCDB using the button below"
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfBoiler"
 			:heat-source="model"
 			:page-url="route.fullPath"
 			:page-index="index"
 			:disabled="hasPackagedProduct(model)"
-			@product-loaded="onProductLoaded"
-		/>
+			:on-incompatible-energy-source="onIncompatibleEnergySource"
+			@product-loaded="handleProductLoaded"		/>
 		<FormKit
 			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"
 			id="specifiedLocation"
@@ -75,11 +91,48 @@ const emit = defineEmits(["update-boiler-model"]);
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
 		/>
+		<FieldsEnergySupplies
+			v-if="showLpgEnergySource"
+			id="energySupply"
+			name="energySupply"
+			label="LPG Energy source"
+			help="Select an LPG energy source that has been added previously"
+			:allowed-fuel-types="[
+				'LPG_bulk',
+				'LPG_bottled',
+				'LPG_condition_11F',
+			]"
+			empty-message="No LPG energy sources added"
+			empty-link-message="Click here to add an LPG energy source"
+		/>
+		<FieldsEnergySupplies
+			v-else-if="!boilerProduct?.fuel"
+			id="energySupply"
+			name="energySupply"
+			label="Energy supply"
+			help="Select the relevant energy supply that has been added previously"
+			:allowed-fuel-types="[
+				'mains_gas',
+				'LPG_bulk',
+				'LPG_bottled',
+				'LPG_condition_11F',
+			]"
+			empty-message="No gaseous energy sources added"
+			empty-link-message="Click here to add a gaseous energy source"
+		/>
+		<FormKit
+			v-else
+			id="energySupply"
+			name="energySupply"
+			type="hidden"
+			:value="boilerProduct.fuel"
+			data-testid="energySupply"
+		/>
 		<FormKit
 			id="maxFlowTemp"
 			name="maxFlowTemp"
 			label="Maximum flow temperature"
-			:help="`Enter the highest temperature that the battery is allowed to operate at for ${page}`"
+			:help="`Enter the highest temperature that the boiler is allowed to operate at for ${page}`"
 			type="govInputWithUnit"
 			:unit="celsius"
 			validation="required"

@@ -1,15 +1,16 @@
-import type { BuildingElementGroundForSchema, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal, SchemaEdgeInsulationVertical } from "~/schema/aliases";
-import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
-import { defaultZoneName } from "./common";
+import type { BuildingElementGroundForSchema, BuildingElementOfType, SchemaEdgeInsulationHorizontal, SchemaEdgeInsulationVertical, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint } from "~/schema/aliases";
 import type {
 	DwellingSpaceLightingData,
 	DwellingSpaceZoneParametersData,
 	EcaasForm,
 	ExternalUnglazedDoorData,
 	LinearThermalBridgeData,
+	PartyFloorData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
 import { asMetres, centimetre, metre, millimetre } from "~/utils/units/length";
+import { defaultZoneName } from "./common";
+import { mapDoorData, mapFloorData, mapLightingData, mapRoofData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
@@ -23,7 +24,11 @@ const baseForm = {
 };
 
 describe("dwelling fabric mapper", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();
@@ -250,6 +255,7 @@ describe("dwelling fabric mapper", () => {
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
 			ventilationOpeningsArea: 100,
+			smartAirBricks: true,
 		};
 
 		const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -272,6 +278,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const internalFloorUnheatedSpace: InternalFloorData = {
+			id: "b2127c90-38b2-464c-ba3a-bdc8daae1c5f",
 			typeOfInternalFloor: "unheatedSpace",
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
@@ -279,15 +286,20 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
 			uValue: 1,
+			pitchOption: "180",
+			pitch: 180,
 		};
 
 		const internalFloorHeatedSpace: InternalFloorData = {
+			id: "c70c9862-f536-45b4-9d45-58c5cb612d9c",
 			typeOfInternalFloor: "heatedSpace",
 			name: "Internal 2",
 			surfaceAreaOfElement: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			uValue: 1,
+			pitchOption: "180",
+			pitch: 180,
 		};
 
 		const exposedFloor: ExposedFloorData = {
@@ -329,6 +341,14 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			depthOfBasementFloor: 1,
 			thicknessOfWalls: unitValue(20, millimetre),
+		};
+		const partyFloor: PartyFloorData = {
+			id: "0ed8380b-d397-4552-b82e-85963eceb805",
+			name: "Party floor 1",
+			surfaceArea: 5,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+			uValue: 1,
 		};
 		const wallOfHeatedBasement: WallOfHeatedBasementData = {
 			id: "heated-basement-wall-id",
@@ -385,6 +405,7 @@ describe("dwelling fabric mapper", () => {
 					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
 					dwellingSpaceFloorAboveUnheatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveUnheatedBasement }] },
 					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveHeatedBasement }] },
+					dwellingSpacePartyFloor: { ...baseForm, data: [{ ...baseForm, data: partyFloor }] },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceWallOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: wallOfHeatedBasement }] },
@@ -400,6 +421,16 @@ describe("dwelling fabric mapper", () => {
 							...baseForm, data: linearThermalBridgeData3,
 						}],
 					},
+				},
+			},
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: {
+						testPressure: "Standard",
+						airTightnessTestResult: 5,
+						smartAirBricksOpen: true,
+					},
+					complete: true,
 				},
 			},
 		});
@@ -422,6 +453,7 @@ describe("dwelling fabric mapper", () => {
 		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
 		const floorAboveUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveUnheatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
 		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
+		const partyFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyFloor.name + floorSuffix] as BuildingElementAdjacentConditionedSpace;
 
 		const expectedGroundFloor: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
@@ -478,10 +510,13 @@ describe("dwelling fabric mapper", () => {
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
-			shield_fact_location: "Average", 
+			smart_air_bricks: groundFloorWithSuspendedFloor.smartAirBricks,
+			vents_open_during_airtightness_test: true,
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
+		expect("vents_open_during_airtightness_test" in groundFloorWithSuspendedFloorElement
+			&& groundFloorWithSuspendedFloorElement.vents_open_during_airtightness_test).toBe(true);
 
 		const expectedGroundFloorWithThicknessInMillimetres: BuildingElementGroundForSchema = {
 			...expectedGroundFloor,
@@ -524,6 +559,7 @@ describe("dwelling fabric mapper", () => {
 			u_value: internalFloorHeatedSpace.uValue,
 			areal_heat_capacity: internalFloorHeatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalFloorHeatedSpace.massDistributionClass),
+			is_adjacent_space_within_dwelling: true,
 		};
 
 		expect(internalFloorUnheatedSpaceElement).toEqual(expectedInternalFloorUnheatedSpace);
@@ -586,6 +622,17 @@ describe("dwelling fabric mapper", () => {
 
 		expect(floorAboveHeatedBasementElement).toEqual(expectedFloorOfHeatedBasement);
 
+		const expectedPartyFloor: BuildingElementAdjacentConditionedSpace = {
+			type: "BuildingElementAdjacentConditionedSpace",
+			pitch: 180,
+			area: partyFloor.surfaceArea,
+			areal_heat_capacity: partyFloor.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(partyFloor.massDistributionClass),
+			u_value: partyFloor.uValue,
+			is_adjacent_space_within_dwelling: false,
+		};
+
+		expect(partyFloorElement).toEqual(expectedPartyFloor);
 	});
 
 	it("maps wall input state to FHS input request", () => {
@@ -631,7 +678,8 @@ describe("dwelling fabric mapper", () => {
 				pitchOption: "90",
 				pitch: 90,
 				surfaceArea: 10,
-				uValue: 1,
+				uValueWholeWall: 1,
+				thermalResistanceHalfWall: 2.5,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				partyWallCavityType: "filled_unsealed",
@@ -647,7 +695,8 @@ describe("dwelling fabric mapper", () => {
 				pitchOption: "90",
 				pitch: 90,
 				surfaceArea: 10,
-				uValue: 1.5,
+				uValueWholeWall: 1.5,
+				thermalResistanceHalfWall: 2.5,
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "D",
 				partyWallCavityType: "solid",
@@ -712,6 +761,7 @@ describe("dwelling fabric mapper", () => {
 				dwellingSpaceFloors: {
 					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [floorOfHeatedBasement] },
 				},
+				dwellingSpaceThermalBridging: { dwellingSpaceLinearThermalBridges: { ...baseForm, data: [] }, dwellingSpacePointThermalBridges: { ...baseForm, data: [] } },
 			},
 		});
 
@@ -748,8 +798,9 @@ describe("dwelling fabric mapper", () => {
 			pitch: internalWall.data.pitch!,
 			area: internalWall.data.surfaceAreaOfElement,
 			u_value: internalWall.data.uValue,
-			areal_heat_capacity: internalWall.data.arealHeatCapacity,
+			areal_heat_capacity: "Very light",
 			mass_distribution_class: fullMassDistributionClass(internalWall.data.massDistributionClass),
+			is_adjacent_space_within_dwelling: true,
 		};
 
 		expect(internalWallElement).toEqual(expectedInternalWall);
@@ -758,7 +809,8 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithLiningType.data.pitch!,
 			area: partyWallWithLiningType.data.surfaceArea,
-			u_value: partyWallWithLiningType.data.uValue,
+			u_value_whole_wall: partyWallWithLiningType.data.uValueWholeWall,
+			thermal_resistance_construction: partyWallWithLiningType.data.thermalResistanceHalfWall,
 			areal_heat_capacity: partyWallWithLiningType.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWallWithLiningType.data.massDistributionClass),
 			party_wall_cavity_type: "filled_unsealed",
@@ -771,7 +823,8 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithoutExtraAttributes.data.pitch!,
 			area: partyWallWithoutExtraAttributes.data.surfaceArea,
-			u_value: partyWallWithoutExtraAttributes.data.uValue,
+			u_value_whole_wall: partyWallWithoutExtraAttributes.data.uValueWholeWall,
+			thermal_resistance_construction: partyWallWithoutExtraAttributes.data.thermalResistanceHalfWall,
 			areal_heat_capacity: partyWallWithoutExtraAttributes.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWallWithoutExtraAttributes.data.massDistributionClass),
 			party_wall_cavity_type: "solid",
@@ -783,7 +836,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 			pitch: wallToUnheatedSpace.data.pitch!,
 			area: wallToUnheatedSpace.data.surfaceAreaOfElement,
-			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
+			areal_heat_capacity: "Very light",
 			mass_distribution_class: fullMassDistributionClass(wallToUnheatedSpace.data.massDistributionClass),
 			thermal_resistance_unconditioned_space: wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
 			u_value: wallToUnheatedSpace.data.uValue,
@@ -813,19 +866,6 @@ describe("dwelling fabric mapper", () => {
 
 	it("maps ceiling and roof input state to FHS input request", () => {
 		// Arrange
-		const ceiling: CeilingData = {
-			id: "ceiling-id",
-			type: "unheatedSpace",
-			name: "Ceiling 1",
-			surfaceArea: 5,
-			uValue: 1,
-			arealHeatCapacity: "Very light",
-			massDistributionClass: "I",
-			pitchOption: "0",
-			pitch: 0,
-			thermalResistanceOfAdjacentUnheatedSpace: 1,
-		};
-
 		const roofAboveHeatedSpace: RoofData = {
 			id: "roof-id",
 			name: "Roof above heated space",
@@ -886,45 +926,26 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 		};
 
-		const ceilingSuffix = " (ceiling)";
-		const roofSuffix = " (roof)";
-
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { ...baseForm, data: [{ ...baseForm, data: ceiling }] },
-					dwellingSpaceRoofs: {
-						...baseForm,
-						data: [
-							{ ...baseForm, data: roofAboveHeatedSpace },
-							{ ...baseForm, data: roofAboveUnheatedSpace },
-							{ ...baseForm, data: roofPitchedInsulatedAtCeiling },
-							{ ...baseForm, data: roofPitchedInsulatedAtRoof }],
-					},
+				dwellingSpaceRoofs: {
+					...baseForm,
+					data: [
+						{ ...baseForm, data: roofAboveHeatedSpace },
+						{ ...baseForm, data: roofAboveUnheatedSpace },
+						{ ...baseForm, data: roofPitchedInsulatedAtCeiling },
+						{ ...baseForm, data: roofPitchedInsulatedAtRoof }],
 				},
 			},
 		});
 
 		// Act
-		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
+		const fhsInputData = mapRoofData(resolveState(store.$state));
 		// Assert
-		const ceilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[ceiling.name + ceilingSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const roofAboveHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveHeatedSpace.name + roofSuffix]! as BuildingElementOpaque;
-		const roofAboveUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveUnheatedSpace.name + roofSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const roofPitchedInsulatedAtCeilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtCeiling.name + roofSuffix] as BuildingElementOpaque;
-		const roofPitchedInsulatedAtRoofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtRoof.name + roofSuffix] as BuildingElementOpaque;
-
-		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
-			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: extractPitch(ceiling),
-			area: ceiling.surfaceArea,
-			u_value: ceiling.uValue,
-			areal_heat_capacity: ceiling.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(ceiling.massDistributionClass),
-			thermal_resistance_unconditioned_space: ceiling.thermalResistanceOfAdjacentUnheatedSpace,
-		};
-
-		expect(ceilingElement).toEqual(expectedCeiling);
+		const roofAboveHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveHeatedSpace.name]! as BuildingElementOpaque;
+		const roofAboveUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveUnheatedSpace.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const roofPitchedInsulatedAtCeilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtCeiling.name] as BuildingElementOpaque;
+		const roofPitchedInsulatedAtRoofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtRoof.name] as BuildingElementOpaque;
 
 		const expectedFlatRoofAboveHeatedSpace: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
@@ -1056,7 +1077,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			uValue: 1,
 		} as const satisfies InternalDoorData;
-		
+
 		const externalGlazedDoor = {
 			id: "external-glazed-door-id",
 			name: "External glazed door 1",
@@ -1068,9 +1089,13 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.3,
-			midHeightOpenablePart1: 1,
-			maximumOpenableArea: 1,
-			freeAreaHeight: 1,
+			openableParts: [
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 1,
+				},
+			],
 			uValue: 7,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
@@ -1163,46 +1188,50 @@ describe("dwelling fabric mapper", () => {
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
 		const expectedInternalDoorUnheatedSpace =
-		{
-			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: 90,
-			area: internalDoorUnheatedSpace.surfaceArea,
-			u_value: internalDoorUnheatedSpace.uValue,
-			areal_heat_capacity: internalDoorUnheatedSpace.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(internalDoorUnheatedSpace.massDistributionClass),
-			thermal_resistance_unconditioned_space: internalDoorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
-		} as const satisfies BuildingElementAdjacentUnconditionedSpaceSimple;
+
+			{
+				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+				pitch: 90,
+				area: internalDoorUnheatedSpace.surfaceArea,
+				u_value: internalDoorUnheatedSpace.uValue,
+				areal_heat_capacity: internalDoorUnheatedSpace.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(internalDoorUnheatedSpace.massDistributionClass),
+				thermal_resistance_unconditioned_space: internalDoorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
+			} as const satisfies BuildingElementAdjacentUnconditionedSpaceSimple;
+
 
 		expect(internalDoorElement).toEqual(expectedInternalDoorUnheatedSpace);
 
 		const expectedInternalDoorHeatedSpace =
-		{
-			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: 90,
-			area: internalDoorHeatedSpace.surfaceArea,
-			u_value: internalDoorHeatedSpace.uValue,
-			areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
-		};
+
+			{
+				type: "BuildingElementAdjacentConditionedSpace",
+				pitch: 90,
+				area: internalDoorHeatedSpace.surfaceArea,
+				u_value: internalDoorHeatedSpace.uValue,
+				areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
+				is_adjacent_space_within_dwelling: false,
+			} as const satisfies BuildingElementAdjacentConditionedSpace;
+
 
 		expect(internalDoorHeatedSpaceElement).toEqual(expectedInternalDoorHeatedSpace);
-		const midHeight = 30 + externalGlazedDoor.height / 2;
 
-		const expectedExternalGlazedDoor: BuildingElementTransparent = {
+		const expectedExternalGlazedDoor = {
 			type: "BuildingElementTransparent",
 			pitch: 90,
 			orientation360: externalWall.data.orientation,
 			height: externalGlazedDoor.height,
 			width: externalGlazedDoor.width,
-			mid_height: midHeight,
 			base_height: externalGlazedDoor.elevationalHeight,
 			g_value: externalGlazedDoor.solarTransmittance,
 			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
-			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
-			free_area_height: externalGlazedDoor.freeAreaHeight,
 			window_part_list: [
-				{ mid_height_air_flow_path: midHeight },
-				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
+				{
+					free_area_height: externalGlazedDoor.openableParts[0].freeAreaHeight,
+					max_window_open_area: externalGlazedDoor.openableParts[0].maximumOpenableArea,
+					mid_height: externalGlazedDoor.openableParts[0].midHeight,
+				},
 			],
 			shading: [
 				{
@@ -1294,15 +1323,19 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
-			freeAreaHeight: 1,
+			openableParts: [
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 1,
+				},
+			],
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			treatmentControls: "auto_motorised",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
-			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
-			maximumOpenableArea: 1,
 			securityRisk: false,
 			hasShading: true,
 			depthOfReveal: 200,
@@ -1383,14 +1416,13 @@ describe("dwelling fabric mapper", () => {
 			base_height: window.elevationalHeight,
 			u_value: window.uValue,
 			g_value: window.solarTransmittance,
-			mid_height: 30 + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
-			free_area_height: 1,
-			max_window_open_area: window.maximumOpenableArea,
 			window_part_list: [
 				{
-					mid_height_air_flow_path: window.midHeightOpenablePart1,
+					free_area_height: window.openableParts[0]!.freeAreaHeight,
+					max_window_open_area: window.openableParts[0]!.maximumOpenableArea,
+					mid_height: window.openableParts[0]!.midHeight,
 				},
 			],
 			shading: [
@@ -1437,7 +1469,6 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
@@ -1492,7 +1523,6 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
@@ -1545,7 +1575,6 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
@@ -1619,12 +1648,6 @@ describe("dwelling fabric mapper", () => {
 
 		// Assert
 		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging;
-
-		// narrow by removing possibility thermal bridging is represented as a number
-		if (typeof thermalBridging === "number") {
-			expect.fail("Thermal bridging was unexpectedly represented as a number");
-			return;
-		}
 
 		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingLinearFhs;
 		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingPoint;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SchemaShadingObjectType } from "~/schema/aliases";
 import { getUrl, type ShadingData, uniqueName } from "#imports";
+import type { SchemaShadingObjectType } from "~/schema/aliases";
 import { distanceShadingZod, heightShadingZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
@@ -120,7 +120,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="ExternalConditions.shading_segments.*.shading.*.type">
 			<GovDetails summary-text="Help with this input">
 				<ul class="govuk-list govuk-list--bullet">
-					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level</li>
+					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level.</li>
 					<li>An overhang (for example, a roof or balcony) starts at a certain height above ground level. These are rare as it indicates that light is blocked above a certain height but not below it. It will only occur if, for example, there is an overpass or bridge close to the dwelling which blocks a substantial section of the sky.</li>
 				</ul>
 				<img src="/img/overhang-and-obstacle.png" alt="Overhang and obstacle">

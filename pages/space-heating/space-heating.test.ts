@@ -4,11 +4,11 @@ import {
 } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import SpaceHeating from "./index.vue";
 import formStatus from "~/constants/formStatus";
-import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
-import HeatEmitterForm from "./heat-emitters/[heatEmitter]/index.vue";
 import { celsius } from "~/utils/units/temperature";
+import HeatEmitterForm from "./heat-emitters/[heatEmitter]/index.vue";
+import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
+import SpaceHeating from "./index.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -16,8 +16,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("space heating", () => {
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const store = useEcaasStore();
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
 	const user = userEvent.setup();
 
 	afterEach(() => {
@@ -63,7 +67,6 @@ describe("space heating", () => {
 		productReference: "HEAT_BATTERY_SMALL",
 		maxFlowTemp: unitValue(32, celsius),
 		numberOfUnits: 1,
-		energySupply: "electricity",
 	};
 
 	const heatPump: HeatSourceData = {
@@ -641,6 +644,7 @@ describe("space heating", () => {
 					packagedProductReference: "1000",
 					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(32, celsius),
+					energySupply: "mains_gas",
 				};
 
 				const exhaustAirHeatPump: HeatSourceData = {
@@ -861,7 +865,7 @@ describe("space heating", () => {
 					const hotWaterHeatSourcesData = store.domesticHotWater.heatSources.data;
 					const waterStorageData = store.domesticHotWater.waterStorage.data;
 
-					expect((await screen.findByTestId("duplicationError"))).toBeDefined();
+					expect(await screen.findByTestId("spaceHeatingErrorSummary")).toBeDefined();
 					expect(hotWaterHeatSourcesData.length).toBe(1);
 					expect(waterStorageData.length).toBe(1);
 				});
@@ -1109,7 +1113,7 @@ describe("space heating", () => {
 				};
 			});
 
-			it("disables the mark section as complete button when data is incomplete", async () => {
+			it("disables the mark as complete button when data is incomplete", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
@@ -1125,7 +1129,7 @@ describe("space heating", () => {
 
 				await renderSuspended(SpaceHeating);
 
-				const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+				const markAsCompleteButton = screen.getByRole("button", { name: "Mark as complete" });
 				expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 			});
 		});
@@ -1157,11 +1161,15 @@ describe("space heating", () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
-							data: [{ data: boiler, complete: true }],
+							data: [
+								{
+									data: { ...boiler, energySupply: "mains_gas" },
+									complete: true,
+								},
+							],
 						},
 					},
 				});
-
 
 				await renderSuspended(SpaceHeating);
 				await user.click(await screen.findByTestId("markAsCompleteButton"));
@@ -1177,7 +1185,7 @@ describe("space heating", () => {
 				expect(store.spaceHeating.heatSource?.complete).toBe(false);
 
 				await renderSuspended(SpaceHeating);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark as complete" })).not.toBeNull();
 			});
 		});
 	});

@@ -1,7 +1,12 @@
-
 describe("thermal bridging events", () => {
-	const nuxtApp = useNuxtApp();
-	const store = useEcaasStore();
+	let nuxtApp: ReturnType<typeof useNuxtApp>;
+	
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		nuxtApp = useNuxtApp();
+		store = useEcaasStore();
+	});
 
 	const groundFloor: Partial<GroundFloorData> = {
 		id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",

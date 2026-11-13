@@ -1,10 +1,17 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import type { Product } from "~/pcdb/pcdb.types";
-import ProductDetails from "./[id]/index.vue";
-import type { H3Error } from "h3";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import type { H3Error } from "h3";
+import type { Product } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
+import ProductDetails from "./[id]/index.vue";
 
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
+const SPACE_HEATING_HEAT_EMITTERS_PATH = "/space-heating/heat-emitters";
 describe("Heat pump details", async () => {
 	const wetDistributionSystem: Partial<HeatEmittingData> = {
 		name: "Wet distribution system 1",
@@ -34,17 +41,16 @@ describe("Heat pump details", async () => {
 		technologyType: "FanCoils",
 	};
 
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
-	const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-		mockNavigateTo: vi.fn(),
-	}));
-
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(SPACE_HEATING_HEAT_EMITTERS_PATH, mockRoute));
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	beforeEach(() => {

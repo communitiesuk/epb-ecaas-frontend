@@ -1,8 +1,9 @@
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import Vent from "./[vent].vue";
+import { screen } from "@testing-library/vue";
 import type { VentData } from "~/stores/ecaasStore.schema";
+import { millimetresSquare } from "~/utils/units/area.js";
+import Vent from "./[vent].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -10,7 +11,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("vent", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	afterEach(() => {
@@ -36,7 +42,7 @@ describe("vent", () => {
 	const state: VentData = {
 		name: "Vent 1",
 		associatedItemId: externalWall.id,
-		effectiveVentilationArea: 10,
+		effectiveVentilationArea: unitValue(150, millimetresSquare),
 		openingRatio: 1,
 		midHeightOfZone: 1,
 		hasAssociatedItem: true,
@@ -68,7 +74,7 @@ describe("vent", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Vent 1");
 		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
-		await user.type(screen.getByTestId("effectiveVentilationArea"), "10");
+		await user.type(screen.getByTestId("effectiveVentilationArea"), "150");
 		await user.type(screen.getByTestId("midHeightOfZone"), "1");
 		await user.tab();
 	};
@@ -116,7 +122,7 @@ describe("vent", () => {
 		expect(
 			(await screen.findByTestId<HTMLInputElement>("effectiveVentilationArea"))
 				.value,
-		).toBe("10");
+		).toBe("150");
 		expect(
 			(await screen.findByTestId<HTMLInputElement>("midHeightOfZone")).value,
 		).toBe("1");

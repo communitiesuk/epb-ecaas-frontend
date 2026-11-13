@@ -1,17 +1,23 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import userEvent from "@testing-library/user-event";
-import Doors from "./index.vue";
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
-import UnglazedDoorForm from "./external-unglazed/[door].vue";
-import glazedDoorForm from "./external-glazed/[door].vue";
-import internalDoorForm from "./internal/[door].vue";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
+import glazedDoorForm from "./external-glazed/[door].vue";
+import UnglazedDoorForm from "./external-unglazed/[door].vue";
+import Doors from "./index.vue";
+import internalDoorForm from "./internal/[door].vue";
+
+const navigateToMock = vi.hoisted(() => vi.fn());
 
 describe("doors", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -105,8 +111,6 @@ describe("doors", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.2,
-			freeAreaHeight: 1,
-			maximumOpenableArea: 1,
 			uValue: 9,
 			numberOpenableParts: "0",
 			curtainsOrBlinds: false,
@@ -127,9 +131,13 @@ describe("doors", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.2,
-			midHeightOpenablePart1: 2,
-			freeAreaHeight: 1,
-			maximumOpenableArea: 1,
+			openableParts: [
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 2,
+				},
+			],
 			uValue: 5,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: false,
@@ -149,10 +157,18 @@ describe("doors", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.2,
-			midHeightOpenablePart1: 2,
-			midHeightOpenablePart2: 1.2,
-			freeAreaHeight: 1,
-			maximumOpenableArea: 1,
+			openableParts: [
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 2,
+				},
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 1.2,
+				},
+			],
 			uValue: 4,
 			numberOpenableParts: "2",
 			curtainsOrBlinds: false,
@@ -460,7 +476,7 @@ describe("doors", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 
 		const addCompleteDoorsDataToStore = async () => {
 			store.$patch({
@@ -496,7 +512,7 @@ describe("doors", () => {
 
 		type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
 
-		it("disables the Mark section as complete button when a door is incomplete", async () => {
+		it("disables the Mark as complete button when a door is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -519,7 +535,7 @@ describe("doors", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all doors are complete", async () => {
+		it("enables the Mark as complete button when all doors are complete", async () => {
 			await addCompleteDoorsDataToStore();
 
 			await renderSuspended(Doors);
@@ -641,13 +657,13 @@ describe("doors", () => {
 					).toBe(false);
 					await renderSuspended(Doors);
 					expect(
-						screen.getByRole("button", { name: "Mark section as complete" }),
+						screen.getByRole("button", { name: "Mark as complete" }),
 					).not.toBeNull();
 				}
 			});
 
 			// skipped test as appears behaviour of button here is in flux
-			it.skip("disables the mark section as complete button when item is incomplete", async () => {
+			it.skip("disables the mark as complete button when item is incomplete", async () => {
 				store.$patch({
 					dwellingFabric: {
 						dwellingSpaceDoors: {
@@ -660,7 +676,7 @@ describe("doors", () => {
 
 				await renderSuspended(Doors);
 				const markAsCompleteButton = screen.getByRole("button", {
-					name: "Mark section as complete",
+					name: "Mark as complete",
 				});
 				expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 			});

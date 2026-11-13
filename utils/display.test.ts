@@ -1,4 +1,4 @@
-import { show, dim, renderPercentageValue } from "./display";
+import { dim, renderPercentageValue, show } from "./display";
 
 describe("Show function to make showable value", () => {
 	it("renders a string as-is", () => {

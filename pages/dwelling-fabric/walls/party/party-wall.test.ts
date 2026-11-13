@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import PartyWall from "./[wall].vue";
 import { v4 as uuidv4 } from "uuid";
+import PartyWall from "./[wall].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -12,7 +12,12 @@ mockNuxtImport("navigateTo", () => {
 vi.mock("uuid");
 
 describe("party wall", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const state: PartyWallData = {
@@ -24,7 +29,8 @@ describe("party wall", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		partyWallCavityType: "solid",
-		uValue: 0.5,
+		uValueWholeWall: 0.5,
+		thermalResistanceHalfWall: 2.4,
 	};
 
 	afterEach(() => {
@@ -46,7 +52,8 @@ describe("party wall", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("partyWallCavityType_solid"));
-		await user.type(screen.getByTestId("uValue"), "0.5");
+		await user.type(screen.getByTestId("uValueWholeWall"), "0.5");
+		await user.type(screen.getByTestId("thermalResistanceHalfWall"), "2.4");
 		await user.tab();
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -79,7 +86,8 @@ describe("party wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.5");
+		expect((await screen.findByTestId<HTMLInputElement>("uValueWholeWall")).value).toBe("0.5");
+		expect((await screen.findByTestId<HTMLInputElement>("thermalResistanceHalfWall")).value).toBe("2.4");
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -92,7 +100,8 @@ describe("party wall", () => {
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
-		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
+		expect((await screen.findByTestId("uValueWholeWall_error"))).toBeDefined();
+		expect((await screen.findByTestId("thermalResistanceHalfWall_error"))).toBeDefined();
 
 	});
 

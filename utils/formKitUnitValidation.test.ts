@@ -66,10 +66,10 @@ describe("FormKit unit validation", () => {
 	});
 
 	it.each([
-		{ messageName: "zodUnitMax", args: [50], expected: "Thickness of walls must be no more than 50." },
-		{ messageName: "zodUnitLessThan", args: [50], expected: "Thickness of walls must be less than 50." },
-		{ messageName: "zodUnitMin", args: [0], expected: "Thickness of walls must be no less than 0." },
-		{ messageName: "zodUnitGreaterThan", args: [0], expected: "Thickness of walls must be greater than 0." },
+		{ messageName: "zodUnitMax", args: [50], expected: "Thickness of walls must be no more than 50" },
+		{ messageName: "zodUnitLessThan", args: [50], expected: "Thickness of walls must be less than 50" },
+		{ messageName: "zodUnitMin", args: [0], expected: "Thickness of walls must be no less than 0" },
+		{ messageName: "zodUnitGreaterThan", args: [0], expected: "Thickness of walls must be greater than 0" },
 	])("$messageName message matches app style", ({ messageName, args, expected }) => {
 		const { validationMessages } = getValidationConfig();
 		const message = getMessage(validationMessages, messageName);

@@ -2,10 +2,10 @@ type EcaasSectionWithTagging =
 	| WindowData
 	| ExternalWallData
 	| InternalWallData
+	| InternalFloorData
 	| WallsToUnheatedSpaceData
 	| PartyWallData
-	| RoofData
-	| CeilingData;
+	| RoofData;
 
 export function getInheritedPitchAndOrientation(
 	sections: EcaasSectionWithTagging[][],

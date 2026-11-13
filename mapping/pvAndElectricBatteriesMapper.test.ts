@@ -1,7 +1,7 @@
+import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { mapElectricBatteryData, mapPvDiverterData, mapPvData, mapDiverterEnergySupplyData } from "./pvAndElectricBatteriesMapper";
-import type { SchemaWindowShadingObject } from "~/schema/aliases";
+import { mapDiverterEnergySupplyData, mapElectricBatteryData, mapPvData, mapPvDiverterData } from "./pvAndElectricBatteriesMapper";
 
 const baseForm = {
 	data: [],
@@ -10,7 +10,11 @@ const baseForm = {
 
 
 describe("PV and electric batteries mapper", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();

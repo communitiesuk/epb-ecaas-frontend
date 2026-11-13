@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import InternalWall from "./[wall].vue";
 import { v4 as uuidv4 } from "uuid";
+import InternalWall from "./[wall].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -12,7 +12,12 @@ mockNuxtImport("navigateTo", () => {
 vi.mock("uuid");
 
 describe("internal wall", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const internalWall: InternalWallData = {
@@ -108,6 +113,36 @@ describe("internal wall", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("internalWallErrorSummary"))).toBeDefined();
+	});
+
+	it("requires custom areal heat capacity value when custom option is selected", async () => {
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.getByTestId("arealHeatCapacityCustom_error")).toBeDefined();
+	});
+
+	it("saves custom areal heat capacity value to store when custom option is selected", async () => {
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+
+		await populateValidForm();
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.type(screen.getByTestId("arealHeatCapacityCustom"), "10");
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const data = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[0]!.data as Extract<InternalWallData, { arealHeatCapacity: "Custom" }>;
+
+		expect(data.arealHeatCapacityCustom).toEqual(10);
 	});
 
 	it("requires pitch when custom pitch option is selected", async () => {
@@ -244,7 +279,7 @@ describe("internal wall", () => {
 			},
 		});
 	
-		const table = screen.getByTestId("internalWallArealHeatCapacityTable");
+		const table = screen.getByTestId("constructionBuildUpTable");
 	
 		expect(table).toBeDefined();
 		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();

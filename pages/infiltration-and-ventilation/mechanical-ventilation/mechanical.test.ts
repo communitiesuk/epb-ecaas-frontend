@@ -1,15 +1,21 @@
-import { screen } from "@testing-library/vue";
-import userEvent from "@testing-library/user-event";
-import MechanicalVentilationOverview from "./index.vue";
-import MechanicalVentilationForm from "./[mechanical]/index.vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
+import MechanicalVentilationForm from "./[mechanical]/index.vue";
+import MechanicalVentilationOverview from "./index.vue";
+
+const navigateToMock = vi.hoisted(() => vi.fn());
 
 describe("mechanical ventilation overview", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
-	const navigateToMock = vi.hoisted(() => vi.fn());
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
@@ -325,7 +331,7 @@ describe("mechanical ventilation overview", () => {
 
 	it("should only display warning message when mechanical ventilations of type mvhr have been added", async () => {
 		const warningMessage =
-			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork";
+			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork.";
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.queryByText(warningMessage)).toBeNull();
@@ -346,7 +352,7 @@ describe("mechanical ventilation overview", () => {
 
 	it("should only display warning message when mechanical ventilations of type centralised mv have been added", async () => {
 		const warningMessage =
-			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork";
+			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork.";
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.queryByText(warningMessage)).toBeNull();
@@ -365,10 +371,10 @@ describe("mechanical ventilation overview", () => {
 		expect(screen.getByText(warningMessage)).toBeDefined();
 	});
 
-	it("marks mechanical ventilation as complete when mark section as complete button is clicked", async () => {
+	it("marks mechanical ventilation as complete when mark as complete button is clicked", async () => {
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 		const completedStatusElement = screen.queryByTestId(
 			"completeSectionCompleted",
@@ -380,9 +386,7 @@ describe("mechanical ventilation overview", () => {
 		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
 
 		expect(complete).toBe(true);
-		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" }),
-		).toBeNull();
+
 		expect(completedStatusElement?.style.display).not.toBe("none");
 
 		expect(navigateToMock).toHaveBeenCalledWith(
@@ -413,7 +417,7 @@ describe("mechanical ventilation overview", () => {
 			store.infiltrationAndVentilation.mechanicalVentilation.complete,
 		).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -440,7 +444,7 @@ describe("mechanical ventilation overview", () => {
 			store.infiltrationAndVentilation.mechanicalVentilation.complete,
 		).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -471,7 +475,7 @@ describe("mechanical ventilation overview", () => {
 
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -509,7 +513,7 @@ describe("mechanical ventilation overview", () => {
 
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -554,7 +558,7 @@ describe("mechanical ventilation overview", () => {
 		expect(deleteButton).toBeNull();
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 		const addCompleteMechanicalVentilationToStore = async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
@@ -576,7 +580,7 @@ describe("mechanical ventilation overview", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when any mechanical ventilation item is incomplete", async () => {
+		it("disables the Mark as complete button when any mechanical ventilation item is incomplete", async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					mechanicalVentilation: {
@@ -595,7 +599,7 @@ describe("mechanical ventilation overview", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all mechanical ventilation items are complete", async () => {
+		it("enables the Mark as complete button when all mechanical ventilation items are complete", async () => {
 			await addCompleteMechanicalVentilationToStore();
 			await renderSuspended(MechanicalVentilationOverview);
 

@@ -2,8 +2,13 @@ import type { RuntimeNuxtHooks } from "#app";
 import { celsius } from "~/utils/units/temperature";
 
 describe("water storage events", () => {
-	const nuxtApp = useNuxtApp();
-	const store = useEcaasStore();
+	let nuxtApp: ReturnType<typeof useNuxtApp>;
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		nuxtApp = useNuxtApp();
+		store = useEcaasStore();
+	});
 
 	const heatPump: EcaasForm<DomesticHotWaterHeatSourceData> = {
 		data: {

@@ -1,19 +1,28 @@
-import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import Products from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath";
+import Products from "./index.vue";
+
+const { mockFetch, mockRoute } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+}));
+
+const DHW_HWC_BASE_PATH = "/domestic-hot-water/hot-water-cylinders";
 
 describe("Heat source products page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
 	const user = userEvent.setup();
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-	}));
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(DHW_HWC_BASE_PATH, mockRoute));
 
 	afterEach(() => {
 		mockFetch.mockReset();

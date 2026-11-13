@@ -1,7 +1,12 @@
 import { checkDuctworkRequirementsMet } from "~/utils/checkDuctworkRequirementsMet";
 
 describe("checkDuctworkRequirmentsMet", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "MVHR",

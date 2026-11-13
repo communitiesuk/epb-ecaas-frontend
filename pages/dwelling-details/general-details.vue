@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
-import { isInteger } from "~/utils/validation";
-import { getUrl, type DomesticHotWaterHeatSourceData, type EcaasForm, type FuelTypeDisplay, type GeneralDetailsData, type HeatSourceData } from "#imports";
+import { getUrl, type FuelTypeDisplay, type GeneralDetailsData } from "#imports";
 import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
-// import { storeyOfFlatZod } from "~/stores/ecaasStore.schema";
-// import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
+import { kilowatt, type Power } from "~/utils/units/power";
+import { isInteger } from "~/utils/validation";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -18,7 +17,7 @@ const fuelTypeOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
-	"LPG_condition_11F": "LPG - 11F",
+	"LPG_condition_11F": "LPG (Liquid petroleum gas) - condition 11F",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay | CheckboxOption>;
 
 const model = ref({
@@ -42,6 +41,14 @@ const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaB
 
 const energyExportToGridOptions = canExportToGridDisplay;
 
+const validPowerExported = (node: FormKitNode) => {
+	const value = node.value as Power | undefined;
+
+	if (!value) return true;
+
+	return value.amount >= 0 && value.amount <= 100;
+};
+
 const saveForm = (fields: typeof model.value) => {
 
 	store.$patch({
@@ -61,6 +68,7 @@ const saveForm = (fields: typeof model.value) => {
 					numOfWetRooms: fields.numOfWetRooms,
 					fuelType: fields.fuelType,
 					canExportToGrid: fields.canExportToGrid,
+					maxPowerExported: fields.maxPowerExported,
 				},
 				complete: true,
 			},
@@ -69,44 +77,6 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/dwelling-details");
 };
-
-function removeRefsToFuelType(
-	heatSources: EcaasForm<
-		Extract<
-			HeatSourceData,
-			{ "typeOfHeatSource": /*"heatNetwork"*/ | "heatBattery" }
-		> | DomesticHotWaterHeatSourceData | SmartHotWaterTankData
-	>[],
-	removedFuelType: SchemaFuelType,
-) {
-	for (const item of heatSources) {
-		if ("energySupply" in item.data)
-			if (item.data.energySupply === removedFuelType) {
-				item.data.energySupply = undefined!;
-				item.complete = false;
-			}
-	}
-}
-
-watch(() => model.value.fuelType, (newFuelTypes, oldFuelTypes) => {
-	if (newFuelTypes === oldFuelTypes || oldFuelTypes === undefined) return;
-	if (newFuelTypes.length > oldFuelTypes.length) return;
-
-	const removedFuel = oldFuelTypes.find(fuel => !newFuelTypes.includes(fuel));
-	const spaceHeatingHeatSources = store.spaceHeating.heatSource.data.filter(({ data: x }) => 
-		// x.typeOfHeatSource === "heatNetwork"|| 
-		x.typeOfHeatSource === "heatBattery") as EcaasForm<Extract<HeatSourceData, { "typeOfHeatSource": /*"heatNetwork"*/ | "heatBattery" }>>[];
-	const dhwHeatSources = store.domesticHotWater.heatSources.data.filter(({ data: x }) => x.isExistingHeatSource === false && (
-		// x.typeOfHeatSource === "heatNetwork" ||
-		x.typeOfHeatSource === "heatBattery" || x.typeOfHeatSource === "pointOfUse"));
-	const dhwWaterStorage = store.domesticHotWater.waterStorage.data.filter(({ data: x }) => x.typeOfWaterStorage === "smartHotWaterTank") as EcaasForm<SmartHotWaterTankData>[];
-
-	if (removedFuel) {
-		removeRefsToFuelType(spaceHeatingHeatSources, removedFuel);
-		removeRefsToFuelType(dhwHeatSources, removedFuel);
-		removeRefsToFuelType(dhwWaterStorage, removedFuel);
-	}
-});
 
 watch(() => model.value.typeOfDwelling, (newType, oldType) => {
 	if (newType === oldType || oldType === undefined) return;
@@ -131,8 +101,27 @@ watch(() => model.value.fuelType, (newType) => {
 	}
 });
 
-autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
+watch(() => model.value.canExportToGrid, (newValue) => {
+	if (newValue !== "yes") {
+		model.value.maxPowerExported = undefined;
+	}
+});
+
+autoSaveForm<GeneralDetailsData>(model, async (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;
+
+	await invalidateIncompatibleProducts(
+		state,
+		newData.data?.fuelType ?? [],
+	);
+});
+
+watch(() => model.value.partOActiveCoolingRequired, (isCoolingRequired) => {
+	const airConditioning = store.cooling.airConditioning;
+
+	if (isCoolingRequired && airConditioning.complete && airConditioning.data.length === 0) {
+		airConditioning.complete = false;
+	}
 });
 
 watch(() => model.value.partOActiveCoolingRequired, (isCoolingRequired) => {
@@ -395,6 +384,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="canExportToGrid"
 			validation="required"
 			data-field="EnergySupply.*.is_export_capable"
+		/>
+		<FormKit
+			v-if="mounted && model?.canExportToGrid === 'yes'"
+			id="maxPowerExported"
+			type="govInputWithUnit"
+			label="Maximum power that can be exported (optional)"
+			:unit="kilowatt"
+			name="maxPowerExported"
+			help="The Distribution Network Operator (DNO) may have imposed a limit on the amount of energy generated onsite that can be exported to the grid. If they have, enter it here."
+			:validation-rules="{ validPowerExported }"
+			validation="validPowerExported"
+			:validation-messages="{
+				validPowerExported: `Maximum power that can be exported must be 100 ${kilowatt.name}s or less.`,
+			}"
+			data-field="EnergySupply.*.power_limit_export"
 		/>
 		<FormKit
 			id="isPartGCompliant"

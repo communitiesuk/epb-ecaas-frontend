@@ -1,22 +1,28 @@
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
-import { screen, within } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen, within } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
-import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
-import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
+import { litre } from "~/utils/units/volume";
+import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 
 const baseCompleteForm = {
 	data: [],
 	complete: true,
 };
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("Domestic hot water", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -437,7 +443,6 @@ describe("Domestic hot water", () => {
 						productReference: "1234",
 						maxFlowTemp: unitValue(32, celsius),
 						numberOfUnits: 1,
-						energySupply: "electricity",
 						isExistingHeatSource: false,
 						heatSourceId: "NEW_HEAT_SOURCE",
 						coldWaterSource: "mainsWater",
@@ -824,6 +829,7 @@ describe("Domestic hot water", () => {
 				packagedProductReference: "1000",
 				needsSpecifiedLocation: false,
 				maxFlowTemp: unitValue(32, celsius),
+				energySupply: "mains_gas",
 			};
 
 			const exhaustAirHeatPump: HeatSourceData = {
@@ -991,7 +997,7 @@ describe("Domestic hot water", () => {
 		);
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 
 		const addCompleteHotWaterToStore = async () => {
 			const heatPump: EcaasForm<DomesticHotWaterHeatSourceData> = {
@@ -1049,7 +1055,7 @@ describe("Domestic hot water", () => {
 
 		// type SectionKey = keyof typeof store.domesticHotWater;
 
-		it("disables the Mark section as complete button when a section is incomplete", async () => {
+		it("disables the Mark as complete button when a section is incomplete", async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: false }] },
@@ -1063,7 +1069,7 @@ describe("Domestic hot water", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all sections are complete", async () => {
+		it("enables the Mark as complete button when all sections are complete", async () => {
 			await addCompleteHotWaterToStore();
 			await renderSuspended(DomesticHotWater);
 
@@ -1742,7 +1748,7 @@ describe("Domestic hot water", () => {
 				expect(store.domesticHotWater.hotWaterOutlets?.complete).toBe(false);
 
 				await renderSuspended(DomesticHotWater);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark as complete" })).not.toBeNull();
 			});
 		});
 	});
@@ -1777,7 +1783,7 @@ describe("Domestic hot water", () => {
 			});
 		});
 
-		it("disables the mark section as complete button", async () => {
+		it("disables the mark as complete button", async () => {
 
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
@@ -1810,6 +1816,7 @@ describe("Domestic hot water", () => {
 				packagedProductReference: "1000",
 				needsSpecifiedLocation: false,
 				maxFlowTemp: unitValue(32, celsius),
+				energySupply: "mains_gas",
 			};
 
 			store.$patch({

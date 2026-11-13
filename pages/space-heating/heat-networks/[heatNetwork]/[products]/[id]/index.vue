@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HeatNetworkProductDetailsPage from "~/components/HeatNetworkProductDetailsPage.vue";
 import type { PageId } from "~/data/pages/pages";
-import type { Product, HeatNetworkProduct } from "~/pcdb/pcdb.types";
+import type { HeatNetworkProduct, Product } from "~/pcdb/pcdb.types";
 import type { HeatNetworkData, HeatNetworkProductType } from "~/stores/ecaasStore.schema";
 import { heatNetworkProductTypeDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
@@ -13,8 +13,8 @@ const router = useRouter();
 const { params, query } = useRoute();
 
 const heatNetworkType = kebabToCamelCase(params.products as string);
-
-if (!(heatNetworkType in productTypeMap)) {
+const validHeatNetworkType = heatNetworkType in productTypeMap;
+if (!validHeatNetworkType) {
 	throw createError({
 		statusCode: 404,
 		statusMessage: "Product type not found",
@@ -52,7 +52,7 @@ const selectProduct = () => {
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<HeatNetworkProductDetailsPage :product="(data as Product)"/>
+	<HeatNetworkProductDetailsPage v-if="validHeatNetworkType" :product="(data as Product)"/>
 
 	<div class="govuk-button-group">
 		<GovButton

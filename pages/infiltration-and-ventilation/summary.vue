@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type VentData } from "#imports";
+import type { SummarySection } from "~/common.types";
 import { useProductReferences } from "~/composables/productReferences";
 import { installationLocationOptions, installationTypeOptions } from "~/utils/display";
 
@@ -20,7 +20,7 @@ const mvhrAssociatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof
 const { 
 	dwellingSpaceWindows, 
 	dwellingSpaceWalls, 
-	dwellingSpaceCeilingsAndRoofs: { dwellingSpaceRoofs }, 
+	dwellingSpaceRoofs, 
 	dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor },
 } = store.dwellingFabric;
 
@@ -122,6 +122,7 @@ const ductworkSummary: SummarySection = {
 			"Ductwork cross sectional shape": displayCamelToSentenceCase(show(x.ductworkCrossSectionalShape)),
 			"Internal diameter of ductwork": internalDiameterOfDuctwork, 
 			"External diameter of ductwork": externalDiameterOfDuctwork,
+			"Internal perimeter of ductwork": "internalPerimeterOfDuctwork" in x ? dim(x.internalPerimeterOfDuctwork, "millimetres") : emptyValueRendering,
 			"Length of ductwork": dim(x.lengthOfDuctwork, "metres"),
 			"Insulation thickness": dim(x.insulationThickness, "millimetres"),
 			"Thermal conductivity of ductwork insulation": dim(x.thermalInsulationConductivityOfDuctwork, "watts per metre kelvin"),
@@ -149,7 +150,7 @@ const ventSummary: SummarySection = {
 
 		return {
 			"Name": x.name,
-			"Effective ventilation area": dim(x.effectiveVentilationArea, "centimetres square"),
+			"Effective ventilation area": dim(x.effectiveVentilationArea, "millimetres square"),
 			"Mid height of zone": dim(x.midHeightOfZone, "metres"),
 			"Associated wall or window": associatedItemName,
 			"Orientation": orientation !== undefined ? dim(orientation, "degrees") : emptyValueRendering,
@@ -174,12 +175,26 @@ const ventilationSummary: SummarySection = {
 
 const airPermeabilityData = store.infiltrationAndVentilation.airPermeability.data;
 
+const hasSmartAirBricks = store.dwellingFabric.dwellingSpaceFloors
+	.dwellingSpaceGroundFloor.data
+	.some(
+		x =>
+			x.data.typeOfGroundFloor === "Suspended_floor" &&
+			"smartAirBricks" in x.data &&
+			x.data.smartAirBricks === true,
+	);
+	
 const airPermeabilitySummary: SummarySection = {
 	id: "airPermeability",
 	label: "Air permeability",
 	data: {
 		"Type of infiltration pressure test": displayTypeOfInfiltrationPressureTest(airPermeabilityData.testPressure),
 		"Air tightness test result": dim(airPermeabilityData.airTightnessTestResult, "cubic metres per hour per square metre"),
+		...(hasSmartAirBricks &&
+			airPermeabilityData.smartAirBricksOpen !== undefined && {
+			"Were the smart air bricks open during the air tightness test?":
+					airPermeabilityData.smartAirBricksOpen ? "Yes" : "No",
+		}),
 	},
 	editUrl: getUrl("airPermeability"),
 };

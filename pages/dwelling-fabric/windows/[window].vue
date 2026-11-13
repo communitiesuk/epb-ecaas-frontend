@@ -2,10 +2,8 @@
 import type { WindowData } from "#imports";
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
-import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod, freeAreaHeightZod } from "~/stores/ecaasStore.schema";
+import { freeAreaHeightZod, gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, revealDimensionZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-
-
 
 const title = "Window";
 const store = useEcaasStore();
@@ -21,7 +19,7 @@ const index = getStoreIndex(windowsData);
 const model = ref(window?.data);
 
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 // Build tagging options with "none of the above"
 const tagOptions = [
@@ -53,69 +51,17 @@ const saveForm = (fields: WindowData) => {
 			elevationalHeight: fields.elevationalHeight,
 			securityRisk: fields.securityRisk,
 			openingToFrameRatio: fields.openingToFrameRatio,
-			freeAreaHeight: fields.freeAreaHeight ?? 0,
 			depthOfReveal: fields.depthOfReveal,
 			distanceFromGlassToStartOfReveal: fields.distanceFromGlassToStartOfReveal,
+			numberOpenableParts: fields.numberOpenableParts,
+			openableParts: fields.openableParts,
 		};
 
-		let commonFieldsIncludingOpenableParts;
-
-		const numberParts = fields.numberOpenableParts;
-
-		switch (numberParts) {
-			case "0":
-				commonFieldsIncludingOpenableParts = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-				};
-				break;
-			case "1":
-				commonFieldsIncludingOpenableParts = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-				} as Extract<WindowData, { numberOpenableParts: "1" }>;
-				break;
-			case "2":
-				commonFieldsIncludingOpenableParts = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-					midHeightOpenablePart2: fields.midHeightOpenablePart2,
-				} as Extract<WindowData, { numberOpenableParts: "2" }>;
-				break;
-			case "3":
-				commonFieldsIncludingOpenableParts = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-					midHeightOpenablePart2: fields.midHeightOpenablePart2,
-					midHeightOpenablePart3: fields.midHeightOpenablePart3,
-				} as Extract<WindowData, { numberOpenableParts: "3" }>	;
-				break;
-			case "4":
-				commonFieldsIncludingOpenableParts = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-					midHeightOpenablePart2: fields.midHeightOpenablePart2,
-					midHeightOpenablePart3: fields.midHeightOpenablePart3,
-					midHeightOpenablePart4: fields.midHeightOpenablePart4,
-				} as Extract<WindowData, { numberOpenableParts: "4" }>;
-				break;
-			default:
-				commonFieldsIncludingOpenableParts = { ...commonFields } as WindowData;
-				break;
-		}
 		let newWindowValue : WindowData;
 
 		if (fields.curtainsOrBlinds) {
 			newWindowValue = {
-				...commonFieldsIncludingOpenableParts,
+				...commonFields,
 				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
 				treatmentControls: fields.treatmentControls,
@@ -125,7 +71,7 @@ const saveForm = (fields: WindowData) => {
 		} else {
 			newWindowValue = {
 				curtainsOrBlinds: false,
-				...commonFieldsIncludingOpenableParts,
+				...commonFields,
 			} as WindowData;
 		}
 
@@ -175,6 +121,18 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 		(window.data as Record<string, unknown>).shading = items;
 	});
 };
+
+const createOpenableParts = (numberOpenableParts: string | undefined) => {
+	return Array.from({ length: numberOpenableParts ? parseInt(numberOpenableParts) : 0 }, () => ({}));
+};
+
+const openableParts = ref(createOpenableParts(model.value?.numberOpenableParts));
+
+watch(model, (currentModel, prevModel) => {
+	if (currentModel && currentModel?.numberOpenableParts !== prevModel?.numberOpenableParts) {
+		openableParts.value = createOpenableParts(currentModel.numberOpenableParts);
+	}
+});
 </script>
 
 <template>
@@ -271,11 +229,11 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header">0</th>
-							<td class="govuk-table__cell">There is no frame, only glass</td>
+							<td class="govuk-table__cell">There is no frame, only glass.</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header">1</th>
-							<td class="govuk-table__cell">There is no glass</td>
+							<td class="govuk-table__cell">There is no glass.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -304,73 +262,54 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			name="numberOpenableParts"
 			validation="required"
 		/>
-
-		<template v-if="mounted && !!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
-			<FormKit
-				id="maximumOpenableArea"
-				type="govInputWithSuffix"
-				suffix-text="m²"
-				label="Maximum openable area"
-				help="Enter the total area of the gap created when the window is fully open, as defined by Part O"
-				name="maximumOpenableArea"
-				:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
-			/>
-			<FormKit
-				id="freeAreaHeight"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Free area height of window opening"
-				help="Enter the vertical height of the section of the window that opens"
-				name="freeAreaHeight"
-				:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
-			>
-				<GovDetails summary-text="Help with this input">
-					<p class="govuk-body">This diagrams shows how to measure the free area height of a window.</p>
-					<img src="/img/free_area_height.png" alt="How to measure the free area height of a window">
-				</GovDetails>
-			</FormKit>
-			<FormKit
-				id="midHeightOpenablePart1"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Mid height of the air flow path for openable part 1 "
-				help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
-				name="midHeightOpenablePart1"
-				:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
-			/>
-			<template v-if="model.numberOpenableParts !== '1'">
+		<template v-if="model && model.numberOpenableParts">
+			<ClientOnly>
 				<FormKit
-					id="midHeightOpenablePart2"
-					type="govInputWithSuffix"
-					suffix-text="m"
-					label="Mid height of the air flow path for openable part 2 "
-					help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
-					name="midHeightOpenablePart2"
-					:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
-				/>
-				<template v-if="model.numberOpenableParts !== '2'">
+					v-slot="{ items }"
+					v-model="openableParts"
+					name="openableParts"
+					type="list"
+					dynamic>
 					<FormKit
-						id="midHeightOpenablePart3"
-						type="govInputWithSuffix"
-						suffix-text="m"
-						label="Mid height of the air flow path for openable part 3 "
-						help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
-						name="midHeightOpenablePart3"
-						:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
-					/>
-					<template v-if="model.numberOpenableParts !== '3'">
+						v-for="(item, i) in items"
+						:key="item"
+						:index="i"
+						type="group">
 						<FormKit
-							id="midHeightOpenablePart4"
+							:id="`maximumOpenableArea_${i}`"
+							type="govInputWithSuffix"
+							suffix-text="m²"
+							:label="`Maximum openable area for openable part ${i + 1}`"
+							help="Enter the total area of the gap created when the window is fully open, as defined by Part O"
+							name="maximumOpenableArea"
+							:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
+						/>
+						<FormKit
+							:id="`freeAreaHeight_${i}`"
 							type="govInputWithSuffix"
 							suffix-text="m"
-							label="Mid height of the air flow path for openable part 4 "
+							:label="`Free area height of window opening for openable part ${i + 1}`"
+							help="Enter the vertical height of the section of the window that opens"
+							name="freeAreaHeight"
+							:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
+						>
+							<GovDetails summary-text="Help with this input">
+								<p class="govuk-body">This diagrams shows how to measure the free area height of a window.</p>
+								<img src="/img/free_area_height.png" alt="How to measure the free area height of a window">
+							</GovDetails>
+						</FormKit>
+						<FormKit
+							:id="`midHeightOpenable_${i}`"
+							type="govInputWithSuffix"
+							suffix-text="m"
+							:label="`Mid height of the air flow path for openable part ${i + 1}`"
 							help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
-							name="midHeightOpenablePart4"
+							name="midHeight"
 							:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 						/>
-					</template>
-				</template>
-			</template>
+					</FormKit>
+				</FormKit>
+			</ClientOnly>
 		</template>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 		<h2 class="govuk-heading-l no-bottom-padding">Window shading</h2>

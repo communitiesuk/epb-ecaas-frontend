@@ -30,7 +30,7 @@ const saveForm = () => {
 };
 
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 const tagOptions = [
 	...dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
@@ -144,7 +144,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="arealHeatCapacity"
 			name="arealHeatCapacity"
 			help="For doors, this is usually very light"
-			:show-door-guidance="true"
+			show-construction-build-up-guidance
 		/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FieldsFrontDoor

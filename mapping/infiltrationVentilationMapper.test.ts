@@ -1,7 +1,8 @@
-import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
-import { litrePerSecond } from "~/utils/units/flowRate";
+import type { SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
-import type { SchemaMechanicalVentilation } from "~/schema/aliases";
+import { millimetresSquare } from "~/utils/units/area";
+import { litrePerSecond } from "~/utils/units/flowRate";
+import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 
 const baseForm = {
 	data: [],
@@ -35,7 +36,11 @@ describe("infiltration ventilation mapper", () => {
 		},
 	}];
 
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();
@@ -226,14 +231,12 @@ describe("infiltration ventilation mapper", () => {
 						}],
 					},
 				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
+				dwellingSpaceRoofs: {
+					...baseForm,
+					data: [{
 						...baseForm,
-						data: [{
-							...baseForm,
-							data: roofData as RoofData,
-						}],
-					},
+						data: roofData as RoofData,
+					}],
 				},
 			},
 			infiltrationAndVentilation: {
@@ -267,21 +270,37 @@ describe("infiltration ventilation mapper", () => {
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
 
-		const ductwork: EcaasForm<DuctworkData>[] = [{
-			...baseForm,
-			data: {
-				name: "ductwork 1",
-				mvhrUnit: "bathroom exhaust fan",
-				ductworkCrossSectionalShape: "circular",
-				internalDiameterOfDuctwork: 200,
-				externalDiameterOfDuctwork: 300,
-				lengthOfDuctwork: 10.0,
-				thermalInsulationConductivityOfDuctwork: 0.023,
-				insulationThickness: 100,
-				surfaceReflectivity: false,
-				ductType: "extract",
+		const ductwork: EcaasForm<DuctworkData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: "ductwork 1",
+					mvhrUnit: "bathroom exhaust fan",
+					ductworkCrossSectionalShape: "circular",
+					internalDiameterOfDuctwork: 200,
+					externalDiameterOfDuctwork: 300,
+					lengthOfDuctwork: 10.0,
+					thermalInsulationConductivityOfDuctwork: 0.023,
+					insulationThickness: 100,
+					surfaceReflectivity: false,
+					ductType: "extract",
+				},
 			},
-		}];
+			{
+				...baseForm,
+				data: {
+					name: "ductwork 2",
+					mvhrUnit: "bathroom exhaust fan",
+					ductworkCrossSectionalShape: "rectangular",
+					internalPerimeterOfDuctwork: 1000,
+					lengthOfDuctwork: 10.0,
+					thermalInsulationConductivityOfDuctwork: 0.023,
+					insulationThickness: 100,
+					surfaceReflectivity: false,
+					ductType: "extract",
+				},
+			},
+		];
 
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -315,16 +334,20 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
-		const firstDuctwork = firstMechVent.ductwork[0];
+		const firstDuctwork = firstMechVent.ductwork[0] as Extract<SchemaMechanicalVentilationDuctwork, { cross_section_shape: "circular" }>;
+		const secondDuctwork = firstMechVent.ductwork[1] as Extract<SchemaMechanicalVentilationDuctwork, { cross_section_shape: "rectangular" }>;
 
-		expect(firstDuctwork?.cross_section_shape).toBe("circular");
-		expect(firstDuctwork?.internal_diameter_mm).toBe(200);
-		expect(firstDuctwork?.external_diameter_mm).toBe(300);
-		expect(firstDuctwork?.length).toBe(10);
-		expect(firstDuctwork?.insulation_thermal_conductivity).toBe(0.023);
-		expect(firstDuctwork?.insulation_thickness_mm).toBe(100);
-		expect(firstDuctwork?.reflective).toBe(false);
-		expect(firstDuctwork?.duct_type).toBe("extract");
+		expect(firstDuctwork.cross_section_shape).toBe("circular");
+		expect(firstDuctwork.internal_diameter_mm).toBe(200);
+		expect(firstDuctwork.external_diameter_mm).toBe(300);
+		expect(firstDuctwork.length).toBe(10);
+		expect(firstDuctwork.insulation_thermal_conductivity).toBe(0.023);
+		expect(firstDuctwork.insulation_thickness_mm).toBe(100);
+		expect(firstDuctwork.reflective).toBe(false);
+		expect(firstDuctwork.duct_type).toBe("extract");
+
+		expect(secondDuctwork.cross_section_shape).toBe("rectangular");
+		expect(secondDuctwork.duct_perimeter_mm).toBe(1000);
 	});
 
 	it("maps input state for MVHR without ductwork to FHS input request", () => {
@@ -444,15 +467,19 @@ describe("infiltration ventilation mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
-			freeAreaHeight: 1,
+			openableParts: [
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 1,
+				},
+			],
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			treatmentControls: "manual",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
-			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
-			maximumOpenableArea: 1,
 			securityRisk: false,
 			hasShading: false,
 		};
@@ -463,7 +490,7 @@ describe("infiltration ventilation mapper", () => {
 				data: {
 					name: ventName,
 					associatedItemId: window.id,
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					hasAssociatedItem: true,
@@ -501,7 +528,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
@@ -516,7 +543,7 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					pitch: 45,
@@ -552,7 +579,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
@@ -568,7 +595,7 @@ describe("infiltration ventilation mapper", () => {
 				data: {
 					name: ventName,
 					associatedItemId: "none",
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					pitch: 45,
@@ -603,7 +630,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);

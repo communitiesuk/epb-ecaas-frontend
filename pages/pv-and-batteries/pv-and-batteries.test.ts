@@ -1,22 +1,28 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { within } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import formStatus from "~/constants/formStatus";
+import DivertersForm from "./diverters/index.vue";
+import ElectricBatteryForm from "./electric-battery/index.vue";
 import PvAndBatteries from "./index.vue";
 import PvSystemForm from "./pvs/[pv].vue";
-import ElectricBatteryForm from "./electric-battery/index.vue";
-import DivertersForm from "./diverters/index.vue";
-import { screen } from "@testing-library/vue";
-import { within } from "@testing-library/dom";
-import formStatus from "~/constants/formStatus";
 
 const baseForm = {
 	data: [],
 	complete: true,
 };
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("pv systems and electric battery", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -177,7 +183,7 @@ describe("pv systems and electric battery", () => {
 		});
 	});
 
-	it("disables the mark section as complete button when item is incomplete", async () => {
+	it("disables the mark as complete button when item is incomplete", async () => {
 		store.$patch({
 			pvAndBatteries: {
 				electricBattery: {
@@ -188,7 +194,7 @@ describe("pv systems and electric battery", () => {
 
 		await renderSuspended(PvAndBatteries);
 		const markAsCompleteButton = screen.getByRole("button", {
-			name: "Mark section as complete",
+			name: "Mark as complete",
 		});
 		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
@@ -208,8 +214,8 @@ describe("pv systems and electric battery", () => {
 			formStatus.inProgress.text,
 		);
 	});
-	describe("mark section as complete", () => {
-		const store = useEcaasStore();
+
+	describe("mark as complete", () => {
 		const user = userEvent.setup();
 
 		mockNuxtImport("navigateTo", () => navigateToMock);
@@ -240,7 +246,7 @@ describe("pv systems and electric battery", () => {
 
 		type SectionKey = keyof typeof store.pvAndBatteries;
 
-		it("disables the Mark section as complete button when a section is incomplete", async () => {
+		it("disables the Mark as complete button when a section is incomplete", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvs: { data: [{ ...pv1, complete: false }] },
@@ -254,7 +260,7 @@ describe("pv systems and electric battery", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all sections are complete", async () => {
+		it("enables the Mark as complete button when all sections are complete", async () => {
 			await addCompletePvAndBatteryToStore();
 			await renderSuspended(PvAndBatteries);
 

@@ -1,24 +1,34 @@
-import {
-	mapBoilers,
-	mapHeatBatteries,
-	mapHeatPumps,
-	mapElectricStorageHeaters,
-	mapWarmAirHeater,
-	mapInstantElectricHeaters,
-	mapWetDistributions,
-	mapSpaceHeatSystem,
-	mapHIUs,
-} from "./spaceHeatingMapper";
+import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetHeatPumpInput } from "~/schema/aliases";
+import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
+import { asMetres, millimetre } from "~/utils/units/length";
+import { kilowatt } from "~/utils/units/power";
+import { celsius } from "~/utils/units/temperature";
+import { unitValue } from "~/utils/units/units";
 import type { SchemaElecStorageHeaterWithProductReference, SchemaWetDistribution } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
-import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
-import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetHeatPumpInput } from "~/schema/aliases";
-import { celsius } from "~/utils/units/temperature";
-import { kilowatt } from "~/utils/units/power";
-import { unitValue } from "~/utils/units/units";
-import { asMetres, millimetre } from "~/utils/units/length";
+import {
+	mapBoilers,
+	mapElectricStorageHeaters,
+	mapHeatBatteries,
+	mapHeatPumps,
+	mapHIUs,
+	mapInstantElectricHeaters,
+	mapSpaceHeatSystem,
+	mapWarmAirHeater,
+	mapWetDistributions,
+} from "./spaceHeatingMapper";
 
 describe("Space heating - heat sources", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	describe("mapHeatPumps", () => {
 		const heatPumpWithProductReference1: HeatSourceData = {
 			id: "heatPump1Id",
@@ -38,7 +48,7 @@ describe("Space heating - heat sources", () => {
 			associatedHeatNetworkId: "heatNetwork123",
 			maxFlowTemp: unitValue(30, celsius),
 		};
-		const store = useEcaasStore();
+	
 		describe("with product references", () => {
 			test("maps stored heatpump data to fit schema", () => {
 				store.$patch({
@@ -251,8 +261,6 @@ describe("Space heating - heat sources", () => {
 
 	describe("mapBoilers", () => {
 		describe("with product references", () => {
-			const store = useEcaasStore();
-
 			const boiler1: HeatSourceData = {
 				id: "boilerId1",
 				name: "Combi boiler",
@@ -273,6 +281,7 @@ describe("Space heating - heat sources", () => {
 				needsSpecifiedLocation: false,
 				maxFlowTemp: unitValue(18, celsius),
 			};
+			
 			test("maps stored boiler data to fit schema", () => {
 				store.$patch({
 					spaceHeating: {
@@ -336,8 +345,6 @@ describe("Space heating - heat sources", () => {
 	});
 
 	describe("mapHeatBatteries", () => {
-		const store = useEcaasStore();
-
 		const heatBattery1: HeatSourceData = {
 			id: "heatBatteryId1",
 			name: "Pcm heat battery",
@@ -346,7 +353,6 @@ describe("Space heating - heat sources", () => {
 			productReference: "1234",
 			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,
-			energySupply: "electricity",
 		};
 
 		const heatBattery2: HeatSourceData = {
@@ -356,7 +362,6 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatBattery: "heatBatteryDryCore",
 			productReference: "5678",
 			numberOfUnits: 2,
-			energySupply: "LPG_bottled",
 			maxFlowTemp: unitValue(30, celsius),
 		};
 
@@ -376,7 +381,7 @@ describe("Space heating - heat sources", () => {
 					battery_type: "pcm",
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
-					EnergySupply: "electricity",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					is_heat_network: false,
 				},
 			};
@@ -401,7 +406,7 @@ describe("Space heating - heat sources", () => {
 					type: "HeatBattery",
 					battery_type: "dry_core",
 					number_of_units: 2,
-					EnergySupply: "LPG_bottled",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					product_reference: heatBattery2.productReference,
 					is_heat_network: false,
 				},
@@ -432,14 +437,14 @@ describe("Space heating - heat sources", () => {
 					battery_type: "pcm",
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
-					EnergySupply: "electricity",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					is_heat_network: false,
 				},
 				[heatBattery2.name]: {
 					type: "HeatBattery",
 					battery_type: "dry_core",
 					number_of_units: 2,
-					EnergySupply: "LPG_bottled",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					product_reference: heatBattery2.productReference,
 					is_heat_network: false,
 				},
@@ -452,7 +457,6 @@ describe("Space heating - heat sources", () => {
 	});
 
 	describe("mapHIUs - heat network connection", () => {
-		const store = useEcaasStore();
 		const hiu: HeatSourceData = {
 			id: "hiu1",
 			name: "HIU 1",
@@ -549,6 +553,16 @@ describe("Space heating - heat sources", () => {
 
 
 describe("Space heating - emitters", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const heatPump: Partial<HeatSourceData> = {
 		typeOfHeatPump: "airSource",
 		id: "hp1",
@@ -652,10 +666,6 @@ describe("Space heating - emitters", () => {
 	};
 
 	describe("mapWetDistribution", () => {
-		const store = useEcaasStore();
-		beforeEach(() => {
-			store.$reset();
-		});
 		it("maps stored wet distribution system data with ecodesign controller to fit schema", () => {
 			store.$patch({
 				spaceHeating: {
@@ -682,7 +692,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -741,7 +750,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -796,7 +804,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -858,7 +865,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -896,7 +902,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -970,30 +975,22 @@ describe("Space heating - emitters", () => {
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
-					radiator_type: "standard",
 					length: asMetres(unitValue(500,millimetre)),
 				},
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
-					radiator_type: "standard",
 					length: asMetres(unitValue(500,millimetre)),
 				},
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
-					radiator_type: "standard",
 					length: asMetres(unitValue(500,millimetre)),
 				},
 			]);
 		});
 	});
 	describe("instantElectricHeaters", () => {
-		const store = useEcaasStore();
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		test("maps stored instant electric heater data", () => {
 			store.$patch({
 				spaceHeating: {
@@ -1030,11 +1027,6 @@ describe("Space heating - emitters", () => {
 		});
 	});
 	describe("electricStorageHeaters", () => {
-		const store = useEcaasStore();
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		test("maps stored electric storage heater data", () => {
 			store.$patch({
 				spaceHeating: {
@@ -1059,11 +1051,6 @@ describe("Space heating - emitters", () => {
 		});
 	});
 	describe("warmAirHeater", () => {
-		const store = useEcaasStore();
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		test("maps stored warm air heater data", () => {
 			store.$patch({
 				spaceHeating: {
@@ -1096,6 +1083,7 @@ describe("Space heating - emitters", () => {
 			const actual = mapWarmAirHeater(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
+
 		test("maps multiple instances of a warm air heater", () => {
 			store.$patch({
 				spaceHeating: {
@@ -1142,11 +1130,6 @@ describe("Space heating - emitters", () => {
 
 
 	describe("mapSpaceHeatSystem", () => {
-		const store = useEcaasStore();
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		test("maps a combination of wet distribution, warm air heater, and instant electric heater", () => {
 			store.$patch({
 				spaceHeating: {

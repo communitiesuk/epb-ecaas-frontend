@@ -1,17 +1,22 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import { createPinia, setActivePinia } from "pinia";
 import formStatus from "~/constants/formStatus";
 import pagesData from "~/data/pages/pages";
 import MechanicalOverview from "~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue";
 
-const store = useEcaasStore();
+const mockFetch = vi.hoisted(() => vi.fn());
+mockNuxtImport("$fetch", () => mockFetch);
 
 describe("Ecaas Store", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
 	beforeEach(() => {
+		store = useEcaasStore();	
 		setActivePinia(createPinia());
 	});
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -111,6 +116,7 @@ describe("Ecaas Store", () => {
 					dwellingSpaceGroundFloor: { complete: true },
 					dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
 					dwellingSpaceFloorOfHeatedBasement: { complete: true },
+					dwellingSpacePartyFloor: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: true },
@@ -119,10 +125,7 @@ describe("Ecaas Store", () => {
 					dwellingSpacePartyWall: { complete: true },
 					dwellingSpaceWallOfHeatedBasement: { complete: true },
 				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { complete: true },
-					dwellingSpaceRoofs: { complete: true },
-				},
+				dwellingSpaceRoofs: { complete: true },
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalUnglazedDoor: { complete: true },
 					dwellingSpaceExternalGlazedDoor: { complete: true },
@@ -200,6 +203,9 @@ describe("Ecaas Store", () => {
 						complete: true,
 					},
 					dwellingSpaceFloorOfHeatedBasement: {
+						complete: true,
+					},
+					dwellingSpacePartyFloor: {
 						complete: true,
 					},
 				},
@@ -376,15 +382,23 @@ describe("extractPitch", () => {
 });
 
 describe("postEcaasState", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();	
+		setActivePinia(createPinia());
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
 
 	it("should post ecaas state to session endpoint", async () => {
-		global.$fetch = vi.fn() as unknown as typeof global.$fetch;
-		const fetchSpy = vi.spyOn(global, "$fetch");
+		mockFetch.mockReset();
 		await store.postEcaasState();
 
-		expect(fetchSpy).toHaveBeenCalledTimes(1);
-		expect(fetchSpy).toHaveBeenCalledWith("/api/session", {
+		expect(mockFetch).toHaveBeenCalledTimes(1);
+		expect(mockFetch).toHaveBeenCalledWith("/api/session", {
 			body: store.$state,
 			method: "POST",
 		});
@@ -401,6 +415,17 @@ describe("postEcaasState", () => {
 });
 
 describe("hasCompleteState function", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();	
+		setActivePinia(createPinia());
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	it("returns false when given an empty state", async () => {
 		const result = hasCompleteState(store);
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { getErrorMessage, showErrorState } from "#imports";
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage } from "#imports";
 
 export type CheckboxOption = {
 	label: string;
@@ -60,7 +60,11 @@ const handleChange = (value: string) => {
 					<span class="govuk-visually-hidden">Error:</span>
 					{{ getErrorMessage(props.context) }}
 				</p>
-				<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+				<div
+					class="govuk-checkboxes"
+					:class="{ 'govuk-checkboxes--small': props.context.attrs.size === 'small' }"
+					data-module="govuk-checkboxes"
+				>
 					<div v-for="key in Object.keys(options)" :key="key" class="govuk-checkboxes__item">
 						<input
 							:id="`${id}_${key}`"

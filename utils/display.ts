@@ -1,11 +1,12 @@
 import { objectFromEntries } from "ts-extras";
+import type { Split } from "type-fest";
+import { immersionHeaterPositionValues } from "~/mapping/common";
 import type { StandardDisplayProduct, TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterCylinderConfiguration, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
+import { applianceTypes } from "~/stores/zod";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
-import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterCylinderConfiguration, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
-import type { Split } from "type-fest";
 
 export const emptyValueRendering = "-";
 
@@ -137,54 +138,31 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob";
-
-export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
-	switch (value) {
-		case "Fridge":
-			return "Fridge";
-		case "Freezer":
-			return "Freezer";
-		case "Fridge-Freezer":
-			return "Fridge-freezer";
-		case "Dishwasher":
-			return "Dishwasher";
-		case "Oven":
-			return "Oven";
-		case "Clothes_washing":
-			return "Washing machine";
-		case "Clothes_drying":
-			return "Tumble dryer";
-		case "Hobs":
-			return "Hob";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a appliance key case: ${value}`);
-	}
-}
-// NB. this list is written out to be available at runtime, and could drift from all upstream values over time
-export const applianceKeys: SchemaApplianceType[] = [
-	"Clothes_drying",
-	"Clothes_washing",
-	"Dishwasher",
-	"Freezer",
-	"Fridge",
-	"Fridge-Freezer",
-	"Hobs",
-	"Oven",
-];
+export const appliancesDisplayTypes = { 
+	Oven: "Oven", 
+	Hobs: "Hob", 
+	"Fridge-Freezer": "Fridge-freezer",
+	Fridge: "Fridge",
+	Freezer: "Freezer",
+	Dishwasher: "Dishwasher",
+	Clothes_washing: "Washing machine",
+	Clothes_drying: "Tumble dryer",
+	Microwave: "Microwave",
+	Kettle: "Kettle",
+} as const satisfies Record<SchemaApplianceType, string>;
 
 function isApplianceKey(value: string): value is SchemaApplianceType {
-	return applianceKeys.includes(value as SchemaApplianceType);
+	const applianceType = value as SchemaApplianceType;
+	return applianceTypes.includes(applianceType);
 }
 
-export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string | ApplianceKeyDisplay {
-	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
+export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string {
+	return (isApplianceKey(key)) ? appliancesDisplayTypes[key] : key;
 }
 
-export function displayApplianceType(appliances: ApplianceKey[] | undefined) {
+export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
 	if (appliances === undefined) return emptyValueRendering;
-	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
+	return appliances.map(appliance => appliancesDisplayTypes[appliance]).join(", ");
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
@@ -231,13 +209,13 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 }
 
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Mains gas" | "Electricity";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG (Liquid petroleum gas) - condition 11F" | "Mains gas" | "Electricity";
 
 export const energySupplyOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
-	"LPG_condition_11F": "LPG - 11F",
+	"LPG_condition_11F": "LPG (Liquid petroleum gas) - condition 11F",
 	"electricity": "Electricity",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
 
@@ -258,7 +236,7 @@ export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
 		case "LPG_bottled":
 			return "LPG (Liquid petroleum gas) - bottled";
 		case "LPG_condition_11F":
-			return "LPG - 11F";
+			return "LPG (Liquid petroleum gas) - condition 11F";
 		case "electricity":
 			return "Electricity";
 		case "mains_gas":
@@ -431,21 +409,6 @@ export const mechanicalVentilationProductTypesDisplay = {
 	"centralisedContinuousMev": pluralize("Centralised continuous MEV"),
 	"decentralisedContinuousMev": pluralize("Decentralised continuous MEV"),
 } as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;
-
-export type RadiatorDisplay = "Standard" | "Towel radiator";
-
-export const radiatorTypes = {
-	standard: "Standard",
-	towel: "Towel radiator",
-
-} as const satisfies Record<SchemaRadiatorType, RadiatorDisplay>;
-
-export function displayRadiatorType(type: SchemaRadiatorType | undefined): RadiatorDisplay | typeof emptyValueRendering {
-	if (!type) {
-		return emptyValueRendering;
-	}
-	return radiatorTypes[type];
-}
 
 export const waterStorageProductTypeDisplay = {
 	"smartHotWaterTank": pluralize("Smart hot water tank"),

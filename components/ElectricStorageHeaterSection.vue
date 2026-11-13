@@ -8,6 +8,7 @@ const route = useRoute();
 defineProps<{
 	model: ElectricStorageHeaterModelType
 	index: number;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 }>();
 
 
@@ -26,11 +27,13 @@ defineProps<{
 		label="Select product"
 		name="productReference"
 		validation="required"
-		help="Select the electric storage heater type from the PCDB using the button below."
+		help="Select the electric storage heater type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
 		:selected-product-type="model.typeOfHeatEmitter"
 		:page-url="route.fullPath"
-		:page-index="index" />
+		:page-index="index" 
+		:on-incompatible-energy-source="onIncompatibleEnergySource"
+	/>
 	<FormKit
 		id="numOfStorageHeaters"
 		name="numOfStorageHeaters"

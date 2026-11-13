@@ -17,7 +17,14 @@ const { mounted } = useMounted();
 
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
-	props.context.node.input(target.value);
+	const value = target.value.trim();
+
+	if (value !== "" && Number.isInteger(Number(value))) {
+		props.context.node.input(Number(value));
+		return;
+	}
+
+	props.context.node.input(undefined);
 }
 
 function handleBlur(e: FocusEvent) {

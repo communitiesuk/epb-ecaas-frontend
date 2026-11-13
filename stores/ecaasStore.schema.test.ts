@@ -13,15 +13,19 @@ describe("windowData Zod schema", () => {
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
-			freeAreaHeight: 1,
 			curtainsOrBlinds: true,
 			treatmentControls: "manual",
 			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
-			midHeightOpenablePart1: 1,
+			openableParts: [
+				{
+					midHeight: 1,
+					freeAreaHeight: 1,
+					maximumOpenableArea: 1,
+				},
+			],
 			openingToFrameRatio: 0.8,
-			maximumOpenableArea: 1,
 			hasShading: false,
 		};
 		expect(

@@ -17,6 +17,43 @@ const model = ref(thermalBridgeData?.data);
 
 const defaultName = "Linear thermal bridge";
 
+const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): string | undefined => {
+	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
+
+	if (options) {
+		return options[typeOfThermalBridge as string]?.split(":")[0];
+	}
+};
+
+watch(
+	() => model.value?.typeOfThermalBridge,
+	(newType, oldType) => {
+		if (!newType) {
+			if (!model.value?.name || model.value.name === (oldType ? getDefaultName(oldType) ?? defaultName : "")) {
+				model.value = {
+					...model.value,
+					name: defaultName,
+				};
+			}
+
+			return;
+		}
+
+		const oldDefaultName = oldType ? getDefaultName(oldType) ?? defaultName : "";
+		const currentName = model.value?.name;
+		const nameIsAutomatic = !currentName || currentName === oldDefaultName;
+
+		if (nameIsAutomatic) {
+			const newName = getDefaultName(newType) ?? defaultName;
+
+			model.value = {
+				...model.value,
+				name: newName,
+			};
+		}
+	},
+);
+
 type StartsWith<T extends string, Prefix extends string> = T extends `${Prefix}${string}` ? T : never;
 
 const junctionTypeOptions = [{
@@ -106,15 +143,6 @@ autoSaveElementForm<LinearThermalBridgeData>({
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName: "",
 	onPatch: (state, newData, index) => {
-		if (!newData.data.name) {
-			newData.data.name = getDefaultName(newData.data.typeOfThermalBridge) ?? defaultName;
-
-			model.value = {
-				...model.value,
-				name: newData.data.name,
-			};
-		}
-
 		if (newData.data.typeOfThermalBridge === "E6") {
 			newData.data.associatedItemId ??= "none";
 		}
@@ -123,14 +151,6 @@ autoSaveElementForm<LinearThermalBridgeData>({
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
 	},
 });
-
-const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): string | undefined => {
-	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
-
-	if (options) {
-		return options[typeOfThermalBridge as string]?.split(":")[0];
-	}
-};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -186,7 +206,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<p class="govuk-body">All ground floor entries must have at least one E5 junction associated with it. The total lengths of all E5 junctions associated with a ground floor must match the length of the ground floor.</p>
 				</GovDetails>
 				<div v-if="!associatedGroundFloorOptions.length">
-					<p class="govuk-error-message">No ground floors added.</p>
+					<p class="govuk-error-message">No ground floors added</p>
 					<NuxtLink :to="getUrl('dwellingSpaceGroundFloorCreate')" class="govuk-link gov-radios-add-link">
 						Click here to add a ground floor
 					</NuxtLink>
@@ -226,7 +246,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<p class="govuk-body">All heated basement floor entries must have at least one E22 junction associated with it. The total lengths of all E22 junctions associated with a heated basement floor must match the length of the floor element.</p>
 				</GovDetails>
 				<div v-if="!associatedHeatedBasementFloor.length">
-					<p class="govuk-error-message">No heated basement floors added.</p>
+					<p class="govuk-error-message">No heated basement floors added</p>
 					<NuxtLink :to="getUrl('dwellingSpaceFloorOfHeatedBasementCreate')" class="govuk-link gov-radios-add-link">
 						Click here to add a heated basement floor
 					</NuxtLink>

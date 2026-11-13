@@ -4,14 +4,20 @@ import ThermalBridges from "./index.vue";
 import LinearThermalBridgeForm from "./linear/[bridging].vue";
 import PointThermalBridgeForm from "./point/[bridging].vue";
 
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("thermal bridges", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -345,11 +351,9 @@ describe("thermal bridges", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
-		const store = useEcaasStore();
+	describe("mark as complete", () => {
 		const user = userEvent.setup();
 
-		const navigateToMock = vi.hoisted(() => vi.fn());
 		mockNuxtImport("navigateTo", () => navigateToMock);
 
 		const addThermalBridgingDataToStore = async () => {
@@ -371,7 +375,7 @@ describe("thermal bridges", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when a thermal bridge is incomplete", async () => {
+		it("disables the Mark as complete button when a thermal bridge is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -386,7 +390,7 @@ describe("thermal bridges", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all thermal bridges are complete", async () => {
+		it("enables the Mark as complete button when all thermal bridges are complete", async () => {
 			await addThermalBridgingDataToStore();
 
 			await renderSuspended(ThermalBridges);

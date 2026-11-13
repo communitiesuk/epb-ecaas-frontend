@@ -1,21 +1,27 @@
-import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import Products from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
+import Products from "./index.vue";
 
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
+const SPACE_HEATING_HEAT_SOURCE_PATH = "/space-heating/heat-source";
 describe("Heat source products page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
-	const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-		mockNavigateTo: vi.fn(),
-	}));
-
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(SPACE_HEATING_HEAT_SOURCE_PATH, mockRoute));
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	afterEach(() => {
@@ -442,7 +448,7 @@ describe("Heat source products page", () => {
 		expect(screen.queryByText("Booster Heat Pump")).toBeNull();
 	});
 
-	test("shows all heat pump types if a heat network has been added", async () => {
+	test("only shows booster heat pump types if a heat network has been added", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
@@ -461,9 +467,9 @@ describe("Heat source products page", () => {
 
 		await renderSuspended(Products);
 
-		expect(screen.getByText("Small Heat Pump")).toBeDefined();
-		expect(screen.getByText("Medium Heat Pump")).toBeDefined();
-		expect(screen.getByText("Large Heat Pump")).toBeDefined();
+		expect(screen.queryByText("Small Heat Pump")).toBeNull();
+		expect(screen.queryByText("Medium Heat Pump")).toBeNull();
+		expect(screen.queryByText("Large Heat Pump")).toBeNull();
 		expect(screen.getByText("Booster Heat Pump")).toBeDefined();
 	});
 

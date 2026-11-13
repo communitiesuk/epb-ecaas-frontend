@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { coldWaterSourceOptions } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import type { WwhrsData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
-import { v4 as uuidv4 } from "uuid";
-import { coldWaterSourceOptions } from "#imports";
-import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const title = "Waste water heat recovery systems";
 const store = useEcaasStore();
@@ -97,7 +97,7 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 				label="Select a waste water heat recovery system"
 				name="productReference"
 				validation="required"
-				help="Select the waste water heat recovery system from the PCDB using the button below."
+				help="Select the waste water heat recovery system from the PCDB using the button below"
 				:selected-product-reference="model.productReference"
 				selected-product-type="wwhrs"
 				:page-url="route.fullPath"

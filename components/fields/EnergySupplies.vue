@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
-import { useEnergySupplies } from "~/composables/energySupplies";
+import type { SchemaFuelType } from "~/schema/aliases";
 
-defineProps<{
+const props = defineProps<{
 	id: string;
 	name: string;
 	label: string;
@@ -11,9 +11,12 @@ defineProps<{
 	validationRules?: Record<string, (node: FormKitNode) => boolean>;
 	validationMessages?: Record<string, string>;
 	dataField?: string;
+	allowedFuelTypes?: SchemaFuelType[];
+	emptyMessage?: string;
+	emptyLinkMessage?: string;
 }>();
 
-const { energySupplies, getDefaultEnergySupply } = useEnergySupplies();
+const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(props.allowedFuelTypes);
 </script>
 
 <template>
@@ -30,11 +33,15 @@ const { energySupplies, getDefaultEnergySupply } = useEnergySupplies();
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages"
 		>
-			<div v-if="!energySupplies.length"
-			>
-				<p class="govuk-error-message">No energy supplies added.</p>
-				<NuxtLink :to="getUrl('generalSpecifications')" class="govuk-link gov-radios-add-link">
-					Click here to add an energy supply
+			<div v-if="!energySupplies.length">
+				<p class="govuk-error-message">
+					{{ emptyMessage ?? "No energy supplies added." }}
+				</p>
+				<NuxtLink
+					:to="getUrl('generalSpecifications')"
+					class="govuk-link gov-radios-add-link"
+				>
+					{{ emptyLinkMessage ?? "Click here to add an energy supply" }}
 				</NuxtLink>
 			</div>
 		</FormKit>

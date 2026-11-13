@@ -1,14 +1,18 @@
-import GeneralDetails from "./general-details.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import type { GeneralDetailsData, HeatSourceData } from "~/stores/ecaasStore.schema";
-import type { SchemaFuelType } from "~/schema/aliases";
+import { screen } from "@testing-library/vue";
+import type { BoilerProduct, ElectricStorageHeaterProduct, FanCoilProduct } from "~/pcdb/pcdb.types.js";
+import type { GeneralDetailsData } from "~/stores/ecaasStore.schema";
+import GeneralDetails from "./general-details.vue";
 
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+const { navigateToMock, mockFetch } = vi.hoisted(() => ({
+	navigateToMock: vi.fn(),
+	mockFetch: vi.fn(),
+}));
+mockNuxtImport("navigateTo", () => navigateToMock);
+mockNuxtImport("useFetch", () => mockFetch);
+
+vi.mock("uuid");
 
 const state: GeneralDetailsData = {
 	typeOfDwelling: "house",
@@ -23,6 +27,7 @@ const state: GeneralDetailsData = {
 	numOfWetRooms: 3,
 	fuelType: ["electricity"],
 	canExportToGrid: "yes",
+	maxPowerExported: { amount: 50, unit: "kilowatt" },
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
 };
@@ -44,9 +49,35 @@ const stateWithFlat: GeneralDetailsData = {
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
 };
+const wetDistributionSystem: HeatEmittingData = {
+	id: "1234",
+	name: "Wet Distribution System 1",
+	typeOfHeatEmitter: "wetDistributionSystem",
+	heatSource: "heat-pump-id",
+	ecoDesignControllerClass: "1",
+	designFlowTemp: 55,
+	designTempDiffAcrossEmitters: 10,
+	hasVariableFlowRate: false,
+	designFlowRate: 100,
+	percentageRecirculated: 20,
+	emitters: [],
+};
+
+const fanCoilProductWithFuelType: Partial<FanCoilProduct> = {
+	id: "1001",
+	brandName: "Test",
+	modelName: "Fan Coil with Fuel Type",
+	technologyType: "FanCoils",
+	fuel: "LPG_bulk",
+};
 
 describe("General details", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	afterEach(() => {
@@ -68,6 +99,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "3");
 			await user.click(screen.getByTestId("canExportToGrid_yes"));
+			await user.type(screen.getByTestId("maxPowerExported"), "50");
 			await user.click(screen.getByTestId("isPartGCompliant_yes"));
 			await user.click(screen.getByTestId("partOActiveCoolingRequired_no"));
 	
@@ -75,7 +107,6 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data, complete } = store.dwellingDetails.generalSpecifications;
-			
 			expect(data).toEqual(state);
 			expect(complete).toBe(true);
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-details");
@@ -88,7 +119,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("storeysInDwelling"), "2");
 	
 			expect(store.dwellingDetails.generalSpecifications.data.typeOfDwelling).toBe("house");
-			expect(store.dwellingDetails.generalSpecifications.data.storeysInDwelling).toBe("2");
+			expect(store.dwellingDetails.generalSpecifications.data.storeysInDwelling).toBe(2);
 		});
 
 		test("form is prepopulated when data exists in state", async () => {
@@ -103,7 +134,6 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId("typeOfDwelling_house")).hasAttribute("checked")).toBe(true);
-			// expect((await screen.queryByTestId("storeyOfFlat") as HTMLInputElement)).toBe(null);
 			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingWidth")).value).toBe("5");
@@ -146,8 +176,42 @@ describe("General details", () => {
 
 			expect((await screen.findByTestId("generalDetailsErrorSummary"))).toBeDefined();
 		});
-	});
 
+		test("if energy generated on site can be exported to the grid is true, maximum power that can be exported field shows", async() => {
+			const user = userEvent.setup();
+
+			await renderSuspended(GeneralDetails);
+
+			await user.click(screen.getByTestId("canExportToGrid_yes"));
+
+			expect(screen.getByTestId("maxPowerExported")).toBeDefined();
+		});
+
+		test("maximum power that can be exported field is not shown when energy cannot be exported", async () => {
+			await renderSuspended(GeneralDetails);
+
+			expect(screen.queryByTestId("maxPowerExported")).toBeNull();
+
+			await user.click(screen.getByTestId("canExportToGrid_no_export"));
+
+			expect(screen.queryByTestId("maxPowerExported")).toBeNull();
+		});
+
+		test("shows error if maximum power that can be exported exceeds 100 kW", async () => {
+			await renderSuspended(GeneralDetails);
+
+			await user.click(screen.getByTestId("canExportToGrid_yes"));
+			await user.type(screen.getByTestId("maxPowerExported"), "101");
+
+			await user.tab();
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const errorSummary = screen.getByTestId("generalDetailsErrorSummary");
+			expect(errorSummary.textContent).toContain("Maximum power that can be exported must be 100 kilowatts or less.");
+		});
+	});
+	
 	describe("When the type of dwelling is a flat", () => {
 
 		test("data is saved to store state when form is valid", async () => {
@@ -220,64 +284,6 @@ describe("General details", () => {
 		});
 	});
 
-	it("if fuel type is updated, it is removed from all objects which reference it", async () => {
-		const heatBatterySpaceHeating: Partial<HeatSourceData> = {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
-			name: "Heat battery 1",
-			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "heatBatteryPcm",
-			productReference: "HEAT_BATTERY_SMALL",
-			energySupply: "mains_gas",
-		};
-
-		const heatBatteryDHW: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
-			name: "Heat source 1",
-			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "heatBatteryPcm",
-			energySupply: "mains_gas",
-		};
-
-		const state: Partial<GeneralDetailsData> = {
-			typeOfDwelling: "house",
-			fuelType: ["mains_gas", "electricity", "LPG_bulk"],
-		};
-
-		store.$patch({
-			dwellingDetails: {
-				generalSpecifications: {
-					data: state,
-				},
-			},
-			spaceHeating: {
-				heatSource: {
-					data: [
-						{ data: heatBatterySpaceHeating },
-					],
-				},
-			},
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatBatteryDHW },
-					],
-				},
-			},
-		});
-		await renderSuspended(GeneralDetails);
-		await user.click(await screen.findByTestId("fuelType_mains_gas"));
-		const spaceHeatBattery = store.spaceHeating.heatSource.data[0];
-		expect((spaceHeatBattery?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
-		expect(spaceHeatBattery?.complete).toBe(false);
-
-
-		const DHWItems = store.domesticHotWater.heatSources.data;
-		expect((DHWItems[0]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
-		expect(DHWItems[0]?.complete).toBe(false);
-	});
-
 	it("when type of dwelling is updated from flat to house, updates store so any internal door is not a front door", async () => {
 		const internalDoor: EcaasForm<Partial<InternalDoorData>> = {
 			data: {
@@ -315,6 +321,151 @@ describe("General details", () => {
 				orientation: undefined,
 			});
 	});
+
+	test("wet distribution section and overall heat emitters section are marked incomplete when required fuel type is removed", async () => {
+		const wetDistributionSystemWithFanCoilEmitter: HeatEmittingData = {
+			...wetDistributionSystem,
+			emitters: [
+				{
+					id: "emitter1",
+					name: "Fan Coil",
+					typeOfHeatEmitter: "fanCoil",
+					numOfFanCoils: 3,
+					productReference: "1001",
+				},
+			],
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [
+						{
+							data: wetDistributionSystemWithFanCoilEmitter,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["LPG_bulk", "electricity"],
+					},
+					complete: true,
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(fanCoilProductWithFuelType),
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("fuelType_LPG_bulk"));
+
+		await nextTick();
+
+		expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+		expect(store.spaceHeating.heatEmitters.complete).toBe(false);
+	});
+
+	test("marks heat source section and boiler as incomplete when required fuel type is removed from general details", async () => {
+		const boilerProductWithLpg: Partial<BoilerProduct> = {
+			id: "2001",
+			brandName: "Test Boiler",
+			modelName: "LPG Combi Boiler",
+			technologyType: "CombiBoiler",
+			fuel: "LPG_bulk",
+		};
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{
+							data: {
+								id: "hs1",
+								name: "Gas Boiler",
+								typeOfHeatSource: "boiler",
+								typeOfBoiler: "combiBoiler",
+								productReference: "2001",
+							},
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["LPG_bulk", "electricity"],
+					},
+					complete: true,
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(boilerProductWithLpg),
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("fuelType_LPG_bulk"));
+		await nextTick();
+
+		expect(store.spaceHeating.heatSource.data[0]?.complete).toBe(false);
+		expect(store.spaceHeating.heatSource.complete).toBe(false);
+	});
+
+	test("marks heat emitter section and electric storage heater as incomplete when required fuel type is removed from general details", async () => {
+		const electricStorageHeaterWithGas: Partial<ElectricStorageHeaterProduct> = {
+			id: "3001",
+			brandName: "Electric Storage Heater",
+			modelName: "Electric Storage Heater",
+			technologyType: "StorageHeater",
+			fuel: "mains_gas",
+		};
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [
+						{
+							data: {
+								id: "heat_emitter_1",
+								name: "Electric Storage Heater",
+								typeOfHeatEmitter: "electricStorageHeater",
+								productReference: "3001",
+							},
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["mains_gas", "electricity"],
+					},
+					complete: true,
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(electricStorageHeaterWithGas),
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("fuelType_mains_gas"));
+		await nextTick();
+
+		expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+		expect(store.spaceHeating.heatEmitters.complete).toBe(false);
+	});
+
 	test("marks cooling as incomplete when active cooling becomes required and no air conditioning is entered", async () => {
 		store.$patch({
 			dwellingDetails: {

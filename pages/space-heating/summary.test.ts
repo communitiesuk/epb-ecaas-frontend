@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
-import SpaceHeatingSummary from "./summary.vue";
-import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 import { millimetre } from "~/utils/units/length";
+import { celsius } from "~/utils/units/temperature";
+import SpaceHeatingSummary from "./summary.vue";
 
 
 type ExpectedData = { [key: string]: string };
@@ -25,29 +25,29 @@ const { mockFetch } = vi.hoisted(() => ({
 
 mockNuxtImport("useFetch", () => mockFetch);
 
-
-const store = useEcaasStore();
-beforeEach(() => {
-	store.$reset();
-	mockFetch.mockReset();
-	mockFetch.mockImplementation((url: string, options?: { query?: { ids?: string } }) => {
-		if (url === "/api/products/batch") {
-			const ids = options?.query?.ids
-				?.split(",")
-				.map(id => id.trim())
-				.filter(Boolean) ?? [];
-
-			return {
-				data: ref(ids.map(id => ({ id, modelName: "Mock product" }))),
-			};
-		}
-
-		return { data: ref({ modelName: "Mock product" }) };
-	});
-});
-
-
 describe("Space heating summary page", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+		store.$reset();
+		mockFetch.mockReset();
+		mockFetch.mockImplementation((url: string, options?: { query?: { ids?: string } }) => {
+			if (url === "/api/products/batch") {
+				const ids = options?.query?.ids
+					?.split(",")
+					.map(id => id.trim())
+					.filter(Boolean) ?? [];
+
+				return {
+					data: ref(ids.map(id => ({ id, modelName: "Mock product" }))),
+				};
+			}
+
+			return { data: ref({ modelName: "Mock product" }) };
+		});
+	});
+
 	it("displays the correct title", async () => {
 		await renderSuspended(SpaceHeatingSummary);
 		expect(screen.getByRole("heading", { name: "Space heating summary" }));
@@ -68,7 +68,7 @@ describe("Space heating summary page", () => {
 			);
 		});
 
-		it("displays the correct data for the boiler summary", async () => {
+		it("displays the correct data for the boiler summary with LPG energy source", async () => {
 
 			const boiler1: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
@@ -78,15 +78,69 @@ describe("Space heating summary page", () => {
 				productReference: "BOILER_SMALL",
 				needsSpecifiedLocation: true,
 				specifiedLocation: "internal",
+				energySupply: "LPG_bottled",
 				maxFlowTemp: unitValue(2, celsius),
-
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
 						data: [{ data: boiler1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "LPG_bulk", "LPG_bottled"],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Boiler 1",
+				"Type of heat source": "Boiler",
+				"Type of boiler": "Combi boiler",
+				"Product reference": "BOILER_SMALL",
+				"Location of boiler": "Heated space",
+				"LPG energy source": energySupplyOptions.LPG_bottled,
+				"Maximum flow temperature": `2 ${celsius.suffix}`,
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-boilerSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("displays the correct data for the boiler summary without LPG energy source", async () => {
+
+			const boiler1: HeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				name: "Boiler 1",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				productReference: "BOILER_SMALL",
+				needsSpecifiedLocation: true,
+				specifiedLocation: "internal",
+				energySupply: "mains_gas",
+				maxFlowTemp: unitValue(2, celsius),
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "mains_gas"],
+						},
 					},
 				},
 			});
@@ -100,13 +154,95 @@ describe("Space heating summary page", () => {
 				"Product reference": "BOILER_SMALL",
 				"Location of boiler": "Heated space",
 				"Maximum flow temperature": `2 ${celsius.suffix}`,
-
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-boilerSummary-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+
+			expect(screen.queryByTestId("summary-boilerSummary-lpg-energy-source")).toBeNull();
+		});
+
+		it("displays the correct data for the boiler summary with more than one boiler and one of them uses an LPG energy source", async () => {
+			const boiler1: HeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				name: "Boiler 1",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				productReference: "BOILER_SMALL",
+				needsSpecifiedLocation: true,
+				specifiedLocation: "internal",
+				energySupply: "LPG_bulk",
+				maxFlowTemp: unitValue(2, celsius),
+			};
+
+			const boiler2: HeatSourceData = {
+				id: "2c84f358-68d6-37c9-2uce-94uedl9d4s9b",
+				name: "Boiler 2",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				productReference: "BOILER_SMALL",
+				needsSpecifiedLocation: true,
+				specifiedLocation: "internal",
+				energySupply: "mains_gas",
+				maxFlowTemp: unitValue(2, celsius),
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }, { data: boiler2 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "LPG_bulk", "mains_gas"],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult1 = {
+				Name: "Boiler 1",
+				"Type of heat source": "Boiler",
+				"Type of boiler": "Combi boiler",
+				"Product reference": "BOILER_SMALL",
+				"Location of boiler": "Heated space",
+				"LPG energy source": energySupplyOptions.LPG_bulk,
+				"Maximum flow temperature": `2 ${celsius.suffix}`,
+			};
+
+			const expectedResult2 = {
+				Name: "Boiler 2",
+				"Type of heat source": "Boiler",
+				"Type of boiler": "Combi boiler",
+				"Product reference": "BOILER_SMALL",
+				"Location of boiler": "Heated space",
+				"LPG energy source": "-",
+				"Maximum flow temperature": `2 ${celsius.suffix}`,
+			};
+
+			for (const [key, value] of Object.entries(expectedResult1)) {
+				const lineResult = await screen.getByTestId(
+					`summary-boilerSummary-${hyphenate(key)}`,
+				);
+
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelectorAll("dd")[0]?.textContent?.trim()).toBe(value);
+			}
+
+			for (const [key, value] of Object.entries(expectedResult2)) {
+				const lineResult = await screen.getByTestId(
+					`summary-boilerSummary-${hyphenate(key)}`,
+				);
+
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelectorAll("dd")[1]?.textContent?.trim()).toBe(value);
 			}
 		});
 
@@ -119,7 +255,7 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_PUMP_SMALL",
 				maxFlowTemp: unitValue(17, celsius),
 			};
-			const store = useEcaasStore();
+
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -163,7 +299,7 @@ describe("Space heating summary page", () => {
 				maxFlowTemp: unitValue(35, celsius),
 				associatedHeatNetworkId: "network-1",
 			};
-			const store = useEcaasStore();
+
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {
@@ -206,7 +342,7 @@ describe("Space heating summary page", () => {
 				numberOfUnits: 1,
 				energySupply: "electricity",
 			};
-			const store = useEcaasStore();
+			
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -243,7 +379,6 @@ describe("Space heating summary page", () => {
 				subHeatNetworkName: "Sub 2",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {
@@ -276,7 +411,6 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_NETWORK-MEDIUM",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {
@@ -317,7 +451,6 @@ describe("Space heating summary page", () => {
 				associatedHeatNetworkId: "network-1",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -375,7 +508,6 @@ describe("Space heating summary page", () => {
 				associatedHeatNetworkId: "network-1",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -435,7 +567,6 @@ describe("Space heating summary page", () => {
 				associatedHeatNetworkId: "network-1",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -646,13 +777,6 @@ describe("Space heating summary page", () => {
 	});
 
 	describe("Heat emitters section", () => {
-
-		const store = useEcaasStore();
-
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		const wetDistributionSystem: HeatEmittingData = {
 			id: "wet-dist-1",
 			name: "Wet Distribution 1",

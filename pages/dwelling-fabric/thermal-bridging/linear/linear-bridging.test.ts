@@ -9,7 +9,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("linear thermal bridges", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const state: EcaasForm<LinearThermalBridgeData> = {
@@ -129,6 +134,53 @@ describe("linear thermal bridges", () => {
 			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
 			expect(actualLinearBridge.data.name).toBe("E1");
 			expect(actualLinearBridge.data.length).toBeUndefined();
+		});
+
+		it("updates the automatic name when the thermal bridge type changes", async () => {
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "create" },
+				},
+			});
+
+			const typeOfThermalBridge = screen.getByTestId("typeOfThermalBridge");
+			
+			await user.selectOptions(typeOfThermalBridge, "E1");
+
+			const name = screen.getByTestId("name");
+			
+			expect((name as HTMLInputElement).value).toBe("E1");
+
+			await user.selectOptions(typeOfThermalBridge, "E2");
+
+			expect((name as HTMLInputElement).value).toBe("E2");
+
+			await user.selectOptions(typeOfThermalBridge, "E3");
+
+			expect((name as HTMLInputElement).value).toBe("E3");
+		});
+
+		it("preserves a manually entered name when the thermal bridge type changes", async () => {
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "create" },
+				},
+			});
+
+			const typeOfThermalBridge = screen.getByTestId("typeOfThermalBridge");
+			
+			await user.selectOptions(typeOfThermalBridge, "E1");
+			
+			const name = screen.getByTestId("name");
+
+			await user.clear(name);
+			await user.type(name, "Living room bridge");
+
+			expect((name as HTMLInputElement).value).toBe("Living room bridge");
+
+			await user.selectOptions(typeOfThermalBridge, "E2");
+
+			expect((name as HTMLInputElement).value).toBe("Living room bridge");
 		});
 
 		it("creates a new thermal linear bridge automatically with default name after other data is entered", async () => {

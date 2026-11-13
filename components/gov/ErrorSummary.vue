@@ -18,18 +18,22 @@ withDefaults(defineProps<{
 	useLinks: true,
 });
 
-const navigateToField = (id: string) => (e: Event) => {
+const navigateToField = (id: string, e: Event) => {
 	e.preventDefault();
 
-	const label = document.querySelector(`label[for="${id}"]`);
+	const target =
+        document.querySelector(`label[for="${id}"]`) ??
+        document.getElementById(id) ??
+        document.querySelector<HTMLElement>(
+        	`[name="${id}"], [name="${id}[]"], input[id^="${id}-"], input[id^="${id}_"]`,
+        );
 
-	if (label) {
-		label.scrollIntoView();
-		return;
-	}
+	if (!target) return;
 
-	document.getElementById(id)?.scrollIntoView();
+	const scrollTarget = target.closest("fieldset, .govuk-form-group") ?? target;
+	scrollTarget.scrollIntoView();
 };
+
 </script>
 
 <template>
@@ -44,7 +48,7 @@ const navigateToField = (id: string) => (e: Event) => {
 						<NuxtLink v-if="useLinks && error.href" :to="error.href">
 							{{ error.text }}
 						</NuxtLink>
-						<a v-else-if="useLinks && !error.disableLink" :href="`#${error.id}`" @click="navigateToField(error.id)">
+						<a v-else-if="useLinks && !error.disableLink" :href="`#${error.id}`" @click="navigateToField(error.id, $event)">
 							{{ error.text }}
 						</a>
 						<span v-else>{{ error.text }}</span>

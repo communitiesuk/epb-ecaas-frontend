@@ -1,37 +1,21 @@
-import type { ResolvedState } from "./fhsInputMapper";
-import type { HeatEmittingData, WetDistributionEmitterData } from "../stores/ecaasStore.schema";
+import { objectFromEntries } from "ts-extras";
+import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import { asMetres } from "~/utils/units/length";
 import type {
+	SchemaEcoDesignControllerNoWeatherCompensator,
+	SchemaEcoDesignControllerWeatherCompensator,
 	SchemaElecStorageHeaterWithProductReference,
 	SchemaFancoilWithProductReference,
-	SchemaHeatSourceWetHeatBattery,
+	SchemaHeatBatteryWithProductReference,
 	SchemaInstantElecHeater,
 	SchemaRadiatorWithProductReference,
 	SchemaUfhWithProductReference,
 	SchemaWarmAir,
 	SchemaWetDistribution,
-	SchemaEcoDesignControllerNoWeatherCompensator,
-	SchemaEcoDesignControllerWeatherCompensator,
 } from "../schema/api-schema.types";
-import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import type { HeatEmittingData, WetDistributionEmitterData } from "../stores/ecaasStore.schema";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
-import { objectFromEntries } from "ts-extras";
-import { asMetres } from "~/utils/units/length";
-
-// function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
-// 	const heatNetworks = state.spaceHeating.heatNetworks;
-// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-// 	const heatNetworkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
-// 	switch (heatNetworkType) {
-// 		case "sleevedDistrictHeatNetwork":
-// 			return "sleeved DHN" as const;
-// 		case "unsleevedDistrictHeatNetwork":
-// 			return "unsleeved DHN" as const;
-// 		case "communalHeatNetwork":
-// 			return "communal" as const;
-// 		default:
-// 			throw new Error(`Unknown heat network type ${heatNetworkType}`);
-// 	}
-// }
+import type { ResolvedState } from "./fhsInputMapper";
 
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPumpInput> {
 	const heatSources = state.spaceHeating.heatSource;
@@ -83,7 +67,8 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 					...("specifiedLocation" in boiler
 						? { specified_location: boiler.specifiedLocation }
 						: {}),
-					EnergySupply: boiler.packagedProductReference ? "mains gas" : defaultElectricityEnergySupplyName,
+					// EnergySupply is currently required by the schema. The default is expected to be removed in 1.0.0a9.
+					EnergySupply: boiler.energySupply ?? defaultElectricityEnergySupplyName,
 					is_heat_network: false,
 				} as const satisfies SchemaBoilerWithProductReference,
 			];
@@ -91,7 +76,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 	);
 }
 
-export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatBattery> {
+export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHeatBatteryWithProductReference> {
 	const heatSources = state.spaceHeating.heatSource;
 	const heatBatteries = heatSources.filter(
 		(heatSource) => heatSource.typeOfHeatSource === "heatBattery",
@@ -110,19 +95,13 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 					battery_type: heatBatteryTypeMap[heatBattery.typeOfHeatBattery],
 					number_of_units: heatBattery.numberOfUnits,
 					product_reference: heatBattery.productReference,
-					EnergySupply: heatBattery.energySupply,
+					EnergySupply: defaultElectricityEnergySupplyName,
 					is_heat_network: false as const,
 				},
 			];
 		}),
 	);
 }
-
-// function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
-// 	const heatNetworks = state.spaceHeating.heatNetworks;
-// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-// 	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
-// }
 
 export function mapHIUs(
 	state: ResolvedState,
@@ -343,7 +322,6 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 			const radiator = {
 				wet_emitter_type: "radiator",
 				product_reference: emitter.productReference,
-				radiator_type: "standard",
 				length: asMetres(emitter.length),
 			} as const satisfies SchemaRadiatorWithProductReference;
 

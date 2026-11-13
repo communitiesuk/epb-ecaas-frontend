@@ -8,7 +8,7 @@ export function useAssociatedItems(itemTypes: Array<AssociatedItemType>): [strin
 	const store = useEcaasStore();
 
 	const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-	const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+	const { dwellingSpaceRoofs } = store.dwellingFabric;
 	const { dwellingSpaceWindows } = store.dwellingFabric;
 	const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;

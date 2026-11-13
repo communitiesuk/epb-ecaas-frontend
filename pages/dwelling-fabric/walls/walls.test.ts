@@ -1,20 +1,26 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import Walls from "./index.vue";
 import ExternalWallForm from "./external/[wall].vue";
+import Walls from "./index.vue";
 import InternalWallForm from "./internal/[wall].vue";
 import PartyWallForm from "./party/[wall].vue";
-import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
 import WallOfHeatedBasementForm from "./wall-of-heated-basement/[wall].vue";
+import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
 
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("walls", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -100,7 +106,8 @@ describe("walls", () => {
 		pitchOption: "90",
 		pitch: 90,
 		surfaceArea: 10,
-		uValue: 1,
+		uValueWholeWall: 1,
+		thermalResistanceHalfWall: 2.4,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		partyWallCavityType: "solid",
@@ -750,7 +757,7 @@ describe("walls", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 
 		const addWallsDataToStore = async () => {
 			store.$patch({
@@ -801,7 +808,7 @@ describe("walls", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when a wall is incomplete", async () => {
+		it("disables the Mark as complete button when a wall is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -819,7 +826,7 @@ describe("walls", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all walls are complete", async () => {
+		it("enables the Mark as complete button when all walls are complete", async () => {
 			await addWallsDataToStore();
 
 			await renderSuspended(Walls);

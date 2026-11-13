@@ -24,7 +24,11 @@ describe("getHeatNetworkFields", () => {
 		productReference: "2222",
 	};
 
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	test("maps communal heat network with no booster flag fields correctly", () => {
 		store.$patch({

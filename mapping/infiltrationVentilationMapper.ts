@@ -1,10 +1,11 @@
-import { objectEntries, objectFromEntries } from "ts-extras";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
-import { defaultElectricityEnergySupplyName } from "./common";
-import { asCubicMetresPerHour } from "~/utils/units/flowRate";
+import { objectFromEntries } from "ts-extras";
 import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
 import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
+import { asCentimetresSquare } from "~/utils/units/area";
+import { asCubicMetresPerHour } from "~/utils/units/flowRate";
+import { defaultElectricityEnergySupplyName } from "./common";
+import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, baseHeightOfVentilationZone } = mapVentilationData(state);
@@ -18,15 +19,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 		},
 		ventilation_zone_base_height: baseHeightOfVentilationZone,
 		ach_max_static_calcs: 2, // suggested default
-		MechanicalVentilation: objectFromEntries(objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
-			return [
-				name,
-				{
-					...mechanicalVentData,
-					...(mechanicalVentData.vent_type === "MVHR" ? { ductwork: mapMvhrDuctworkData(name, state) } : {}),
-				},
-			];
-		})),
+		MechanicalVentilation: mechanicalVentilation,
 		Vents: mapVentsData(state),
 	};
 
@@ -37,9 +30,9 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
 	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
-	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-	const { dwellingSpaceWindows } = state.dwellingFabric;
-	const mechanicalVentilation = state.infiltrationAndVentilation.mechanicalVentilation ?? [];
+
+	const { dwellingSpaceRoofs, dwellingSpaceWindows, dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor } } = state.dwellingFabric;
+	const mechanicalVentilation = state.infiltrationAndVentilation.mechanicalVentilation;
 
 	const entries = mechanicalVentilation.map((x): [string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
@@ -64,6 +57,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			dwellingSpaceExternalWall,
 			dwellingSpaceRoofs,
 			dwellingSpaceWindows,
+			dwellingSpaceExternalGlazedDoor,
 		], x.associatedItemId) : undefined;
 
 		switch (ventType) {
@@ -89,7 +83,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					vent_type: "MVHR",
 					...commonFields,
 					mvhr_location: x.mvhrLocation,
-					ductwork: [],
+					ductwork: mapMvhrDuctworkData(x.name, state),
 					position_exhaust: {
 						mid_height_air_flow_path: x.midHeightOfAirFlowPathForExhaust,
 						orientation360: exhaustAssociatedItem?.orientation ?? x.orientationOfExhaust,
@@ -116,8 +110,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 					...(x.measuredFanPowerAndAirFlowRateKnown ? {
 						measured_air_flow_rate: x.measuredAirFlowRate,
 						measured_fan_power: x.measuredFanPower,
@@ -130,8 +124,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					...commonFields,
 					SFP: x.specificFanPower,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			case "Decentralised continuous MEV":
@@ -143,8 +137,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			default:
@@ -166,22 +160,27 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 
 	return mvhrductworks.map((x) => {
 		const val: SchemaMechanicalVentilationDuctwork = {
-			cross_section_shape: x.ductworkCrossSectionalShape,
 			duct_type: x.ductType,
 			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			internal_diameter_mm: x.internalDiameterOfDuctwork,
-			external_diameter_mm: x.externalDiameterOfDuctwork,
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity,
+			...(x.ductworkCrossSectionalShape === "circular" ? {
+				cross_section_shape: "circular" as const,
+				internal_diameter_mm: x.internalDiameterOfDuctwork,
+				external_diameter_mm: x.externalDiameterOfDuctwork,
+			} : {
+				cross_section_shape: "rectangular" as const,
+				duct_perimeter_mm: x.internalPerimeterOfDuctwork,
+			}),
 		};
 		return val;
 	});
 }
 
 export function mapVentsData(state: ResolvedState) {
-	const { dwellingSpaceWindows, dwellingSpaceWalls: { dwellingSpaceExternalWall }, dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor }, dwellingSpaceCeilingsAndRoofs: { dwellingSpaceRoofs } } = state.dwellingFabric;
-	const vents = state.infiltrationAndVentilation.vents ?? [];
+	const { dwellingSpaceWindows, dwellingSpaceWalls: { dwellingSpaceExternalWall }, dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor }, dwellingSpaceRoofs } = state.dwellingFabric;
+	const vents = state.infiltrationAndVentilation.vents;
 	const entries = vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
 
@@ -199,7 +198,7 @@ export function mapVentsData(state: ResolvedState) {
 		}
 
 		const val: SchemaVent = {
-			area_cm2: x.effectiveVentilationArea,
+			area_cm2: asCentimetresSquare(x.effectiveVentilationArea),
 			mid_height_air_flow_path: x.midHeightOfZone,
 			orientation360: ventOrientation,
 			pitch,

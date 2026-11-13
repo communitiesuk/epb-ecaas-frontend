@@ -1,13 +1,12 @@
-import { standardPitchOption } from "./../utils/pitchOptions";
 import type { TaggedUnion } from "type-fest";
-import type { PageId } from "~/data/pages/pages";
-import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
-import type { FloorType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
-import { zeroPitchOption } from "~/utils/pitchOptions";
-import { addConstraints, zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, zodLiteralFromUnionType } from "./zod";
+import type { PageId } from "~/data/pages/pages";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
+import type { FloorType, MassDistributionClass } from "~/schema/aliases";
+import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
+import { addConstraints, zodUnit } from "~/utils/units/zod";
+import { standardPitchOption } from "./../utils/pitchOptions";
+import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, zodLiteralFromUnionType } from "./zod";
 
 export const fraction = z.number().min(0).max(1);
 const named = z.object({
@@ -71,6 +70,7 @@ const baseGeneralDetails = z.object({
 	numOfWetRooms: z.int().min(0),
 	fuelType: z.array(fuelTypeZod),
 	canExportToGrid: z.enum(["yes", "no_export", "no_generation"]),
+	maxPowerExported: addConstraints(zodUnit("power"), { min: 0, max: 100 }).optional(),
 	isPartGCompliant: z.boolean(),
 	partOActiveCoolingRequired: z.boolean(),
 });
@@ -114,7 +114,6 @@ const appliancesDataZod = z.object({
 	kitchenExtractorHoodExternal: z.boolean(),
 });
 export type AppliancesData = z.infer<typeof appliancesDataZod>;
-export type ApplianceKey = AppliancesData["applianceType"][number];
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<GeneralDetailsData>;
@@ -127,7 +126,7 @@ export interface DwellingFabric {
 	dwellingSpaceZoneParameters: EcaasForm<DwellingSpaceZoneParametersData>;
 	dwellingSpaceFloors: FloorsData;
 	dwellingSpaceWalls: WallsData;
-	dwellingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
+	dwellingSpaceRoofs: EcaasFormList<RoofData>;
 	dwellingSpaceDoors: DoorsData;
 	dwellingSpaceWindows: EcaasFormList<WindowData>;
 	dwellingSpaceThermalBridging: ThermalBridgingData;
@@ -135,11 +134,12 @@ export interface DwellingFabric {
 }
 
 export interface FloorsData {
-	dwellingSpaceGroundFloor: EcaasFormList<GroundFloorData>,
-	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>,
-	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>,
-	dwellingSpaceFloorAboveUnheatedBasement: EcaasFormList<FloorAboveUnheatedBasementData>
-	dwellingSpaceFloorOfHeatedBasement: EcaasFormList<FloorOfHeatedBasementData>
+	dwellingSpaceGroundFloor: EcaasFormList<GroundFloorData>;
+	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>;
+	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>;
+	dwellingSpaceFloorAboveUnheatedBasement: EcaasFormList<FloorAboveUnheatedBasementData>;
+	dwellingSpaceFloorOfHeatedBasement: EcaasFormList<FloorOfHeatedBasementData>;
+	dwellingSpacePartyFloor: EcaasFormList<PartyFloorData>;
 }
 
 export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
@@ -148,24 +148,40 @@ export type AdjacentSpaceType = typeof adjacentSpaceTypes[number];
 
 export const surfaceAreaAdjacentSpaceZod = z.number().min(0.01).max(10000);
 
-const baseInternalFloorData = named.extend({
-	surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	uValue,
-});
+const arealHeatCapacityFields = {
+	discriminator: "arealHeatCapacity",
+	variants: [
+		z.object({
+			arealHeatCapacity: z.literal("Custom"),
+			arealHeatCapacityCustom: z.number(),
+		}),
+		z.object({
+			arealHeatCapacity: arealHeatCapacityZod,
+		}),
+	] satisfies Tuple,
+};
 
-const internalFloorDataZod = z.discriminatedUnion(
-	"typeOfInternalFloor",
-	[
-		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal("unheatedSpace"),
-			thermalResistanceOfAdjacentUnheatedSpace,
-		}),
-		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal("heatedSpace"),
-		}),
-	],
+const internalFloorDataZod = nestedDiscriminatedUnion(
+	namedWithId.extend({
+		surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
+		massDistributionClass,
+		uValue,
+		pitchOption: z.enum(["180", "custom"]),
+		pitch: z.number().min(0).max(180),
+	}),
+	{
+		discriminator: "typeOfInternalFloor",
+		variants: [
+			z.object({
+				typeOfInternalFloor: z.literal("unheatedSpace"),
+				thermalResistanceOfAdjacentUnheatedSpace,
+			}),
+			z.object({
+				typeOfInternalFloor: z.literal("heatedSpace"),
+			}),
+		],
+	},
+	arealHeatCapacityFields,
 );
 
 export type InternalFloorData = z.infer<typeof internalFloorDataZod>;
@@ -174,6 +190,15 @@ export const surfaceAreaOpaqueZod = z.number().min(0.01).max(10000);
 export const heightOpaqueZod = z.number().min(0.001).max(50);
 export const widthOpaqueZod = z.number().min(0.001).max(100);
 export const baseHeightOpaqueZod = z.number().min(0).max(500);
+
+export const partyFloorDataZod = namedWithId.extend({
+	surfaceArea: surfaceAreaOpaqueZod,
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	uValue,
+});
+
+export type PartyFloorData = z.infer<typeof partyFloorDataZod>;
 
 export const exposedFloorDataZod = named.extend({
 	pitch: z.number().min(0).max(180),
@@ -205,6 +230,8 @@ const baseGroundFloorData = namedWithId.extend({
 	thicknessOfWalls: thicknessOfWallsZod,
 });
 
+export const heightUpperSurfaceZod = z.number().min(0).max(100);
+
 const slabEdgeInsulationBase = baseGroundFloorData.extend({
 	typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
 });
@@ -232,8 +259,6 @@ const horizontalAndVerticalEdgeInsulation = z.object({
 	verticalEdgeInsulationThermalResistance: z.number(),
 });
 
-export const heightUpperSurfaceZod = z.number().min(0).max(100);
-
 const groundFloorDataZod = z.union(
 	[
 		slabEdgeInsulationBase.extend(horizontalEdgeInsulation.shape),
@@ -248,6 +273,7 @@ const groundFloorDataZod = z.union(
 			underfloorSpaceThermalResistance: z.number(),
 			thermalTransmittanceOfWallsAboveGround: z.number(),
 			ventilationOpeningsArea: z.number(),
+			smartAirBricks: z.boolean(),
 		}),
 		baseGroundFloorData.extend({
 			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),
@@ -328,26 +354,30 @@ const externalWallDataZod = namedWithId.extend({
 
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
 
-const internalWallDataZod = namedWithId.extend({
-	surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).max(180)),
-	uValue,
-});
+const internalWallDataZod = nestedDiscriminatedUnion(
+	namedWithId.extend({
+		surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
+		massDistributionClass,
+		pitchOption: standardPitchOption,
+		pitch: z.optional(z.number().min(0).max(180)),
+		uValue,
+	}),
+	arealHeatCapacityFields,
+);
 
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
-const wallsToUnheatedSpaceDataZod = namedWithId.extend({
-	surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
-	uValue,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).max(180)),
-	thermalResistanceOfAdjacentUnheatedSpace,
-});
+const wallsToUnheatedSpaceDataZod = nestedDiscriminatedUnion(
+	namedWithId.extend({
+		surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
+		uValue,
+		massDistributionClass,
+		pitchOption: standardPitchOption,
+		pitch: z.optional(z.number().min(0).max(180)),
+		thermalResistanceOfAdjacentUnheatedSpace,
+	}),
+	arealHeatCapacityFields,
+);
 
 export type WallsToUnheatedSpaceData = z.infer<typeof wallsToUnheatedSpaceDataZod>;
 
@@ -355,12 +385,15 @@ export const thermalResistanceCavityZod = z.optional(z.number().gt(0));
 
 export const surfaceAreaPartyWallZod = z.number().gt(0);
 
+export const thermalResistancePartyWall = z.number().min(0.01).max(50);
+
 const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: surfaceAreaPartyWallZod,
 	arealHeatCapacity: arealHeatCapacityZod,
-	uValue,
+	uValueWholeWall: uValue,
+	thermalResistanceHalfWall: thermalResistancePartyWall,
 	massDistributionClass,
 	partyWallCavityType: partyWallCavityTypeZod,
 	partyWallLiningType: z.optional(partyWallLiningTypeZod),
@@ -379,34 +412,6 @@ const wallOfHeatedBasementDataZod = namedWithId.extend({
 });
 
 export type WallOfHeatedBasementData = z.infer<typeof wallOfHeatedBasementDataZod>;
-
-export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
-	dwellingSpaceCeilings: EcaasFormList<CeilingData>;
-	dwellingSpaceRoofs: EcaasFormList<RoofData>;
-}>;
-
-const baseCeilingData = namedWithId.extend({
-	surfaceArea: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	pitchOption: zeroPitchOption,
-	pitch: z.optional(z.number().min(0).max(180)),
-	uValue,
-});
-const ceilingDataZod = z.discriminatedUnion(
-	"type",
-	[
-		baseCeilingData.extend({
-			type: z.literal("heatedSpace"),
-		}),
-		baseCeilingData.extend({
-			type: z.literal("unheatedSpace"),
-			thermalResistanceOfAdjacentUnheatedSpace,
-		}),
-	],
-);
-
-export type CeilingData = z.infer<typeof ceilingDataZod>;
 
 const roofType = z.enum(["flatAboveHeatedSpace", "flatAboveUnheatedSpace", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling"]);
 
@@ -473,43 +478,40 @@ const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	solarTransmittance: gValueZod,
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
-	maximumOpenableArea: maxWindowOpenAreaZod,
-	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
+
+const openablePartsZod = z.object({
+	freeAreaHeight: freeAreaHeightZod,
+	maximumOpenableArea: maxWindowOpenAreaZod,
+	midHeight: midHeightAirFlowPathZod,
+});
+
+export type OpenablePartData = z.infer<typeof openablePartsZod>;
 
 const openablePartsFields = {
 	discriminator: "numberOpenableParts",
 	variants: [
 		z.object({
 			numberOpenableParts: z.literal("0"),
+			openableParts: z.optional(openablePartsZod.array().max(0)),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("1"),
-			maximumOpenableArea: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(1),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("2"),
-			maximumOpenableArea: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
-			midHeightOpenablePart2: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(2),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("3"),
-			maximumOpenableArea: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
-			midHeightOpenablePart2: midHeightAirFlowPathZod,
-			midHeightOpenablePart3: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(3),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("4"),
-			maximumOpenableArea: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
-			midHeightOpenablePart2: midHeightAirFlowPathZod,
-			midHeightOpenablePart3: midHeightAirFlowPathZod,
-			midHeightOpenablePart4: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(4),
 		}),
 	] satisfies Tuple,
 };
@@ -539,8 +541,10 @@ const obstacleShadingDataZod = named.extend({
 	transparency: z.number(),
 });
 
+const typeOfShadingZod = z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]);
+
 const otherShadingDataZod = named.extend({
-	typeOfShading: z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]),
+	typeOfShading: typeOfShadingZod,
 	distance: z.number(),
 	depth: z.number(),
 });
@@ -551,6 +555,8 @@ const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
 ]);
 
 export type ShadingObjectData = z.infer<typeof shadingObjectDataZod>;
+
+export type TypeOfShading = ShadingObjectData["typeOfShading"];
 
 const shadingDataFields = {
 	discriminator: "hasShading",
@@ -577,7 +583,6 @@ export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 const baseInternalDoorData = named.extend({
 	associatedItemId: z.guid(),
 	surfaceArea: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 
@@ -611,6 +616,7 @@ const isTheFrontDoorFields = {
 
 const internalDoorDataZod = nestedDiscriminatedUnion(
 	baseInternalDoorData,
+	arealHeatCapacityFields,
 	typeOfInternalDoorFields,
 	isTheFrontDoorFields,
 );
@@ -628,7 +634,6 @@ const baseWindowData = namedWithId.extend({
 	solarTransmittance: gValueZod,
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
-	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 }).superRefine((val, ctx) => {
@@ -925,23 +930,35 @@ const mechanicalVentilationDataZod = z.discriminatedUnion("hasAssociatedItem",
 
 export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationDataZod>;
 
-const ductworkDataZod = named.extend({
+const ductworkDataBase = named.extend({
 	mvhrUnit: z.string(),
 	ductworkCrossSectionalShape: ductShapeZod,
 	ductType: ductTypeZod,
-	internalDiameterOfDuctwork: z.number().min(0).max(1000),
-	externalDiameterOfDuctwork: z.number().min(0).max(1000),
 	insulationThickness: z.number().min(0).max(100),
 	lengthOfDuctwork: z.number().min(0),
 	thermalInsulationConductivityOfDuctwork: z.number().min(0),
 	surfaceReflectivity: z.boolean(),
 });
 
+const ductworkDataZod = z.discriminatedUnion("ductworkCrossSectionalShape", [
+	ductworkDataBase.extend({
+		ductworkCrossSectionalShape: z.literal(ductShapeZod.enum.circular),
+		internalDiameterOfDuctwork: z.number().min(0).max(1000),
+		externalDiameterOfDuctwork: z.number().min(0).max(1000),
+	}),
+	ductworkDataBase.extend({
+		ductworkCrossSectionalShape: z.literal(ductShapeZod.enum.rectangular),
+		internalPerimeterOfDuctwork: z.number(),
+	}),
+]);
+
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
+
+export const effectiveVentilationAreaZod = addConstraints(zodUnit("area"), { min: 100, max: 99999900 });
 
 const baseVentDataZod = z.object({
 	name: z.string().trim().min(1),
-	effectiveVentilationArea: z.number().min(1).max(999999),
+	effectiveVentilationArea: effectiveVentilationAreaZod,
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
 	associatedItemId: z.string().trim().min(1).optional(),
@@ -973,6 +990,7 @@ export type VentilationData = z.infer<typeof ventilationDataZod>;
 const airPermeabilityDataZod = z.object({
 	testPressure: testPressureZod,
 	airTightnessTestResult: z.number(),
+	smartAirBricksOpen: z.boolean().optional(),
 });
 
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
@@ -1066,7 +1084,7 @@ const heatPumpDataZod = nestedDiscriminatedUnion(
 	},
 );
 
-const boilerBase = pcdbProduct
+const boilerDataZod = pcdbProduct
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
 		typeOfHeatSource: z.literal("boiler"),
@@ -1074,6 +1092,7 @@ const boilerBase = pcdbProduct
 		specifiedLocation: z.optional(boilerLocationZod),
 		needsSpecifiedLocation: z.boolean(),
 		maxFlowTemp: zodUnit("temperature"),
+		energySupply: z.optional(fuelTypeZod),
 	});
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
@@ -1084,7 +1103,7 @@ const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatBattery,
 	maxFlowTemp: zodUnit("temperature"),
 	numberOfUnits: z.number(),
-	energySupply: fuelTypeZod,
+	energySupply: z.optional(fuelTypeZod),
 });
 
 const heatInterfaceUnitBase = pcdbProduct.extend({
@@ -1096,7 +1115,7 @@ const heatInterfaceUnitBase = pcdbProduct.extend({
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpDataZod,
-	boilerBase,
+	boilerDataZod,
 	heatBatteryBase,
 	heatInterfaceUnitBase,
 ]);
@@ -1252,7 +1271,7 @@ const radiatorSchema = namedWithId.extend({
 });
 export type RadiatorData = z.infer<typeof radiatorSchema>;
 
-const wetDistributionSystemEmittersFields = z.discriminatedUnion("typeOfHeatEmitter", [
+export const wetDistributionSystemEmittersFields = z.discriminatedUnion("typeOfHeatEmitter", [
 	underFloorHeatingSchema,
 	fanCoilSchema,
 	radiatorSchema,
@@ -1429,7 +1448,7 @@ const hotWaterHeatSourceWithColdWater = z.object({
 
 export type HotWaterHeatSourceWithColdWater = z.infer<typeof hotWaterHeatSourceWithColdWater>;
 
-const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceWithColdWater.shape);
+const boilerHotWaterSourceDataZod = boilerDataZod.extend(hotWaterHeatSourceWithColdWater.shape);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceWithColdWater.shape);
 
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
@@ -1439,7 +1458,7 @@ const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWate
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterDataZod,
-	boilerHotWaterSourceBase,
+	boilerHotWaterSourceDataZod,
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
 	immersionHeaterHotWaterSourceBase,
@@ -1494,6 +1513,7 @@ const hotWaterCylinderDataZod = namedWithId
 		typeOfWaterStorage: z.literal("hotWaterCylinder"),
 		storageCylinderVolume: zodUnit("volume"),
 		dailyEnergyLoss: z.number(),
+		areaOfHeatExchangerInPcdb: z.optional(z.boolean()),
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
@@ -1600,11 +1620,12 @@ export type HotWaterOutletType =
 	"otherHotWaterOutlet";
 
 export const tankPrimaryPipeworkLengthZod = z.number().min(0.05);
+export const pipeworkDiameterZod = z.number().min(5).max(50);
 
 const pipeworkDataZod = z.object({
 	name: z.string().trim().min(1),
-	internalDiameter: z.number(),
-	externalDiameter: z.number(),
+	internalDiameter: pipeworkDiameterZod,
+	externalDiameter: pipeworkDiameterZod,
 	length: tankPrimaryPipeworkLengthZod,
 	insulationThickness: z.number(),
 	thermalConductivity: z.number(),
@@ -1775,6 +1796,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceExposedFloor": exposedFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceGroundFloor": groundFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceInternalFloor": internalFloorDataZod,
+	"dwellingFabric/dwellingSpaceFloors/dwellingSpacePartyFloor": partyFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorAboveUnheatedBasement": floorAboveUnheatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorOfHeatedBasement": floorOfHeatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceExternalWall": externalWallDataZod,
@@ -1782,8 +1804,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallToUnheatedSpace": wallsToUnheatedSpaceDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpacePartyWall": partyWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallOfHeatedBasement": wallOfHeatedBasementDataZod,
-	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceCeilings": ceilingDataZod,
-	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceRoofs": roofDataZod,
+	"dwellingFabric/dwellingSpaceRoofs": roofDataZod,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalGlazedDoor": externalGlazedDoorData,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalUnglazedDoor": externalUnglazedDoorDataZod,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceInternalDoor": internalDoorDataZod,

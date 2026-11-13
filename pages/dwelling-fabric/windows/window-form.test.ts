@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import Window from "./[window].vue";
 import { v4 as uuidv4 } from "uuid";
+import Window from "./[window].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -10,13 +10,9 @@ mockNuxtImport("navigateTo", () => {
 });
 vi.mock("uuid");
 
-const store = useEcaasStore();
 const user = userEvent.setup();
 
-afterEach(() => {
-	store.$reset();
-	navigateToMock.mockReset();
-});
+
 
 const externalWall: ExternalWallData = {
 	id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
@@ -45,11 +41,15 @@ const window1: EcaasForm<WindowData> = {
 		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
-		freeAreaHeight: 1,
+		openableParts: [
+			{
+				freeAreaHeight: 1,
+				maximumOpenableArea: 1,
+				midHeight: 1,
+			},
+		],
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "1",
-		maximumOpenableArea: 1,
-		midHeightOpenablePart1: 1,
 		curtainsOrBlinds: true,
 		treatmentType: "blinds",
 		treatmentControls: "manual",
@@ -74,9 +74,9 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
 	await user.click(screen.getByTestId("securityRisk_yes"));
 	await user.click(screen.getByTestId("numberOpenableParts_1"));
-	await user.type(screen.getByTestId("freeAreaHeight"), "1");
-	await user.type(screen.getByTestId("maximumOpenableArea"), "1");
-	await user.type(screen.getByTestId("midHeightOpenablePart1"), "1");
+	await user.type(screen.getByTestId("freeAreaHeight_0"), "1");
+	await user.type(screen.getByTestId("maximumOpenableArea_0"), "1");
+	await user.type(screen.getByTestId("midHeightOpenable_0"), "1");
 	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 	await user.click(screen.getByTestId("treatmentType_blinds"));
 	await user.click(screen.getByTestId("treatmentControls_manual"));
@@ -94,6 +94,17 @@ const window2: EcaasForm<WindowData> = {
 };
 
 describe("window", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockReset();
+	});
+
 	describe("without existing external wall or roof", () => {
 		test("links to add walls and roofs are not displayed", async () => {
 			await renderSuspended(Window, {
@@ -343,9 +354,9 @@ describe("window", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeight")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeight_0")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea_0")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenable_0")).value).toBe("1");
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("treatmentControls_manual")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
@@ -365,7 +376,6 @@ describe("window", () => {
 					securityRisk: true,
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
-					freeAreaHeight: 1,
 					openingToFrameRatio: 0.8,
 					numberOpenableParts: "0",
 					curtainsOrBlinds: true,
@@ -439,12 +449,18 @@ describe("window", () => {
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
 			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
-			expect((await screen.findByTestId("freeAreaHeight_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_3_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_3_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_3_error"))).toBeDefined();
 		});
 
 		test("does not require the mid height of more parts than have been selected", async () => {
@@ -453,10 +469,10 @@ describe("window", () => {
 			await user.click(screen.getByTestId("numberOpenableParts_1"));
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
-			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-			expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
-			expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
-			expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
+			expect((await screen.findByTestId("midHeightOpenable_0_error"))).toBeDefined();
+			expect((screen.queryByTestId("midHeightOpenable_1_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenable_2_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenable_3_error"))).toBeNull();
 		});
 
 		test("displays guidance link to window shading guidance page", async () => {
@@ -577,7 +593,6 @@ describe("window", () => {
 		});
 
 		test("updated form data is automatically saved to the correct store object when there are multiple windows added", async () => {
-			const store = useEcaasStore();
 			const user = userEvent.setup();
 
 			store.$patch({

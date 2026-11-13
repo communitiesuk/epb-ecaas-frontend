@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { getUrl, typeOfHeatEmitter, type WetDistributionSystemData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import ElectricStorageHeaterSection from "~/components/ElectricStorageHeaterSection.vue";
 import { heatEmitterTypes } from "../../../../utils/display";
 import { getHeatEmitterDefaultName, type HeatEmitterFormData } from "../../../../utils/getHeatEmitterDefaultName";
-import { getUrl, typeOfHeatEmitter, type WetDistributionSystemData } from "#imports";
 
 export type WetDistributionSystemModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "wetDistributionSystem" }>;
 export type RadiatorModelType = Extract<WetDistributionSystemModelType["emitters"][number], { "typeOfHeatEmitter": "radiator" }>;
@@ -16,6 +16,7 @@ export type ElectricStorageHeaterModelType = Extract<HeatEmittingData, { "typeOf
 const title = "Heat emitters";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
+const { handleInvalidSubmit, errorMessages, addError, clearErrors } = useErrorSummary();
 
 const { mounted } = useMounted();
 
@@ -25,6 +26,11 @@ const index = getStoreIndex(heatEmitterStoreData);
 const heatEmitterData = useItemToEdit("heatEmitter", heatEmitterStoreData);
 const model = ref(heatEmitterData?.data);
 const id = heatEmitterData?.data?.id ?? uuidv4();
+
+const incompatibleEnergySource = ref(false);
+const incompatibleEnergySourceFuel = ref<string | undefined>();
+const emittersValid = ref(false);
+const brokenEmitterIndex = ref<number | null>(null);
 
 function resetAllHeatEmitterRankings(state: EcaasState) {
 	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
@@ -41,6 +47,19 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 }
 
 const saveForm = () => {
+	clearErrors();
+
+	if (incompatibleEnergySource.value) {
+		addIncompatibleEnergySourceError();
+	}
+
+	addEmittersError();
+
+	if (!wetDistributionEmittersValid.value || incompatibleEnergySource.value) {
+		window.scrollTo(0, 0);
+		return;
+	}
+
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeating;
 		const emitter = heatEmitters.data[index];
@@ -53,8 +72,6 @@ const saveForm = () => {
 	});
 	navigateTo("/space-heating");
 };
-
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 watch(
 	() => model.value,
@@ -101,7 +118,7 @@ autoSaveElementForm<HeatEmittingData>({
 			(newData.data as Record<string, unknown>).emitters = [];
 		}
 		if (existing && "complete" in existing) {
-			newData.complete = existing.complete;
+			newData.complete = state.spaceHeating.heatEmitters.data[index]?.complete ?? false;
 		}
 
 		state.spaceHeating.heatEmitters.data[index] = newData;
@@ -110,6 +127,52 @@ autoSaveElementForm<HeatEmittingData>({
 		resetAllHeatEmitterRankings(state);
 	},
 });
+
+const addIncompatibleEnergySourceError = () => {
+	if (!incompatibleEnergySource.value) return;
+
+	addError({
+		id: "emittersSection",
+		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn't been added as an energy source for this dwelling. To change this go to General details.`,       
+	});
+};
+
+const addEmittersError = () => {
+	if (!wetDistributionEmittersValid.value) {
+		addError({
+			id: "emittersSection",
+			text: "Complete all fields in the Emitters section before marking the heat emitters section as complete.",
+		});
+	}
+};
+
+const wetDistributionEmittersValid = computed(() => {
+	if (model.value?.typeOfHeatEmitter !== "wetDistributionSystem") {
+		return true;
+	}
+
+	return emittersValid.value;
+});
+
+const handleSubmitInvalid = (node: FormKitNode) => {
+	handleInvalidSubmit(node);
+	addEmittersError();
+	addIncompatibleEnergySourceError();
+
+	window.scrollTo(0, 0);
+};
+
+function handleIncompatibleEnergySource(value: boolean, fuel?: string, emitterIndex?: number) {
+	incompatibleEnergySource.value = value;
+	incompatibleEnergySourceFuel.value = fuel;
+    
+	if (value && emitterIndex !== undefined) {
+		brokenEmitterIndex.value = emitterIndex;
+	} else if (!value) {
+		brokenEmitterIndex.value = null;
+	}
+}
+
 </script>
 
 <template>
@@ -124,7 +187,7 @@ autoSaveElementForm<HeatEmittingData>({
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit">
+		@submit-invalid="handleSubmitInvalid">
 		<FormKit
 			id="typeOfHeatEmitter"
 			type="govRadios"
@@ -136,7 +199,11 @@ autoSaveElementForm<HeatEmittingData>({
 			<WetDistributionSection
 				v-if="model?.typeOfHeatEmitter === 'wetDistributionSystem'"
 				:model="(model as WetDistributionSystemData)"
-				:index="index" />
+				:index="index"
+				:auto-open-index="brokenEmitterIndex"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
+				@emitters-validity-change="emittersValid = $event"
+			/>
 			<InstantElectricHeaterSection
 				v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"
 				:model="(model as InstantElectricHeaterModelType)"
@@ -144,7 +211,9 @@ autoSaveElementForm<HeatEmittingData>({
 			<ElectricStorageHeaterSection
 				v-if="model?.typeOfHeatEmitter === typeOfHeatEmitter.electricStorageHeater"
 				:model="(model as ElectricStorageHeaterModelType)" 
-				:index="index"/>
+				:index="index"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
+			/>
 			<WarmAirHeaterSection
 				v-if="model?.typeOfHeatEmitter === 'warmAirHeater'"
 				:model="(model as WarmAirHeaterModelType)" />

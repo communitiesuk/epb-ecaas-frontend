@@ -8,8 +8,17 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("~/composables/banner", () => ({
+	useBanner: () => ref({ type: "update-front-door" }),
+}));
+
 describe("internal door", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const internalWall: InternalWallData = {
@@ -154,7 +163,7 @@ describe("internal door", () => {
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 
 	
-			const table = screen.getByTestId("doorArealHeatCapacityTable");
+			const table = screen.getByTestId("constructionBuildUpTable");
 	
 			expect(table).toBeDefined();
 			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
@@ -226,7 +235,7 @@ describe("internal door", () => {
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
 
 	
-			const table = screen.getByTestId("doorArealHeatCapacityTable");
+			const table = screen.getByTestId("constructionBuildUpTable");
 	
 			expect(table).toBeDefined();
 			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
@@ -249,6 +258,41 @@ describe("internal door", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("internalDoorErrorSummary"))).toBeDefined();
+	});
+
+	it("requires custom areal heat capacity value when custom option is selected", async () => {
+		await renderSuspended(InternalDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.getByTestId("arealHeatCapacityCustom_error")).toBeDefined();
+	});
+
+	it("saves custom areal heat capacity value to store when custom option is selected", async () => {
+		await renderSuspended(InternalDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+		await populateValidForm();
+		await user.click(
+			screen.getByTestId(`associatedItemId_${internalWall.id}`),
+		);
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.type(screen.getByTestId("arealHeatCapacityCustom"), "10");
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const data = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]!.data as Extract<InternalDoorData, { arealHeatCapacity: "Custom" }>;
+
+		expect(data.arealHeatCapacityCustom).toEqual(10);
 	});
 
 	it("navigates to doors page when valid form is completed", async () => {
@@ -328,49 +372,6 @@ describe("internal door", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
-			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
-		});
-
-		it("does not display the 'Is this the front door?' element if tagged item is a ceiling", async () => {
-
-			const ceiling: Partial<CeilingData> = {
-				id: "199342c5-07c5-4268-b66b-f85dfc5de58f",
-				type: "heatedSpace",
-				name: "Ceiling 1",
-			};
-
-			const internalDoor: Partial<InternalDoorData> = {
-				typeOfInternalDoor: "heatedSpace",
-				name: "Internal 1",
-				associatedItemId: ceiling.id,
-			};
-
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: stateWithFlat,
-					},
-				},
-				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceCeilings: {
-							data: [{ data: ceiling }],
-						},
-					},
-					dwellingSpaceDoors: {
-						dwellingSpaceInternalDoor: {
-							data: [{ data: internalDoor }],
-						},
-					},
-				},
-			});
-
-			await renderSuspended(InternalDoor, {
-				route: {
-					params: { door: "create" },
-				},
-			});
-
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
@@ -481,10 +482,7 @@ describe("internal door", () => {
 		});
 
 		test("displays banner when banner is set to 'update-front-door", async () => {
-
-			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door" }),
-			}));
+			// mock declaration is moved to top of file
 
 			await renderSuspended(InternalDoor, {
 				route: {

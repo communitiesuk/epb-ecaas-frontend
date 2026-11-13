@@ -1,25 +1,26 @@
-import FormKitStoredList from "./components/form-kit/StoredList.vue";
-import type { StoredListOption } from "./components/form-kit/StoredList.vue";
+import { FormKitBoolean, FormKitPcdbProduct } from "#components";
+import type { FormKitBaseSlots, FormKitInputs, FormKitOptionsProp } from "@formkit/inputs";
 import { defineFormKitConfig } from "@formkit/vue";
 import FormKitButton from "./components/form-kit/Button.vue";
-import FormKitRadios from "./components/form-kit/Radios.vue";
-import type { RadioOption } from "./components/form-kit/Radios.vue";
-import type { FormKitInputs, FormKitOptionsProp } from "@formkit/inputs";
+import FormKitCheckboxes, { type CheckboxOption } from "./components/form-kit/Checkboxes.vue";
+import FormKitCheckboxesWithExclusive from "./components/form-kit/CheckboxesWithExclusive.vue";
 import FormKitDropdown from "./components/form-kit/Dropdown.vue";
 import FormKitInputFloat from "./components/form-kit/InputFloat.vue";
 import FormKitInputInt from "./components/form-kit/InputInt.vue";
+import FormKitInputText from "./components/form-kit/InputText.vue";
+import FormKitInputTextArea from "./components/form-kit/InputTextArea.vue";
+import FormKitInputTextWithSuffix from "./components/form-kit/InputTextWithSuffix.vue";
 import FormKitInputWithSuffix from "./components/form-kit/InputWithSuffix.vue";
 import FormKitInputWithUnit from "./components/form-kit/InputWithUnit.vue";
-import FormKitCheckboxes, { type CheckboxOption } from "./components/form-kit/Checkboxes.vue";
-import FormKitCheckboxesWithExclusive from "./components/form-kit/CheckboxesWithExclusive.vue";
-import FormKitInputText from "./components/form-kit/InputText.vue";
-import FormKitInputTextWithSuffix from "./components/form-kit/InputTextWithSuffix.vue";
-import { FormKitBoolean, FormKitPcdbProduct } from "#components";
-import type { LengthUnit } from "./utils/units/length";
-import type { VolumeUnit } from "./utils/units/volume";
-import type { FlowRateUnit } from "./utils/units/flowRate";
-import type { PowerUnit } from "./utils/units/power";
+import type { RadioOption } from "./components/form-kit/Radios.vue";
+import FormKitRadios from "./components/form-kit/Radios.vue";
+import type { StoredListOption } from "./components/form-kit/StoredList.vue";
+import FormKitStoredList from "./components/form-kit/StoredList.vue";
 import { unitValidationMessages, unitValidationRules } from "./utils/formKitUnitValidation";
+import type { FlowRateUnit } from "./utils/units/flowRate";
+import type { LengthUnit } from "./utils/units/length";
+import type { PowerUnit } from "./utils/units/power";
+import type { VolumeUnit } from "./utils/units/volume";
 
 // Enable TypeScript support for custom inputs
 declare module "@formkit/inputs" {
@@ -46,6 +47,7 @@ declare module "@formkit/inputs" {
 		govInputWithSuffix: {
 			type: "govInputWithSuffix";
 			suffixText: string;
+			labelClass?: string;
 		};
 		govInputWithUnit: {
 			type: "govInputWithUnit";
@@ -65,9 +67,13 @@ declare module "@formkit/inputs" {
 		govInputText: {
 			type: "govInputText";
 		};
+		
 		govInputTextWithSuffix: {
 			type: "govInputWithSuffix";
 			suffixText: string;
+		};
+		govInputTextArea: {
+			type: "govInputTextArea";
 		};
 		govStoredList: {
 			type: "govStoredList";
@@ -82,6 +88,14 @@ declare module "@formkit/inputs" {
 			type: "govPcdbProduct";
 		}
 	}
+
+	interface FormKitInputSlots<Props extends FormKitInputs<Props>> {
+		govRadios: FormKitBaseSlots<Props> & {
+			conditionalOption: {
+				option: string
+			}
+		}
+	}
 }
 
 // Register custom inputs with FormKit
@@ -89,7 +103,11 @@ export default defineFormKitConfig(() => {
 	return {
 		messages: {
 			en: {
-				validation: unitValidationMessages,
+				validation: {
+					...unitValidationMessages,
+					required: ({ name }: { name: string }) =>
+						formatValidationMessage(`${name} is required.`),
+				},
 			},
 		},
 		rules: unitValidationRules,
@@ -137,6 +155,10 @@ export default defineFormKitConfig(() => {
 			govInputTextWithSuffix: {
 				type: "input",
 				component: FormKitInputTextWithSuffix,
+			},
+			govInputTextArea: {
+				type: "input",
+				component: FormKitInputTextArea,
 			},
 			govStoredList: {
 				type: "input",

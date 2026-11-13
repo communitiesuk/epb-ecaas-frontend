@@ -1,8 +1,8 @@
-import { applianceKeys } from "./../utils/display";
-import type { SchemaShadingSegment, SchemaInfiltrationVentilation, SchemaApplianceType } from "~/schema/aliases";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
+import type { SchemaApplianceType, SchemaInfiltrationVentilation, SchemaShadingSegment } from "~/schema/aliases";
+import { applianceTypes } from "~/stores/zod";
 import { defaultElectricityEnergySupplyName } from "./common";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
 	const generalDetailsData = mapGeneralDetailsData(state);
@@ -25,7 +25,6 @@ export type GeneralFieldsFromDwelling = "General" |
 	"NumberOfBedrooms" |
 	"NumberOfUtilityRooms" |
 	"NumberOfBathrooms" |
-	"NumberOfSanitaryAccommodations" |
 	"NumberOfHabitableRooms" |
 	"NumberOfHotTappedRooms" |
 	"NumberOfWetRooms" |
@@ -41,7 +40,6 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 				? {
 					build_type: "flat",
 					storeys_in_dwelling: generalDetails.storeysInDwelling,
-					storey_of_dwelling: 1, // this will need to be removed when schema updated
 					storeys_in_building: generalDetails.storeysInBuilding,
 				}
 				: {
@@ -53,7 +51,6 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		NumberOfUtilityRooms: generalDetails.numOfUtilityRooms,
 		NumberOfBathrooms: generalDetails.numOfBathrooms,
-		NumberOfSanitaryAccommodations: 1, // send a canned value of 1 for this deprecated field
 		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
 		NumberOfHotTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
 		NumberOfWetRooms: generalDetails.numOfWetRooms,
@@ -65,30 +62,36 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 export function mapEnergySupplyFuelTypeData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "EnergySupply"> {
-	const fuelType = state.dwellingDetails.generalSpecifications.fuelType
+	const generalDetails = state.dwellingDetails.generalSpecifications;
+
+	const fuelType = generalDetails.fuelType
 		.filter(x => x !== "electricity");
+
 	// electricity is always required as a fueltype - so its hardcoded into the
 	// EnergySupply object - therefore we filter out electricity so its not added twice
 
-	const canExportToGrid = state.dwellingDetails.generalSpecifications.canExportToGrid === "yes";
+	const canExportToGrid = generalDetails.canExportToGrid === "yes";
+	const maxPowerExported = generalDetails.maxPowerExported?.amount;
 
 	return {
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
 				fuel: "electricity",
+				is_export_capable: canExportToGrid,
+				...(canExportToGrid && maxPowerExported !== undefined && {
+					power_limit_export: maxPowerExported,
+				}),
 			},
 			...objectFromEntries(
-				fuelType
-					? fuelType.map((fuelType) => [
-						fuelType,
-						{
-							fuel: fuelType,
-							...(["LPG_bulk", "LPG_bottled"].includes(fuelType) && {
-								is_export_capable: canExportToGrid,
-							}),
-						},
-					])
-					: [],
+				fuelType.map((fuelType) => [
+					fuelType,
+					{
+						fuel: fuelType,
+						...(["LPG_bulk", "LPG_bottled"].includes(fuelType) && {
+							is_export_capable: canExportToGrid,
+						}),
+					},
+				]),
 			),
 		},
 	};
@@ -164,7 +167,7 @@ export function mapAppliancesData(
 			"Default" | "Not Installed"
 		>;
 
-		for (const appliance of applianceKeys) {
+		for (const appliance of applianceTypes) {
 			if (chosenAppliances.includes(appliance)) {
 				appliancesMap[appliance] = "Default";
 			} else {

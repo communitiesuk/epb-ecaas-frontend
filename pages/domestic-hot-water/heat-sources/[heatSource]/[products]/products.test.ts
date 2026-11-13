@@ -1,20 +1,30 @@
-import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import Products from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath";
+import Products from "./index.vue";
+
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
+
+const DHW_HEAT_SOURCE_BASE_PATH = "/domestic-hot-water/heat-sources";
 
 describe("Heat source products page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-	}));
-
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(DHW_HEAT_SOURCE_BASE_PATH, mockRoute));
+	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [
@@ -121,12 +131,13 @@ describe("Heat source products page", () => {
 
 		mockFetch.mockReset();
 		mockRoute.mockReset();
+		mockNavigateTo.mockReset();
 	});
 
 	test("title dependant on the type of heat source", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "0",
+				heatSource: "0",
 				products: "heat-pump",
 			},
 			path: "/0/heat-pump",
@@ -221,8 +232,13 @@ describe("Heat source products page", () => {
 
 		expect(mockFetch).toHaveBeenCalledTimes(2);
 
+		const expectedProducts = [
+			...MOCKED_HEAT_PUMPS.data,
+			...HOT_WATER_HEAT_PUMPS.data,
+		].filter(product => product.technologyType === "BoosterHeatPump");
+
 		expect(screen.queryAllByTestId("productRow")).toHaveLength(
-			MOCKED_HEAT_PUMPS.data.length + HOT_WATER_HEAT_PUMPS.data.length,
+			expectedProducts.length,
 		);
 	});
 
@@ -314,7 +330,7 @@ describe("Heat source products page", () => {
 		expect(screen.queryByText("Booster Heat Pump")).toBeNull();
 	});
 	
-	test("shows all heat pump types if a heat network has been added", async () => {
+	test("only shows booster heat pump types if a heat network has been added", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
@@ -333,10 +349,10 @@ describe("Heat source products page", () => {
 	
 		await renderSuspended(Products);
 
-		expect(screen.getAllByText("Small Heat Pump")).toBeDefined();
-		expect(screen.getAllByText("Medium Heat Pump")).toBeDefined();
-		expect(screen.getAllByText("Large Heat Pump")).toBeDefined();
-		expect(screen.getAllByText("Hybrid Heat Pump")).toBeDefined();
+		expect(screen.queryAllByText("Small Heat Pump")).toHaveLength(0);
+		expect(screen.queryAllByText("Medium Heat Pump")).toHaveLength(0);
+		expect(screen.queryAllByText("Large Heat Pump")).toHaveLength(0);
+		expect(screen.queryAllByText("Hybrid Heat Pump")).toHaveLength(0);
 		expect(screen.getAllByText("Booster Heat Pump")).toBeDefined();
 	});
 	
