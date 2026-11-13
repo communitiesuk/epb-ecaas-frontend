@@ -42,7 +42,7 @@ describe("vent", () => {
 	const state: VentData = {
 		name: "Vent 1",
 		associatedItemId: externalWall.id,
-		effectiveVentilationArea: unitValue(10, millimetresSquare),
+		effectiveVentilationArea: unitValue(150, millimetresSquare),
 		openingRatio: 1,
 		midHeightOfZone: 1,
 		hasAssociatedItem: true,
@@ -74,7 +74,7 @@ describe("vent", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Vent 1");
 		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
-		await user.type(screen.getByTestId("effectiveVentilationArea"), "10");
+		await user.type(screen.getByTestId("effectiveVentilationArea"), "150");
 		await user.type(screen.getByTestId("midHeightOfZone"), "1");
 		await user.tab();
 	};
@@ -122,7 +122,7 @@ describe("vent", () => {
 		expect(
 			(await screen.findByTestId<HTMLInputElement>("effectiveVentilationArea"))
 				.value,
-		).toBe("10");
+		).toBe("150");
 		expect(
 			(await screen.findByTestId<HTMLInputElement>("midHeightOfZone")).value,
 		).toBe("1");

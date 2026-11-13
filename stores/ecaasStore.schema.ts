@@ -954,7 +954,7 @@ const ductworkDataZod = z.discriminatedUnion("ductworkCrossSectionalShape", [
 
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
-export const effectiveVentilationAreaZod = addConstraints(zodUnit("area"), { min: 1, max: 9999990 });
+export const effectiveVentilationAreaZod = addConstraints(zodUnit("area"), { min: 100, max: 99999900 });
 
 const baseVentDataZod = z.object({
 	name: z.string().trim().min(1),
