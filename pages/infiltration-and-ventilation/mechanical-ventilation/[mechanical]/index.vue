@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentilationData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { useAssociatedItems } from "~/composables/associatedItems";

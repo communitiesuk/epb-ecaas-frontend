@@ -1188,7 +1188,6 @@ describe("dwelling fabric mapper", () => {
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
 		const expectedInternalDoorUnheatedSpace =
-
 			{
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 				pitch: 90,
@@ -1199,11 +1198,9 @@ describe("dwelling fabric mapper", () => {
 				thermal_resistance_unconditioned_space: internalDoorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
 			} as const satisfies BuildingElementAdjacentUnconditionedSpaceSimple;
 
-
 		expect(internalDoorElement).toEqual(expectedInternalDoorUnheatedSpace);
 
 		const expectedInternalDoorHeatedSpace =
-
 			{
 				type: "BuildingElementAdjacentConditionedSpace",
 				pitch: 90,
@@ -1213,7 +1210,6 @@ describe("dwelling fabric mapper", () => {
 				mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
 				is_adjacent_space_within_dwelling: false,
 			} as const satisfies BuildingElementAdjacentConditionedSpace;
-
 
 		expect(internalDoorHeatedSpaceElement).toEqual(expectedInternalDoorHeatedSpace);
 

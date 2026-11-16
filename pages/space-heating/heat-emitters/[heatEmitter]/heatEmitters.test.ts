@@ -2037,7 +2037,6 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-
 			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 			const input = screen.getByTestId("designFlowTemp");
 			await user.clear(input);
