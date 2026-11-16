@@ -486,7 +486,7 @@ const electricShowerSummary: SummarySection = {
 		return {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
-			"Cold water source": displayCamelToSentenceCase(data.coldWaterSource),
+			"Cold water source": "coldWaterSource" in data && data.coldWaterSource ? displayCamelToSentenceCase(data.coldWaterSource) : emptyValueRendering,
 			"Rated power": "ratedPower" in data ? dim(data.ratedPower, "kilowatt") : emptyValueRendering,
 		};
 	}),

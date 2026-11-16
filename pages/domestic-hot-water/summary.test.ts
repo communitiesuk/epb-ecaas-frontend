@@ -661,6 +661,30 @@ describe("Domestic hot water summary", () => {
 			}
 		});
 
+		it("should display an empty value for an electric shower with no cold water source", async () => {
+			const incompleteElectricShower = {
+				data: {
+					id: "5f1c6a2e-8d3b-4e8a-9c1d-2b7e4f6a9c10",
+					name: "Electric shower 2",
+					typeOfHotWaterOutlet: "electricShower",
+				},
+				complete: false,
+			} as unknown as EcaasForm<ElectricShowerData>;
+
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [incompleteElectricShower],
+					},
+				},
+			});
+
+			await renderSuspended(Summary);
+
+			const lineResult = await screen.findByTestId("summary-electricShower-cold-water-source");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(emptyValueRendering);
+		});
+
 		it("should display the correct data for the bath section", async () => {
 			store.$patch({
 				domesticHotWater: {
