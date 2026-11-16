@@ -169,15 +169,6 @@ export default defineNuxtConfig({
 		},
 	},
 
-	// override XSS checking middleware for report tunnelling
-	routeRules: {
-		"/api/tunnel": {
-			security: {
-				xssValidator: false,
-			},
-		},
-	},
-
 	sentry: {
 		sourceMapsUploadOptions: {
 			org: "communitiesuk",

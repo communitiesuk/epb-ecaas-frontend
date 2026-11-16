@@ -551,7 +551,7 @@ const windowSummary: SummarySection = {
 			[`Maximum openable area for openable part ${i + 1}`]: dim(p.maximumOpenableArea, "metres square"),
 			[`Free area height for openable part ${i + 1}`]: dim(p.freeAreaHeight, "metres"),
 			[`Mid height of the air flow path for openable part ${i + 1}`]: dim(p.midHeight, "metres"),
-		})).reduce((prev, current) => ({ ...prev, ...current }));
+		})).reduce((prev, current) => ({ ...prev, ...current }), {});
 
 		return {
 			"Name": show(x.name),
