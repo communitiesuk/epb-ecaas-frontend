@@ -765,7 +765,7 @@ export const mechanicalVentilationTypes = [
 ] as const;
 
 export type MechanicalVentilationType =
-  typeof mechanicalVentilationTypes[number];
+	typeof mechanicalVentilationTypes[number];
 
 const baseMechanicalVentilationData = namedWithId.extend({
 	airFlowRate: zodUnit("flow rate"),
@@ -803,7 +803,7 @@ const baseCentralisedMvData = baseMechanicalVentilationData
 	});
 
 const intermittentMevData = baseMechanicalVentilationData.extend({
-	typeOfMechanicalVentilationOptions: z.literal("Intermittent MEV"), 
+	typeOfMechanicalVentilationOptions: z.literal("Intermittent MEV"),
 	specificFanPower: z.number(),
 	midHeightOfAirFlowPath: z.number(),
 });
@@ -812,7 +812,7 @@ const baseCentralisedContinuousMevData = baseMechanicalVentilationData
 	.extend(pcdbProduct.shape)
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
-		typeOfMechanicalVentilationOptions: z.literal("Centralised continuous MEV"), 
+		typeOfMechanicalVentilationOptions: z.literal("Centralised continuous MEV"),
 		installedUnderApprovedScheme: z.boolean(),
 		measuredFanPowerAndAirFlowRateKnown: z.boolean(),
 		midHeightOfAirFlowPath: z.number(),
@@ -822,7 +822,7 @@ const decentralisedContinuousMevData = baseMechanicalVentilationData
 	.extend(pcdbProduct.shape)
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
-		typeOfMechanicalVentilationOptions: z.literal("Decentralised continuous MEV"), 
+		typeOfMechanicalVentilationOptions: z.literal("Decentralised continuous MEV"),
 		installedUnderApprovedScheme: z.boolean(),
 		installationType: mechVentInstallationTypeZod,
 		installationLocation: mechVentInstallationLocationZod,
@@ -1762,17 +1762,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = NonNullable<EcaasFormPaths<EcaasState>>;
