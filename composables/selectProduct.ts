@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { EcaasError } from "~/errors.types";
-import { heatPumpProductTypesMap, isDisplayProduct, type BoilerProduct, type DisplayProduct, type HeatPumpProduct, type HeatPumpProductTypes, type HybridHeatPumpProduct, type Product, type TechnologyGroup, type TechnologyType } from "~/pcdb/pcdb.types";
+import { heatPumpProductTypesMap, isDisplayProduct, type BoilerProduct, type DisplayProduct, type HeatPumpProduct, type HeatPumpProductTypes, type HotWaterOnlyHeatPumpProduct, type HybridHeatPumpProduct, type Product, type TechnologyGroup, type TechnologyType } from "~/pcdb/pcdb.types";
 import type { SchemaMechVentType } from "~/schema/aliases";
 import { isHotWaterHeatSource } from "~/utils/heatSources";
 import { useProductData } from "./productData";
@@ -99,33 +99,29 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			const waterStorage = state.domesticHotWater.waterStorage.data;
 			const dhwHeatSources = state.domesticHotWater.heatSources.data;
 
-			if (waterStorage.length || (source === "spaceHeating" && dhwHeatSources.length)) {
-				throw new EcaasError("DHW_HEAT_SOURCE_CONFLICT");
-			}
 
-			if (heatPumpProduct.technologyType !== "HybridHeatPump") {
-
-				const setDataFromProduct = (details: HeatPumpProduct) => {
-					if (!details.vesselType) return;
-
-					heatSourceData.tankVolumeDeclared = details.tankVolumeDeclared;
-					heatSourceData.dailyLossesDeclared = details.dailyLossesDeclared;
-					heatSourceData.heatExchangerSurfaceAreaDeclared = details.heatExchangerSurfaceAreaDeclared;
-					heatSourceData.packagedWithWaterCylinder = true;
-
-					if (heatSourceData.packagedWithWaterCylinder) {
-						heatSourceData.waterCylinderConfiguration = undefined!;
-					}
+			const setDataFromProduct = (details: HeatPumpProduct | HotWaterOnlyHeatPumpProduct) => {
+				if (!details.vesselType) {
+					throw new Error("Vessel type should be specified at this point");
 				};
 
-				if (isDisplayProduct(heatPumpProduct)) {
-					// Necessary because vessel type is not available unless we useProductData
-					useProductData(heatPumpProduct.id, true).then(details => {
-						setDataFromProduct(details as HeatPumpProduct);
-					});
-				} else {
-					setDataFromProduct(heatPumpProduct);
+				heatSourceData.tankVolumeDeclared = details.tankVolumeDeclared;
+				heatSourceData.dailyLossesDeclared = details.dailyLossesDeclared;
+				heatSourceData.heatExchangerSurfaceAreaDeclared = details.heatExchangerSurfaceAreaDeclared;
+				heatSourceData.packagedWithWaterCylinder = true;
+
+				if (heatSourceData.packagedWithWaterCylinder) {
+					heatSourceData.waterCylinderConfiguration = undefined!;
 				}
+			};
+			const data = isDisplayProduct(heatPumpProduct)
+				? await useProductData(heatPumpProduct.id, true)
+				: heatPumpProduct;
+			if (data != undefined && "vesselType" in data && data.vesselType) {
+				if (waterStorage.length || (source === "spaceHeating" && dhwHeatSources.length)) {
+					throw new EcaasError("DHW_HEAT_SOURCE_CONFLICT");
+				}
+				setDataFromProduct(data);
 			}
 		}
 

@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
-import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { screen, waitFor } from "@testing-library/vue";
+import type { BoilerProduct, DisplayProduct, HeatPumpProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
 import Products from "./index.vue";
 
@@ -17,7 +17,7 @@ describe("Heat source products page", () => {
 	beforeEach(() => {
 		store = useEcaasStore();
 	});
-	
+
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
@@ -99,16 +99,18 @@ describe("Heat source products page", () => {
 			spaceHeating: {
 				heatSource: {
 					data: [
-						{ data: heatSource1 },
+						{ data: { ...heatSource1 } },
 						{ data: combiBoiler1 },
 					],
 				},
 			},
 		});
 
-		mockFetch.mockReturnValue({
-			data: ref(MOCKED_HEAT_PUMPS),
-		});
+		mockFetch.mockImplementation((url: string) => ({
+			data: ref(url === "/api/products"
+				? MOCKED_HEAT_PUMPS
+				: { id: url.split("/").at(-1), technologyType: "AirSourceHeatPump", sinkType: "Water" }),
+		}));
 	});
 
 	afterEach(() => {
@@ -336,6 +338,9 @@ describe("Heat source products page", () => {
 		mockFetch.mockReturnValueOnce({
 			data: ref(exhaustAirHeatPumpProduct),
 		});
+		mockFetch.mockReturnValueOnce({
+			data: ref({ id: "1000", technologyType: "ExhaustAirMvhrHeatPump", sinkType: "Water" }),
+		});
 
 		await renderSuspended(Products);
 
@@ -417,18 +422,86 @@ describe("Heat source products page", () => {
 			}],
 		};
 
-		mockFetch.mockReturnValue({
-			data: ref(heatPumpProduct),
+		mockFetch.mockReturnValueOnce({ data: ref(heatPumpProduct) });
+		mockFetch.mockReturnValueOnce({
+			data: ref({ id: "1000", technologyType: "AirSourceHeatPump", sinkType: "Water", vesselType: "Integral" }),
 		});
+		mockNavigateTo.mockClear();
 
 		await renderSuspended(Products);
 
 		await user.click(screen.getByTestId("selectProductButton_0"));
 
-		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0?error=DHW_HEAT_SOURCE_CONFLICT");
+		await waitFor(() => {
+			expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0?error=DHW_HEAT_SOURCE_CONFLICT");
+		});
 		expect(store.spaceHeating.heatSource.data[0]?.data.productReference).toBeUndefined();
 		expect(store.domesticHotWater.heatSources.data.length).toBe(1);
 		expect(store.domesticHotWater.waterStorage.data.length).toBe(1);
+	});
+
+	test("selecting a HEM default air-to-air heat pump succeeds when a standalone hot water cylinder exists", async () => {
+		const cylinder: Partial<WaterStorageData> = {
+			id: "5e267b2a-e3d6-4cfc-a776-30516527be4e",
+			name: "Hot water cylinder",
+			typeOfWaterStorage: "hotWaterCylinder",
+			storageCylinderVolume: unitValue(20, "litres"),
+			dailyEnergyLoss: 10,
+		};
+		const product: DisplayProduct = {
+			displayProduct: true,
+			id: "1000",
+			brandName: "HEM Default",
+			modelName: "Air-to-air heat pump",
+			technologyType: "AirSourceHeatPump",
+		};
+		const productDetails: Partial<HeatPumpProduct> = {
+			id: product.id,
+			brandName: product.brandName,
+			modelName: product.modelName,
+			technologyType: "AirSourceHeatPump",
+			sourceType: "OutsideAir",
+			sinkType: "Air",
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{
+						data: {
+							id: "463c94f6-566c-49b2-af27-222222222",
+							name: "Heat source 1",
+							typeOfHeatSource: "heatPump",
+						},
+					}],
+				},
+			},
+			domesticHotWater: {
+				heatSources: { data: [] },
+				waterStorage: { data: [{ data: cylinder }] },
+			},
+		});
+		mockRoute.mockReturnValue({
+			params: { heatSource: "0", products: "heat-pump" },
+			path: "/0/heat-pump",
+		});
+		mockFetch.mockReset();
+		mockFetch.mockReturnValueOnce({ data: ref({ data: [product] }) });
+		mockFetch.mockReturnValue({ data: ref(productDetails) });
+		mockNavigateTo.mockClear();
+
+		await renderSuspended(Products);
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		await waitFor(() => {
+			expect(store.spaceHeating.heatSource.data[0]?.data.productReference).toBe(product.id);
+			expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0");
+		});
+		expect(mockNavigateTo).not.toHaveBeenCalledWith("/space-heating/heat-source/0?error=DHW_HEAT_SOURCE_CONFLICT");
+		expect(store.spaceHeating.heatSource.data).toHaveLength(1);
+		expect(store.domesticHotWater.heatSources.data).toHaveLength(0);
+		expect(store.domesticHotWater.waterStorage.data).toHaveLength(1);
+		expect(store.domesticHotWater.waterStorage.data[0]?.data).toEqual(cylinder);
 	});
 
 	test("only shows non booster heat pumps when a heat network has not been added", async () => {
