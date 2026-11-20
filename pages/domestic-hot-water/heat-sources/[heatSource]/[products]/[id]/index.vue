@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
+import { EcaasError } from "~/errors.types";
 import { technologyGroups, type DisplayProduct, type Product, type TechnologyGroup } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
 import { heatSourceProductTypesDisplay } from "~/utils/display";
@@ -32,15 +33,24 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = async () => {
 	const index = Number(params.heatSource);
+	const redirectUrl = getUrl("heatSources").replace(":heatSource", `${index}`);
 
-	await selectHotWaterHeatSourceProduct(
-		{ ...data, id: data?.id.toString() } as DisplayProduct,
-		(state) => state.domesticHotWater.heatSources.data,
-		index,
-	);
+	try {
+		await selectHotWaterHeatSourceProduct(
+			{ ...data, id: data?.id.toString() } as DisplayProduct,
+			(state) => state.domesticHotWater.heatSources.data,
+			index,
+		);
 
-	// Allow store to be updated before navigation
-	setTimeout(() => navigateTo(getUrl("heatSources").replace(":heatSource", `${index}`)), 100);
+		// Allow store to be updated before navigation
+		setTimeout(() => navigateTo(redirectUrl), 100);
+	} catch (error) {
+		if (error instanceof EcaasError && error.name === "DHW_HEAT_SOURCE_CONFLICT") {
+			navigateTo(`${redirectUrl}?error=${error.name}`);
+		} else {
+			throw error;
+		}
+	}
 };
 </script>
 
