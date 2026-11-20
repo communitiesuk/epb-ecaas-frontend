@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
+import type { SummarySection } from "~/common.types";
+import { useColdWaterSource } from "~/composables/coldWaterSource";
+import { useProductReferences } from "~/composables/productReferences";
+import type { PageId } from "~/data/pages/pages";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { displayDHWHeatSourceType } from "~/utils/display";
-import type { PageId } from "~/data/pages/pages";
-import { useProductReferences } from "~/composables/productReferences";
-import { useColdWaterSource } from "~/composables/coldWaterSource";
 
 const title = "Domestic hot water summary";
 const store = useEcaasStore();
@@ -467,7 +467,7 @@ const mixedShowerSummary: SummarySection = {
 				"Air pressure shower product reference": show(airPressureShowerProductReference),
 				"Air pressure shower product": airPressureShowerProductReference ? show(productNames[data.airPressureShowerProductReference]) : emptyValueRendering,
 			} : {
-				"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
+				"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per minute") : emptyValueRendering,
 			}),
 			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
 			...("wwhrs" in data && data.wwhrs ? {

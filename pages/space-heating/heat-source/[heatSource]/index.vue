@@ -249,9 +249,8 @@ const { mounted } = useMounted();
 			{
 				id: 'heatSourceConflictError',
 				text: `
-					There is another heat source that has a hot water cylinder attached as a packaged product.
-					You cannot add another heat source with a hot water cylinder attached as you cannot have multiple
-					hot water heat sources or multiple hot water storage units.`,
+					This product comes with a hot water cylinder, 
+					but there is already a hot water cylinder added and you cannot have two hot water cylinders.`,
 			}
 		]"
 		:use-links="false"

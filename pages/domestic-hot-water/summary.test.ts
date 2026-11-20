@@ -4,7 +4,7 @@ import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, Pipewo
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 import { degrees } from "~/utils/units/angle";
 import { metresSquare } from "~/utils/units/area";
-import { litrePerSecond } from "~/utils/units/flowRate";
+import { litrePerMinute, litrePerSecond } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { celsius } from "~/utils/units/temperature";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity.js";
@@ -590,7 +590,7 @@ describe("Domestic hot water summary", () => {
 				"Name": "Mixer shower 1",
 				"Type of hot water outlet": "Mixed shower",
 				"Cold water source": "Mains water",
-				"Flow rate": `10 ${litrePerSecond.suffix}`,
+				"Flow rate": `10 ${litrePerMinute.suffix}`,
 				"WWHRS installed": "No",
 			};
 
@@ -749,7 +749,7 @@ describe("Domestic hot water summary", () => {
 				"Type of hot water outlet": "Mixed shower",
 				"Cold water source": "Mains water",
 				"Is this an air pressure shower?": "No",
-				"Flow rate": `15 ${litrePerSecond.suffix}`,
+				"Flow rate": `15 ${litrePerMinute.suffix}`,
 				"WWHRS installed": "Yes",
 				"WWHRS": "WWHRS",
 			};
@@ -1162,7 +1162,7 @@ describe("Domestic hot water summary", () => {
 			await verifyDataInSection(sectionId, expectedData);
 		});
 
-		it("does not display building level losses in hiu summary if type of dwelling is a house", async() => {
+		it("does not display building level losses in hiu summary if type of dwelling is a house", async () => {
 			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
 				"HIU-LARGE": "Mock HIU product",
 			});
@@ -1183,7 +1183,7 @@ describe("Domestic hot water summary", () => {
 				associatedHeatNetworkId: "network-1",
 				maxFlowTemp: unitValue(40, celsius),
 			};
-		
+
 			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
@@ -1202,9 +1202,9 @@ describe("Domestic hot water summary", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(Summary);
-		
+
 			const expectedDHWHIUSummary = {
 				"Cold water source": "Mains water",
 				"Name": "Heat interface unit 1",
@@ -1227,8 +1227,8 @@ describe("Domestic hot water summary", () => {
 				),
 			).toBeNull();
 		});
-		
-		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async() => {
+
+		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async () => {
 			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
 				"HIU-LARGE": "Mock HIU product",
 			});
@@ -1252,7 +1252,7 @@ describe("Domestic hot water summary", () => {
 				buildingLevelLosses: unitValue(500, "watt"),
 
 			};
-		
+
 			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
@@ -1271,9 +1271,9 @@ describe("Domestic hot water summary", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(Summary);
-		
+
 			const expectedDHWHIUSummary = {
 				"Cold water source": "Mains water",
 				"Name": "Heat interface unit 1",
@@ -1285,7 +1285,7 @@ describe("Domestic hot water summary", () => {
 				"Maximum flow temperature": `40 ${celsius.suffix}`,
 				"Building level losses": "500 W",
 			};
-		
+
 			for (const [key, value] of Object.entries(expectedDHWHIUSummary)) {
 				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -1309,7 +1309,7 @@ describe("Domestic hot water summary", () => {
 							data: [
 								{ data: heatPump1 },
 								{ data: boiler1 },
-								{ data: heatBattery1 },	
+								{ data: heatBattery1 },
 							],
 						},
 					},

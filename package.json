@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "install-clean": "npm ci",
     "build": "nuxt build",
     "ci-test": "npm run typedtest",
     "dev": "nuxt dev",

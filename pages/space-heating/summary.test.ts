@@ -342,7 +342,7 @@ describe("Space heating summary page", () => {
 				numberOfUnits: 1,
 				energySupply: "electricity",
 			};
-			
+
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -488,7 +488,7 @@ describe("Space heating summary page", () => {
 			}
 		});
 
-		it("does not display building level losses in hiu summary if type of dwelling is a house", async() => {
+		it("does not display building level losses in hiu summary if type of dwelling is a house", async () => {
 			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
 				"HIU-LARGE": "Mock HIU product",
 			});
@@ -547,7 +547,7 @@ describe("Space heating summary page", () => {
 			).toBeNull();
 		});
 
-		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async() => {
+		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async () => {
 			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
 				"HIU-LARGE": "Mock HIU product",
 			});
@@ -607,7 +607,7 @@ describe("Space heating summary page", () => {
 			).toBeDefined();
 		});
 	});
-	
+
 	describe("Heating control section", () => {
 		const heatingControl: HeatingControlData = {
 			name: "Separate temperature control",
@@ -893,8 +893,8 @@ describe("Space heating summary page", () => {
 			"Design flow temperature": "55 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
-			"Maximum flow rate": "200 l/min",
-			"Minimum flow rate": "50 l/min",
+			"Maximum flow rate": `200 litres per minute`,
+			"Minimum flow rate": `50 litres per minute`,
 			"Percentage recirculated": "20 %",
 			"Name of emitter 1": "Radiator 1",
 			"Type of emitter 1": "Radiator",

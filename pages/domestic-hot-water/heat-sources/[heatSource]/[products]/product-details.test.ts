@@ -132,6 +132,33 @@ describe("Heat source details", async () => {
 		expect(heatSource.productReference).toBe("1000");
 	});
 
+	test("redirects with a conflict error when a packaged cylinder conflicts with existing water storage", async () => {
+		const cylinder: Partial<WaterStorageData> = {
+			id: "existing-cylinder",
+			name: "Hot water cylinder",
+			typeOfWaterStorage: "hotWaterCylinder",
+		};
+		store.$patch({
+			domesticHotWater: {
+				heatSources: { data: [{ data: { ...smallHeatPump, productReference: "HEATPUMP-SMALL" } }] },
+				waterStorage: { data: [{ data: cylinder }] },
+			},
+		});
+		mockFetch.mockReturnValue({
+			data: ref({ ...heatPumpProduct, vesselType: "Integral" }),
+		});
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+
+		await waitFor(() => {
+			expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0?error=DHW_HEAT_SOURCE_CONFLICT");
+		});
+		expect(store.domesticHotWater.heatSources.data[0]?.data).toMatchObject({ productReference: "HEATPUMP-SMALL" });
+		// Ensure a second cylinder was not added
+		expect(store.domesticHotWater.waterStorage.data).toHaveLength(1);
+		expect(store.domesticHotWater.waterStorage.data[0]?.data).toMatchObject({ id: "existing-cylinder" });
+	});
+
 	test("A boiler heat source is created when a hybrid heat pump is selected", async () => {
 		// Arrange
 		const hybridHeatPump: Partial<HeatSourceData> = {
@@ -361,4 +388,3 @@ describe("Heat source details", async () => {
 		});
 	});
 });
-		

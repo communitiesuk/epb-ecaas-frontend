@@ -211,7 +211,7 @@ const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 			type="govInputWithSuffix"
 			label="Flow rate"
 			name="flowRate"
-			suffix-text="litres per second"
+			suffix-text="litres per minute"
 			:validation="zodTypeAsFormKitValidation(model.typeOfHotWaterOutlet === 'mixedShower' ? showerFlowRateZod : otherFlowRateZod)"
 		/>
 		<FormKit

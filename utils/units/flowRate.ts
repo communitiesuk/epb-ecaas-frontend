@@ -21,6 +21,10 @@ export function asCubicMetresPerHour(flowRate: FlowRate): number {
 		const convertedAmount = amount * 3.6;
 		return convertedAmount;
 	}
+	if (unit === "litres per minute") {
+		const convertedAmount = amount * 0.06;
+		return convertedAmount;
+	}
 
 	return amount;
 }
