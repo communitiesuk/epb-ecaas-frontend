@@ -230,7 +230,7 @@ const baseGroundFloorData = namedWithId.extend({
 	thicknessOfWalls: thicknessOfWallsZod,
 });
 
-export const heightUpperSurfaceZod = z.number().min(0).max(100);
+export const heightUpperSurfaceZod = z.number().gt(0).max(100);
 
 const slabEdgeInsulationBase = baseGroundFloorData.extend({
 	typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
