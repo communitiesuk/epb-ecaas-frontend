@@ -2369,6 +2369,32 @@ describe("heatSource", () => {
 			expect(await screen.findByTestId("chargingSource_error")).toBeDefined();
 			expect(store.spaceHeating.heatSource.data[0]?.complete).not.toBe(true);
 		});
+		test("shows charging options when heat battery pcm is selected", async () => {
+			store.$patch({ domesticHotWater: { heatSources: { data: [] } } });
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("create") });
+
+			const absentChargingOptions = screen.queryByTestId("chargingSource");
+			expect(absentChargingOptions).toBeNull();
+			const chargingOptions = screen.queryAllByTestId(/^chargingSource_/);
+			expect(chargingOptions).toHaveLength(0);
+
+			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
+			const charging = screen.getByTestId("chargingSource");
+			expect(charging).toBeDefined();
+
+		});
+
+		test("PCM heat battery show link to create heat source when wet heat source is selected and no existing heat source is available", async () => {
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("create") });
+			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
+			await user.click(screen.getByTestId("chargingSource_wetHeatSource"));
+
+			const link = screen.getByTestId("createHeatSourceLink");
+			expect(link).toBeDefined();
+			expect(link.getAttribute("href")).toBe(getUrl("heatSourceCreate"));
+		});
 
 		test("wet charging lists previously added boilers and heat pumps", async () => {
 			const heatPump: HeatSourceData = {
@@ -2427,13 +2453,29 @@ describe("heatSource", () => {
 		});
 
 		test("wet charging requires a heat source", async () => {
-			store.$patch({ spaceHeating: { heatSource: { data: [{ data: heatBatteryPCM }] } } });
+			store.$patch({ spaceHeating: { heatSource: { data: [{ data: heatBatteryPCM }, { data: boiler1 }, { data: boosterHeatPump }] } } });
 			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 			await user.click(screen.getByTestId("chargingSource_wetHeatSource"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("chargingHeatSourceId_error")).toBeDefined();
 			expect(store.spaceHeating.heatSource.data[0]?.complete).toBeFalsy();
+		});
+
+		test("wet charging defaults to only source if only one viable heat source exists", async () => {
+			store.$patch({
+				spaceHeating: { heatSource: { data: [{ data: heatBatteryPCM }, { data: boiler1 }] } },
+			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
+			await user.click(screen.getByTestId("chargingSource_wetHeatSource"));
+
+			const sources = screen.getByTestId("chargingHeatSourceId");
+			expect(within(sources).getAllByTestId(/^chargingHeatSourceId_/)).toHaveLength(1);
+			expect(screen.getByTestId<HTMLInputElement>(`chargingHeatSourceId_${boiler1.id}`).checked).toBe(true);
+			expect(store.spaceHeating.heatSource.data[0]?.data).toMatchObject({
+				chargingSource: "wetHeatSource",
+				wetHeatSourceId: boiler1.id,
+			});
 		});
 
 		test("dry core heat batteries do not show the charging question", async () => {

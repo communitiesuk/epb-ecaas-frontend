@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { heatBatteryTypes, uniqueName } from "#imports";
+import { getUrl, heatBatteryTypes, uniqueName } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { getCombinedHeatPumpsAndBoilers } from "~/utils/getCombinedHeatSources";
 import { celsius } from "~/utils/units/temperature";
@@ -37,6 +37,13 @@ const handleProductLoaded = (product: AnyPcdbProduct) => {
 
 	props.onProductLoaded?.(product);
 };
+const getDefaultWetHeatSourceId = () => {
+	if (wetHeatSourcesForPCM.value.size === 1) {
+		return Array.from(wetHeatSourcesForPCM.value.keys())[0];
+	}
+	
+};
+
 </script>
 
 <template>
@@ -49,26 +56,37 @@ const handleProductLoaded = (product: AnyPcdbProduct) => {
 		validation="required"
 		@click="emit('update-heat-battery-model', 'typeOfHeatBattery')" />
 	<div v-show="model.typeOfHeatBattery">
-		<template v-if="model.typeOfHeatBattery === 'heatBatteryPcm'">
-			<FormKit
-				id="chargingSource"
-				type="govRadios"
-				name="chargingSource"
-				label="How is this heat battery charged?"
-				:options="{ electricity: 'Electricity', wetHeatSource: 'Wet heat source' }"
-				validation="required"
-			/>
-			<FormKit
-				v-if="model.chargingSource === 'wetHeatSource'"
-				id="chargingHeatSourceId"
-				type="govRadios"
-				name="wetHeatSourceId"
-				label="Heat source"
-				help="Select the relevant heat source that has been added previously"
-				:options="wetHeatSourcesForPCM"
-				validation="required"
-			/>
-		</template>
+		<div v-show="model.typeOfHeatBattery">
+			<template v-if="model.typeOfHeatBattery === 'heatBatteryPcm'">
+				<FormKit
+					id="chargingSource"
+					type="govRadios"
+					name="chargingSource"
+					label="How is this heat battery charged?"
+					:options="{ electricity: 'Electricity', wetHeatSource: 'Wet heat source' }"
+					validation="required"
+				/>
+				<template v-if="model.chargingSource === 'wetHeatSource'">
+					<FormKit
+						v-if="wetHeatSourcesForPCM.size > 0"
+						id="chargingHeatSourceId"
+						type="govRadios"
+						name="wetHeatSourceId"
+						label="Heat source"
+						help="Select the relevant heat source that has been added previously"
+						:options="wetHeatSourcesForPCM"
+						validation="required"
+						:value="model.wetHeatSourceId ? model.wetHeatSourceId : getDefaultWetHeatSourceId()"
+					/>
+					<div v-else>
+						<p class="govuk-error-message">No heat sources added.</p>
+						<NuxtLink :to="getUrl('heatSourceCreate')" class="govuk-link gov-radios-add-link" data-testid="createHeatSourceLink">
+							Click here to add a heat source
+						</NuxtLink>
+					</div>
+				</template>
+			</template>
+		</div>
 		<FormKit
 			id="name"
 			type="govInputText"
