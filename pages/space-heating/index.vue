@@ -88,8 +88,11 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 function handleRemove(type: "heatNetworks" | "heatSource" | "heatEmitters" | "heatingControls", index: number) {
 	if (type === "heatSource") {
 		duplicationError.value = false;
+		const heatSourceId = store.spaceHeating.heatSource.data[index]?.data?.id;
+		if (heatSourceId) {
+			store.removeTaggedAssociations()([store.spaceHeating.heatSource, store.domesticHotWater.heatSources], heatSourceId, "wetHeatSourceId");
+		}
 	}
-
 	if (type === "heatNetworks") {
 		const heatNetwork = store.spaceHeating.heatNetworks.data[index];
 		clearAssociationsWithHeatNetwork(heatNetwork?.data.id);

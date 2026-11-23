@@ -794,6 +794,60 @@ describe("Domestic hot water", () => {
 			expect(screen.queryByTestId("heatSources_items")).toBeNull();
 		});
 
+		test("when a heat pump is removed its associated PCM battery is set to in progress and its association is cleared", async () => {
+			const heatPump: DomesticHotWaterHeatSourceData = {
+				id: "dhw-heat-pump",
+				name: "Hot water heat pump",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP-SMALL",
+				maxFlowTemp: unitValue(30, celsius),
+				energySupply: "electricity",
+			};
+			const battery: DomesticHotWaterHeatSourceData = {
+				id: "dhw-heat-battery",
+				name: "Hot water heat battery",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				coldWaterSource: "mainsWater",
+				typeOfHeatSource: "heatBattery",
+				typeOfHeatBattery: "heatBatteryPcm",
+				chargingSource: "wetHeatSource",
+				wetHeatSourceId: heatPump.id,
+				productReference: "HEAT_BATTERY_SMALL",
+				maxFlowTemp: unitValue(32, celsius),
+				numberOfUnits: 1,
+			};
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{ data: heatPump, complete: true },
+							{ data: battery, complete: true },
+						],
+						complete: true,
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("heatSources_remove_0"));
+
+			const heatSourceData = store.domesticHotWater.heatSources.data;
+			expect(heatSourceData.length).toBe(1);
+			expect(heatSourceData[0]?.data).toEqual(expect.objectContaining({
+				typeOfHeatSource: "heatBattery",
+			}));
+			if ("wetHeatSourceId" in heatSourceData[0]!.data) {
+				expect(heatSourceData[0]?.data.wetHeatSourceId).toBeUndefined();
+			} else {
+				throw new Error("Expected heat source to have wetHeatSourceId property");
+			}
+			expect(heatSourceData[0]?.complete).toBe(false);
+			expect(store.domesticHotWater.heatSources.complete).toBe(false);
+		});
+
 		test("heat sources cannot be duplicated", async () => {
 			store.$patch({
 				domesticHotWater: {

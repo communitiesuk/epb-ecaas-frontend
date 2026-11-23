@@ -7,7 +7,7 @@ import pagesData from "~/data/pages/pages";
 import type { Page } from "~/data/pages/pages.types";
 import { patchState } from "./patch";
 
-type KeysToDeleteCascade = "associatedItemId" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
+type KeysToDeleteCascade = "associatedItemId" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId" | "wetHeatSourceId";
 
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {

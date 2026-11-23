@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, within } from "@testing-library/vue";
+import { screen, waitFor, within } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
 import type { BoilerProduct, DisplayProduct, HotWaterOnlyHeatPumpProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import type { DomesticHotWaterHeatSourceData, HeatNetworkData } from "~/stores/ecaasStore.schema";
@@ -602,9 +602,32 @@ describe("Heat Source Page", () => {
 			expect(store.domesticHotWater.heatSources.data[0]?.data).toHaveProperty("chargingSource", "electricity");
 			expect(store.domesticHotWater.heatSources.data[0]?.data).not.toHaveProperty("wetHeatSourceId");
 		});
+		test("wet charging defaults to only source if only one viable heat source exists", async () => {
+			store.$patch({
+				spaceHeating: { heatSource: { data: [{ data: existingHeatPumpSpaceHeating1 }] } },
+				domesticHotWater: { heatSources: { data: [{ data: heatBattery }] } },
+			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
+			await user.click(screen.getByTestId("chargingSource_wetHeatSource"));
 
-		test("wet charging requires a heat source", async () => {
-			store.$patch({ domesticHotWater: { heatSources: { data: [{ data: heatBattery }] } } });
+			const sources = screen.getByTestId("chargingHeatSourceId");
+			expect(within(sources).getAllByTestId(/^chargingHeatSourceId_/)).toHaveLength(1);
+			expect(screen.getByTestId<HTMLInputElement>(`chargingHeatSourceId_${existingHeatPumpSpaceHeating1.id}`).checked).toBe(true);
+			await waitFor(() => {
+				expect(store.domesticHotWater.heatSources.data[0]?.data).toMatchObject({
+					chargingSource: "wetHeatSource",
+					wetHeatSourceId: existingHeatPumpSpaceHeating1.id,
+				});
+			});
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(store.domesticHotWater.heatSources.data[0]?.complete).toBe(true);
+		});
+
+		test("wet charging requires a heat source to be selected", async () => {
+			store.$patch({
+				spaceHeating: { heatSource: { data: [{ data: existingHeatPumpSpaceHeating1 }] } },
+				domesticHotWater: { heatSources: { data: [{ data: heatBattery }, { data: backupBoiler }] } },
+			});
 			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 			await user.click(screen.getByTestId("chargingSource_wetHeatSource"));
 			await user.click(screen.getByTestId("saveAndComplete"));
