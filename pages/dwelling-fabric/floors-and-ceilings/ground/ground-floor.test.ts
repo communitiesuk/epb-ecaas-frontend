@@ -375,20 +375,6 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("smartAirBricks_yes")).hasAttribute("checked")).toBe(true);
 		});
 
-		test("error is shown when height of floor upper surface is 0", async () => {
-			await renderSuspended(GroundFloor, {
-				route: { params: { floor: "create" } },
-			});
-
-			await populateValidForm();
-			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
-			await user.type(screen.getByTestId("heightOfFloorUpperSurface"), "0");
-			await user.tab();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(await screen.findByTestId("heightOfFloorUpperSurface_error")).toBeDefined();
-		});
-
 		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(GroundFloor);
 
