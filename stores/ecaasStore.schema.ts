@@ -1100,11 +1100,31 @@ export type PcdbPackagedProduct = z.infer<typeof pcdbPackagedProduct>;
 
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
-	typeOfHeatBattery,
 	maxFlowTemp: zodUnit("temperature"),
 	numberOfUnits: z.number(),
 	energySupply: z.optional(fuelTypeZod),
 });
+
+const heatBatteryPcmElectric = heatBatteryBase.extend({
+	typeOfHeatBattery: z.literal("heatBatteryPcm"),
+	chargingSource: z.literal("electricity"),
+});
+const heatBatteryPcmWet = heatBatteryBase.extend({
+	typeOfHeatBattery: z.literal("heatBatteryPcm"),
+	chargingSource: z.literal("wetHeatSource"),
+	wetHeatSourceId: z.string().trim().min(1),
+});
+const heatBatteryDryCore = heatBatteryBase.extend({
+	typeOfHeatBattery: z.literal("heatBatteryDryCore"),
+});
+
+const heatBatteryDataZod = z.discriminatedUnion("typeOfHeatBattery", [
+	z.discriminatedUnion("chargingSource", [
+		heatBatteryPcmElectric,
+		heatBatteryPcmWet,
+	]),
+	heatBatteryDryCore,
+]);
 
 const heatInterfaceUnitBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatInterfaceUnit"),
@@ -1116,7 +1136,7 @@ const heatInterfaceUnitBase = pcdbProduct.extend({
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpDataZod,
 	boilerDataZod,
-	heatBatteryBase,
+	heatBatteryDataZod,
 	heatInterfaceUnitBase,
 ]);
 
@@ -1449,7 +1469,13 @@ const hotWaterHeatSourceWithColdWater = z.object({
 export type HotWaterHeatSourceWithColdWater = z.infer<typeof hotWaterHeatSourceWithColdWater>;
 
 const boilerHotWaterSourceDataZod = boilerDataZod.extend(hotWaterHeatSourceWithColdWater.shape);
-const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceWithColdWater.shape);
+const heatBatteryHotWaterSourceDataZod = z.discriminatedUnion("typeOfHeatBattery", [
+	z.discriminatedUnion("chargingSource", [
+		heatBatteryPcmElectric.extend(hotWaterHeatSourceWithColdWater.shape),
+		heatBatteryPcmWet.extend(hotWaterHeatSourceWithColdWater.shape),
+	]),
+	heatBatteryDryCore.extend(hotWaterHeatSourceWithColdWater.shape),
+]);
 
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
 const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
@@ -1459,7 +1485,7 @@ const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWate
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterDataZod,
 	boilerHotWaterSourceDataZod,
-	heatBatteryHotWaterSourceBase,
+	heatBatteryHotWaterSourceDataZod,
 	solarThermalHotWaterSourceBase,
 	immersionHeaterHotWaterSourceBase,
 	pointOfUseHotWaterSourceBase,

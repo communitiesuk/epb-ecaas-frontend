@@ -350,6 +350,7 @@ describe("Space heating - heat sources", () => {
 			name: "Pcm heat battery",
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
+			chargingSource: "electricity",
 			productReference: "1234",
 			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,

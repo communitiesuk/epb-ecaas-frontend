@@ -64,6 +64,7 @@ describe("space heating", () => {
 		name: "Heat battery 1",
 		typeOfHeatSource: "heatBattery",
 		typeOfHeatBattery: "heatBatteryPcm",
+		chargingSource: "electricity",
 		productReference: "HEAT_BATTERY_SMALL",
 		maxFlowTemp: unitValue(32, celsius),
 		numberOfUnits: 1,
@@ -229,7 +230,7 @@ describe("space heating", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(SpaceHeating);
 			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
 		});
@@ -268,7 +269,7 @@ describe("space heating", () => {
 					name: "domestic hot water",
 				});
 
-				expect(link.getAttribute("href")).toBe(getUrl("domesticHotWater")); 
+				expect(link.getAttribute("href")).toBe(getUrl("domesticHotWater"));
 			},
 		);
 	});
@@ -538,9 +539,9 @@ describe("space heating", () => {
 				});
 				await renderSuspended(SpaceHeating);
 				await user.click(screen.getByTestId("heatNetworks_remove_0"));
-				
+
 				const hiuItem = store.spaceHeating.heatSource.data[0];
-		
+
 				expect((hiuItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
 				expect(hiuItem!.complete).toBe(false);
 				expect(store.spaceHeating.heatSource.complete).toBe(false);

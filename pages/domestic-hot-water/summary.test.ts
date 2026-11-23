@@ -948,6 +948,7 @@ describe("Domestic hot water summary", () => {
 			name: "Heat battery 1",
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
+			chargingSource: "electricity",
 			productReference: "HEAT_BATTERY_SMALL",
 			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,

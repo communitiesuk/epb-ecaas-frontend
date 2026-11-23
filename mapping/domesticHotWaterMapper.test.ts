@@ -988,6 +988,7 @@ describe("domestic hot water mapper", () => {
 					name: "Heat battery space",
 					typeOfHeatSource: "heatBattery",
 					typeOfHeatBattery: "heatBatteryPcm",
+					chargingSource: "electricity",
 					productReference: "179",
 					numberOfUnits: 1,
 					maxFlowTemp: unitValue(11, celsius),

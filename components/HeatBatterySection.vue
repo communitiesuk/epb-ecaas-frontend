@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { heatBatteryTypes, uniqueName } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { getCombinedHeatPumpsAndBoilers } from "~/utils/getCombinedHeatSources";
 import { celsius } from "~/utils/units/temperature";
 
 const route = useRoute();
@@ -19,6 +20,13 @@ const props = defineProps<{
 const fuel = ref<string | undefined>();
 
 const heatSources = getCombinedHeatSources(store);
+
+const wetHeatSourcesForPCM = computed(() => new Map(
+	getCombinedHeatPumpsAndBoilers(store)
+		.flatMap(({ data }) => {
+			return [[data.id, data.name] as [string, string]];
+		}),
+));
 
 const emit = defineEmits(["update-heat-battery-model"]);
 
@@ -41,6 +49,26 @@ const handleProductLoaded = (product: AnyPcdbProduct) => {
 		validation="required"
 		@click="emit('update-heat-battery-model', 'typeOfHeatBattery')" />
 	<div v-show="model.typeOfHeatBattery">
+		<template v-if="model.typeOfHeatBattery === 'heatBatteryPcm'">
+			<FormKit
+				id="chargingSource"
+				type="govRadios"
+				name="chargingSource"
+				label="How is this heat battery charged?"
+				:options="{ electricity: 'Electricity', wetHeatSource: 'Wet heat source' }"
+				validation="required"
+			/>
+			<FormKit
+				v-if="model.chargingSource === 'wetHeatSource'"
+				id="chargingHeatSourceId"
+				type="govRadios"
+				name="wetHeatSourceId"
+				label="Heat source"
+				help="Select the relevant heat source that has been added previously"
+				:options="wetHeatSourcesForPCM"
+				validation="required"
+			/>
+		</template>
 		<FormKit
 			id="name"
 			type="govInputText"
