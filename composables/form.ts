@@ -17,7 +17,7 @@ export function useForm() {
 		}
 
 		const routeParam = route.params[Object.keys(route.params)[0]!];
-	
+
 		if (routeParam && routeParam !== "create") {
 			const index = parseInt(routeParam as string);
 			form.data[index] = item;
@@ -74,7 +74,7 @@ export function useForm() {
 		if (!hasChangedFields(newData, initialData)) {
 			return;
 		}
-		
+
 		const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
 		if (routeParam === "create") {
 			// we're about to save, so set the route parameter to the new index
@@ -132,8 +132,8 @@ export const hasChangedFields = <T extends object>(newData: T, initialData: T) =
 		return false;
 	}
 
-	const initialDataKeys = Object.keys(initialData) as (keyof typeof initialData)[];
-	return initialDataKeys.some(x => initialData[x] !== newData[x]);
+	const keys = [...Object.keys(initialData), ...Object.keys(newData)] as (keyof T)[];
+	return keys.some(x => initialData[x] !== newData[x]);
 };
 
 export interface AutoSaveElementFormOptions<T extends { name: string }> {
@@ -148,7 +148,7 @@ export interface AutoSaveElementFormOptions<T extends { name: string }> {
 	 * @returns Name
 	 */
 export const getName = <T extends object>(updatedItem: T, defaultName: string): string => {
-	
+
 	if ("name" in updatedItem && typeof updatedItem.name === "string") {
 		return updatedItem.name.trim() || defaultName;
 	}

@@ -58,7 +58,7 @@ const groundFloorWithCombinedEdgeInsulation = {
 const groundFloorWithSuspendedFloor = {
 	...groundFloor,
 	typeOfGroundFloor: "Suspended_floor",
-	heightOfFloorUpperSurface: 0,
+	heightOfFloorUpperSurface: 1,
 	underfloorSpaceThermalResistance: 0,
 	thermalTransmittanceOfWallsAboveGround: 0,
 	ventilationOpeningsArea: 0,
@@ -336,7 +336,7 @@ describe("ground floor", () => {
 
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
-			await user.type(screen.getByTestId("heightOfFloorUpperSurface"), "0");
+			await user.type(screen.getByTestId("heightOfFloorUpperSurface"), "1");
 			await user.type(screen.getByTestId("underfloorSpaceThermalResistance"), "0");
 			await user.type(screen.getByTestId("thermalTransmittanceOfWallsAboveGround"), "0");
 			await user.type(screen.getByTestId("ventilationOpeningsArea"), "0");
@@ -367,7 +367,7 @@ describe("ground floor", () => {
 			});
 
 			expect((await screen.findByTestId("typeOfGroundFloor_Suspended_floor")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("heightOfFloorUpperSurface")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("heightOfFloorUpperSurface")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("80");
 			expect((await screen.findByTestId<HTMLInputElement>("underfloorSpaceThermalResistance")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("thermalTransmittanceOfWallsAboveGround")).value).toBe("0");

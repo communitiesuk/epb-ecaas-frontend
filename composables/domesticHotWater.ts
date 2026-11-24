@@ -51,6 +51,7 @@ export function useDomesticHotWater() {
 			if (heatSourceId) {
 				store.removeTaggedAssociations()([waterStorage, hotWaterOutlets], heatSourceId, "dhwHeatSourceId"); 
 				store.removeTaggedAssociations()([heatSource, dhwHeatSources], heatSourceId, "boosterHeatPumpId"); 
+				store.removeTaggedAssociations()([dhwHeatSources], heatSourceId, "wetHeatSourceId");
 			}
 
 			if (waterStorageId) {

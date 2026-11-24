@@ -64,6 +64,7 @@ describe("space heating", () => {
 		name: "Heat battery 1",
 		typeOfHeatSource: "heatBattery",
 		typeOfHeatBattery: "heatBatteryPcm",
+		chargingSource: "electricity",
 		productReference: "HEAT_BATTERY_SMALL",
 		maxFlowTemp: unitValue(32, celsius),
 		numberOfUnits: 1,
@@ -229,7 +230,7 @@ describe("space heating", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(SpaceHeating);
 			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
 		});
@@ -268,7 +269,7 @@ describe("space heating", () => {
 					name: "domestic hot water",
 				});
 
-				expect(link.getAttribute("href")).toBe(getUrl("domesticHotWater")); 
+				expect(link.getAttribute("href")).toBe(getUrl("domesticHotWater"));
 			},
 		);
 	});
@@ -538,9 +539,9 @@ describe("space heating", () => {
 				});
 				await renderSuspended(SpaceHeating);
 				await user.click(screen.getByTestId("heatNetworks_remove_0"));
-				
+
 				const hiuItem = store.spaceHeating.heatSource.data[0];
-		
+
 				expect((hiuItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
 				expect(hiuItem!.complete).toBe(false);
 				expect(store.spaceHeating.heatSource.complete).toBe(false);
@@ -870,6 +871,106 @@ describe("space heating", () => {
 					expect(waterStorageData.length).toBe(1);
 				});
 			});
+			describe("PCM battery", () => {
+				const pcmBattery: Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }> = {
+					typeOfHeatSource: "heatBattery",
+					typeOfHeatBattery: "heatBatteryPcm",
+					chargingSource: "wetHeatSource",
+					id: "pcmBattery1",
+					maxFlowTemp: unitValue(60, "celsius"),
+					name: "PCM Battery 1",
+					numberOfUnits: 1,
+					productReference: "PR-12345",
+					wetHeatSourceId: heatPump.id,
+					energySupply: "electricity",
+				};
+				test("when a heat source is removed that a pcm battery is associated with, a complete pcm is set to inprogress and its association is cleared", async () => {
+					store.$patch({
+						spaceHeating: {
+							heatSource: {
+								data: [
+									{ data: heatPump, complete: true },
+									{
+										data: pcmBattery,
+										complete: true,
+									},
+								],
+								complete: true,
+							},
+						},
+					});
+					await renderSuspended(SpaceHeating);
+					await user.click(screen.getByTestId("heatSource_remove_0"));
+
+					const heatSourceData = store.spaceHeating.heatSource.data;
+					expect(heatSourceData.length).toBe(1);
+					expect(heatSourceData[0]?.data).toEqual(expect.objectContaining({
+						typeOfHeatSource: "heatBattery",
+					}));
+					if ("wetHeatSourceId" in heatSourceData[0]!.data) {
+						expect(heatSourceData[0]?.data.wetHeatSourceId).toBeUndefined();
+					} else {
+						throw new Error("Expected heat source to have wetHeatSourceId property");
+					}
+					expect(heatSourceData[0]?.complete).toBe(false);
+				});
+				test("when a heat source is removed that a pcm battery is associated with, the pcm battery's association is cleared from Domestic hot water", async () => {
+					store.$patch({
+						spaceHeating: {
+							heatSource: {
+								data: [
+									{ data: heatPump, complete: true },
+								],
+								complete: true,
+							},
+						},
+						domesticHotWater: {
+							heatSources: {
+								data: [
+									{
+										data: {
+											typeOfHeatSource: "heatBattery",
+											typeOfHeatBattery: "heatBatteryPcm",
+											isExistingHeatSource: false,
+											wetHeatSourceId: heatPump.id,
+										},
+										complete: true,
+									},
+								],
+								complete: true,
+							},
+						},
+					});
+
+					await renderSuspended(SpaceHeating);
+					await user.click(screen.getByTestId("heatSource_remove_0"));
+
+					const hotWaterHeatSourcesData = store.domesticHotWater.heatSources.data;
+					if ("wetHeatSourceId" in hotWaterHeatSourcesData[0]!.data) {
+						expect(hotWaterHeatSourcesData[0]?.data.wetHeatSourceId).toBeUndefined();
+					} else {
+						throw new Error("Expected heat source to have wetHeatSourceId property");
+					}
+					expect(hotWaterHeatSourcesData[0]?.complete).toBe(false);
+				});
+				test("removing a heat source without an ID leaves unrelated batteries complete", async () => {
+					store.$patch({
+						spaceHeating: {
+							heatSource: {
+								data: [
+									{ data: { name: "Incomplete heat source" }, complete: false },
+									{ data: heatBattery, complete: true },
+								],
+							},
+						},
+					});
+
+					await renderSuspended(SpaceHeating);
+					await user.click(screen.getByTestId("heatSource_remove_0"));
+
+					expect(store.spaceHeating.heatSource.data[0]?.complete).toBe(true);
+				});
+			});
 		});
 
 		describe("heat emitters", async () => {
@@ -1140,7 +1241,7 @@ describe("space heating", () => {
 					spaceHeating: {
 						heatSource: {
 							data: [
-								{ ...boiler, complete: false },
+								{ data: boiler, complete: true },
 							],
 						},
 					},
