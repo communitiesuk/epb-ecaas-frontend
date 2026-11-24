@@ -111,6 +111,9 @@ export default defineNuxtConfig({
 	nitro: process.env.BUILD_FOR_AWS_LAMBDA
 		? {
 			preset: "aws-lambda",
+			externals: {
+				inline: ["pinia", "@sentry/vue"],
+			},
 		}
 		: undefined,
 
