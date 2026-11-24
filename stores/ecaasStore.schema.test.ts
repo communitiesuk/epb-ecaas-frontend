@@ -1,4 +1,4 @@
-import { windowDataZod, type EcaasForm, type EcaasFormList } from "./ecaasStore.schema";
+import { formSchemas, windowDataZod, type EcaasForm, type EcaasFormList } from "./ecaasStore.schema";
 
 describe("windowData Zod schema", () => {
 	it("correctly validates a valid window shape with one openable part", () => {
@@ -153,5 +153,34 @@ describe("ECaaS form types", () => {
 			complete?: false;
 		};
 		expectTypeOf<EcaasForm<DuckType, "beakSize">>().branded.toEqualTypeOf<ExpectedDuckTypeFormWithBeakSizeRequired>();
+	});
+});
+describe("wet distribution system heat emitter Zod schema", () => {
+	const heatEmittersSchema = formSchemas["spaceHeating/heatEmitters"];
+	const wetDistribution = {
+		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9f",
+		name: "Wet Distribution 1",
+		heatSource: "heat-pump-id",
+		ecoDesignControllerClass: "2",
+		designFlowTemp: 55,
+		minFlowTemp: 45,
+		maxOutdoorTemp: 33,
+		minOutdoorTemp: 2,
+		designTempDiffAcrossEmitters: 10,
+		hasVariableFlowRate: false,
+		designFlowRate: 100,
+		percentageRecirculated: 20,
+		typeOfHeatEmitter: "wetDistributionSystem",
+		emitters: [],
+	};
+
+	it("accepts a design flow temperature within range", () => {
+		expect(heatEmittersSchema.safeParse(wetDistribution).success).toBe(true);
+	});
+
+	it.each([19, 121])("rejects a design flow temperature of %s", (designFlowTemp) => {
+		const result = heatEmittersSchema.safeParse({ ...wetDistribution, designFlowTemp });
+		expect(result.success).toBe(false);
+		expect(result.error?.issues.some(issue => issue.path.includes("designFlowTemp"))).toBe(true);
 	});
 });

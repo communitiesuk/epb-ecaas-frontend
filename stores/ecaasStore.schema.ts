@@ -1319,7 +1319,7 @@ export const percentageRecirculatedZod = z.number().min(0).lt(100);
 const wetDistributionSystemBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("wetDistributionSystem"),
 	heatSource: z.string(),
-	designFlowTemp: z.number(),
+	designFlowTemp: designFlowTempWetDistributionZod,
 	designTempDiffAcrossEmitters: tempDiffEmitDsgnWetDistributionZod,
 	emitters: z.array(z.union([wetDistributionSystemEmittersFields, wetDistributionSystemEmitterDraftSchema])),
 	percentageRecirculated: percentageRecirculatedZod,
