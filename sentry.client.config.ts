@@ -10,6 +10,8 @@ if (environment && sentryDsn) {
 	Sentry.init({
 		dsn: sentryDsn,
 		environment: `cpl-frontend-${environment ?? "development"}`,
+		integrations: [Sentry.piniaIntegration(usePinia())],
+		normalizeDepth: 10,
 		debug: false,
 		tunnel: "/api/tunnel",
 	});
