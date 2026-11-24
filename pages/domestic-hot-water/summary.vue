@@ -24,6 +24,13 @@ const pointOfUse = heatSources.filter(({ data: x }) => x.isExistingHeatSource ==
 const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
 const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
 
+
+function getNameOfWetHeatSource(id: string, chargingHeatSources: ReturnType<typeof getCombinedHeatPumpsAndBoilers>): string | undefined {
+	return chargingHeatSources.find(x => x.data.id === id)?.data.name;
+}
+
+const heatPumpsAndBoilers = getCombinedHeatPumpsAndBoilers(store);
+
 type SummaryHeatSource = {
 	data: {
 		name: string,
@@ -208,10 +215,12 @@ const heatBatterySummary: SummarySection = {
 					"Used for space heating": "No",
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 					"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
+					"How is this heat battery charged": "chargingSource" in heatSource && heatSource.chargingSource ? displayCamelToSentenceCase(heatSource.chargingSource) : emptyValueRendering,
+					"Wet heat source": "wetHeatSourceId" in heatSource && heatSource.wetHeatSourceId ? getNameOfWetHeatSource(heatSource.wetHeatSourceId, heatPumpsAndBoilers) ?? emptyValueRendering : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 					"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
-					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+					"Energy supply": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery === "heatBatteryDryCore" && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 				}),
 			};
 			return summary;

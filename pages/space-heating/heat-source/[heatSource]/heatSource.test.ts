@@ -2747,11 +2747,11 @@ describe("heatSource", () => {
 			).toBeNull();
 		});
 
-		test("does not show energy supply field when heat battery product has fuel", async () => {
+		test("does not show energy supply field when dry core product has fuel", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatBatteryPCM }],
+						data: [{ data: { ...heatBatteryDryCore } }],
 					},
 				},
 				dwellingDetails: {
@@ -2772,11 +2772,11 @@ describe("heatSource", () => {
 			expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
 		});
 
-		test("shows energy supply field when heat battery product does not have fuel", async () => {
+		test("shows energy supply field when dry core product does not have fuel", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatBatteryPCM }],
+						data: [{ data: { ...heatBatteryDryCore } }],
 					},
 				},
 				dwellingDetails: {
@@ -2797,11 +2797,31 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
 		});
 
-		test("saves energy supply when heat battery product does not have fuel", async () => {
+		test("does not show energy supply field for PCM without product fuel", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatBatteryPCM }],
+						data: [{ data: { ...heatBatteryPCM } }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { fuelType: ["electricity", "mains_gas"] },
+					},
+				},
+			});
+			mockFetch.mockReturnValue({ data: ref(heatBatteryProduct) });
+
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
+
+			expect(screen.queryByTestId("energySupply")).toBeNull();
+		});
+
+		test("saves energy supply when dry core product does not have fuel", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: { ...heatBatteryDryCore } }],
 					},
 				},
 				dwellingDetails: {
@@ -2824,7 +2844,10 @@ describe("heatSource", () => {
 
 			const savedHeatBattery = store.spaceHeating.heatSource.data[0]?.data as Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
 
-			expect(savedHeatBattery.energySupply).toBe("electricity");
+			expect(savedHeatBattery).toMatchObject({
+				typeOfHeatBattery: "heatBatteryDryCore",
+				energySupply: "electricity",
+			});
 		});
 
 		describe("heat battery default name", () => {

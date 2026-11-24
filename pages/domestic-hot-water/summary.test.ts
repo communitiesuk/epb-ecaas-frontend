@@ -952,7 +952,6 @@ describe("Domestic hot water summary", () => {
 			productReference: "HEAT_BATTERY_SMALL",
 			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,
-			energySupply: "electricity",
 		};
 
 		// const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
@@ -1127,7 +1126,7 @@ describe("Domestic hot water summary", () => {
 			"Product reference": "HEAT_BATTERY_SMALL",
 			"Number of units": "1",
 			"Maximum flow temperature": `32 ${celsius.suffix}`,
-			"Energy supply": "Electricity",
+			"How is this heat battery charged": "Electricity",
 		};
 		const expectedHeatInterfaceUnit = {
 			"Cold water source": "Mains water",
@@ -1452,6 +1451,63 @@ describe("Domestic hot water summary", () => {
 			// 	await renderSuspended(Summary);
 			// 	await verifyDataInSection("heatNetworkSummary", expectedExistingHeatNetwork);
 			// });
+		});
+		it("displays the name of wet heat source charging source for heat battery pcm", async () => {
+			const pcmHeatBatteryWithWetHeatSource: DomesticHotWaterHeatSourceData = {
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				id: "heat-battery-1",
+				name: "Heat battery 1",
+				typeOfHeatSource: "heatBattery",
+				typeOfHeatBattery: "heatBatteryPcm",
+				productReference: "HEAT_BATTERY_SMALL",
+				numberOfUnits: 1,
+				maxFlowTemp: unitValue(32, celsius),
+				chargingSource: "wetHeatSource",
+				wetHeatSourceId: "boiler-1",
+			};
+			const boiler: DomesticHotWaterHeatSourceData = {
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				id: "boiler-1",
+				name: "Boiler 1",
+				typeOfHeatSource: "boiler",
+				productReference: "BOILER-LARGE",
+				maxFlowTemp: unitValue(60, celsius),
+				typeOfBoiler: "combiBoiler",
+				needsSpecifiedLocation: true,
+				energySupply: "electricity",
+
+			};
+			const expectedPcmHeatBatteryWithWetHeatSource = {
+				"Cold water source": "Mains water",
+				Name: "Heat battery 1",
+				"Used for space heating": "No",
+				"Type of heat source": "Heat battery",
+				"Type of heat battery": "Heat battery pcm",
+				"Product reference": "HEAT_BATTERY_SMALL",
+				"Number of units": "1",
+				"Maximum flow temperature": `32 ${celsius.suffix}`,
+				"How is this heat battery charged": "Wet heat source",
+				"Wet heat source": "Boiler 1",
+				"Energy supply": "-",
+			};
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: pcmHeatBatteryWithWetHeatSource }, { data: boiler }],
+					},
+				},
+			});
+			await renderSuspended(Summary);
+			for (const [key, value] of Object.entries(expectedPcmHeatBatteryWithWetHeatSource)) {
+				console.log(key, value);
+				const lineResult = (await screen.findByTestId(`summary-heatBatterySummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
 		});
 	});
 });

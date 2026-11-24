@@ -1102,7 +1102,6 @@ const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	maxFlowTemp: zodUnit("temperature"),
 	numberOfUnits: z.number(),
-	energySupply: z.optional(fuelTypeZod),
 });
 
 const heatBatteryPcmElectric = heatBatteryBase.extend({
@@ -1116,6 +1115,7 @@ const heatBatteryPcmWet = heatBatteryBase.extend({
 });
 const heatBatteryDryCore = heatBatteryBase.extend({
 	typeOfHeatBattery: z.literal("heatBatteryDryCore"),
+	energySupply: z.optional(fuelTypeZod),
 });
 
 const heatBatteryDataZod = z.discriminatedUnion("typeOfHeatBattery", [

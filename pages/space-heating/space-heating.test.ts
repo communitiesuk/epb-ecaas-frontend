@@ -882,7 +882,6 @@ describe("space heating", () => {
 					numberOfUnits: 1,
 					productReference: "PR-12345",
 					wetHeatSourceId: heatPump.id,
-					energySupply: "electricity",
 				};
 				test("when a heat source is removed that a pcm battery is associated with, a complete pcm is set to inprogress and its association is cleared", async () => {
 					store.$patch({

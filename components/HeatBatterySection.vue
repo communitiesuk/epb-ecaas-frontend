@@ -31,7 +31,7 @@ const wetHeatSourcesForPCM = computed(() => new Map(
 const emit = defineEmits(["update-heat-battery-model"]);
 
 const handleProductLoaded = (product: AnyPcdbProduct) => {
-	if (product.technologyType === "HeatBatteryPCM" || product.technologyType === "HeatBatteryDryCore") {
+	if (product.technologyType === "HeatBatteryDryCore") {
 		fuel.value = product.fuel ?? "";
 	}
 
@@ -133,7 +133,7 @@ const getDefaultWetHeatSourceId = () => {
 			}"
 		/>
 		<FieldsEnergySupplies
-			v-if="fuel === ''"
+			v-if="model.typeOfHeatBattery== 'heatBatteryDryCore' && fuel === ''"
 			id="energySupply"
 			name="energySupply"
 			label="Energy supply"

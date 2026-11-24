@@ -3,6 +3,7 @@ import { getTabItems, getUrl, type HeatEmittingData, type WetDistributionEmitter
 import type { SummarySection } from "~/common.types";
 import { useProductReferences } from "~/composables/productReferences";
 import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
+import { getCombinedHeatPumpsAndBoilers } from "~/utils/getCombinedHeatSources";
 
 const store = useEcaasStore();
 const title = "Space heating summary";
@@ -15,6 +16,7 @@ const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === "heatPump"
 const heatNetworks = store.spaceHeating.heatNetworks.data;
 const heatInterfaceUnits = heatSources.filter(x => x.data.typeOfHeatSource === "heatInterfaceUnit");
 const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === "heatBattery");
+const chargingHeatSources = getCombinedHeatPumpsAndBoilers(store);
 
 const heatEmitters = store.spaceHeating.heatEmitters.data;
 
@@ -32,6 +34,10 @@ const nestedEmitterModelNames = await useProductReferences(
 	) as EcaasForm<WetDistributionEmitterData>[],
 	productData => productData.modelName,
 );
+
+function getNameOfWetHeatSource(id: string, chargingHeatSources: ReturnType<typeof getCombinedHeatPumpsAndBoilers>): string | undefined {
+	return chargingHeatSources.find(x => x.data.id === id)?.data.name;
+}
 
 const emitterTypeOptions = {
 	radiator: "Radiator",
@@ -202,16 +208,17 @@ const heatBatterySummary: SummarySection = {
 	label: "Heat batteries",
 	data:
 		heatBatteries.map(({ data: heatSource }) => {
-
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
+				"How is this heat battery charged": "chargingSource" in heatSource && heatSource.chargingSource ? displayCamelToSentenceCase(heatSource.chargingSource) : emptyValueRendering,
+				"Wet heat source": "wetHeatSourceId" in heatSource && heatSource.wetHeatSourceId ? getNameOfWetHeatSource(heatSource.wetHeatSourceId, chargingHeatSources) ?? emptyValueRendering : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
-				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+				"Energy supply": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery === "heatBatteryDryCore" && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 			};
 			return summary;
 		}) || [],

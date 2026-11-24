@@ -330,7 +330,7 @@ describe("Space heating summary page", () => {
 			}
 		});
 
-		it("displays the correct data for the heat battery summary", async () => {
+		it("displays the correct data for the heat battery pcm summary with electricity as charging source", async () => {
 
 			const heatBattery1: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
@@ -341,7 +341,6 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_BATTERY_SMALL",
 				maxFlowTemp: unitValue(32, celsius),
 				numberOfUnits: 1,
-				energySupply: "electricity",
 			};
 
 			store.$patch({
@@ -362,7 +361,57 @@ describe("Space heating summary page", () => {
 				"Product name": "Mock product",
 				"Maximum flow temperature": `32 ${celsius.suffix}`,
 				"Number of units": "1",
-				"Energy supply": "Electricity",
+				"How is this heat battery charged": "Electricity",
+				"Wet heat source": "-",
+				"Energy supply": "-",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-heatBatterySummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+		it("displays the correct data for the heat battery pcm summary with wet heat source as charging source", async () => {
+			const wetHeatSource: Partial<HeatSourceData> = {
+				id: "wet-heat-source-1",
+				name: "Boiler 1",
+				typeOfHeatSource: "boiler",
+			};
+			const heatBattery: HeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+				name: "Heat battery 1",
+				typeOfHeatSource: "heatBattery",
+				typeOfHeatBattery: "heatBatteryPcm",
+				chargingSource: "wetHeatSource",
+				productReference: "HEAT_BATTERY_SMALL",
+				maxFlowTemp: unitValue(32, celsius),
+				numberOfUnits: 1,
+				wetHeatSourceId: "wet-heat-source-1",
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatBattery }, { data: wetHeatSource }],
+					},
+
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat battery 1",
+				"Type of heat source": "Heat battery",
+				"Type of heat battery": "Heat battery pcm",
+				"Product reference": "HEAT_BATTERY_SMALL",
+				"Product name": "Mock product",
+				"Maximum flow temperature": `32 ${celsius.suffix}`,
+				"Number of units": "1",
+				"How is this heat battery charged": "Wet heat source",
+				"Wet heat source": "Boiler 1",
+				"Energy supply": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
