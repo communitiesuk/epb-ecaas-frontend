@@ -14,5 +14,5 @@ import { reactive } from "vue";
  */
 export const mockReactiveRouteWithPath = (basePath: string, mockRoute: Mock) => {
 	const route = mockRoute();
-	return reactive({ ...route, path: `${basePath}${route?.path ?? ""}` });
+	return reactive({ ...route, path: `${basePath}${route?.path ?? ""}`, params: route.params || {}, matched: route.matched || [] });
 };
