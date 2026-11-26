@@ -33,7 +33,7 @@ describe("windowData Zod schema", () => {
 			() => {
 				windowDataZod.parse(windowFormData);
 			},
-		).not.toThrowError();
+		).not.toThrow();
 	});
 
 	it("correctly does not validate a invalid window shape with four openable parts", () => {
@@ -68,7 +68,7 @@ describe("windowData Zod schema", () => {
 			() => {
 				windowDataZod.parse(windowFormData);
 			},
-		).toThrowError();
+		).toThrow();
 	});
 
 	it("correctly does not validate a invalid window shape with one openable part and an overhang depth missing", () => {
@@ -103,7 +103,7 @@ describe("windowData Zod schema", () => {
 			() => {
 				windowDataZod.parse(windowFormData);
 			},
-		).toThrowError();
+		).toThrow();
 	});
 });
 

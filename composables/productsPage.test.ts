@@ -34,7 +34,7 @@ describe("Products page", () => {
 		mockRoute.mockReturnValue(route);
 
 		// Act / Assert
-		expect(() => useProductsPage("pump")).toThrowError("Invalid product type selected");
+		expect(() => useProductsPage("pump")).toThrow("Invalid product type selected");
 	});
 
 	it("Returns camel case page ID when ID is a valid PCDB technology type", () => {

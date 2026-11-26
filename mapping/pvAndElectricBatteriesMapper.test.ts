@@ -277,7 +277,7 @@ describe("PV and electric batteries mapper", () => {
 			},
 		});
 
-		expect(() => mapPvDiverterData(resolveState(store.$state))).toThrowError("Expected exactly one non-heat-network heat source for diverter, found 0");
+		expect(() => mapPvDiverterData(resolveState(store.$state))).toThrow("Expected exactly one non-heat-network heat source for diverter, found 0");
 	});
 	it("throws an error if more than one potential heat source for the diverter is found", () => {
 		const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
@@ -356,7 +356,7 @@ describe("PV and electric batteries mapper", () => {
 			},
 		});
 
-		expect(() => mapPvDiverterData(resolveState(store.$state))).toThrowError("Expected exactly one non-heat-network heat source for diverter, found 2");
+		expect(() => mapPvDiverterData(resolveState(store.$state))).toThrow("Expected exactly one non-heat-network heat source for diverter, found 2");
 	});
 	it("exposes energy-supply flags from diverters (is_export_capable + priority)", () => {
 		const diverter1: EcaasForm<PvDiverterData> = {

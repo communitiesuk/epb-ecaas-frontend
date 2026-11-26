@@ -7,6 +7,6 @@ describe("products file passes defined schema", () => {
 			() => {
 				Products.parse(products);
 			},
-		).not.toThrowError();
+		).not.toThrow();
 	});
 });
