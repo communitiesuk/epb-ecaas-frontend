@@ -1518,18 +1518,30 @@ const wwhrsDataZod = pcdbProduct.extend({
 });
 
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
+const preHeatedWaterCylinderOnlyDataZod = z.object({
+	typeOfWaterStorage: z.literal("hotWaterCylinder"),
+	storageCylinderVolume: zodUnit("volume"),
+	coldWaterSource: z.string(),
+	areaOfHeatExchange: z.number(),
+	thermostatPosition: fraction,
+});
+const preHeatedSmartHotWaterTankDataZod = z.object({
+	typeOfWaterStorage: z.literal("smartHotWaterTank"),
+});
 
-const preheatedWaterStorageDataZod = namedWithId
+const preheatedWaterStorageBaseZod = namedWithId
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
-		typeOfWaterStorage: z.literal("hotWaterCylinder"),
-		storageCylinderVolume: zodUnit("volume"),
 		dailyEnergyLoss: z.number(),
 		heaterPosition: fraction,
-		thermostatPosition: fraction,
-		coldWaterSource: z.string(),
 		heatSourceId: z.string(),
 	});
+const preheatedWaterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
+	preHeatedWaterCylinderOnlyDataZod.extend(preheatedWaterStorageBaseZod.shape),
+	preHeatedSmartHotWaterTankDataZod.extend(preheatedWaterStorageBaseZod.shape),
+]);
+
+
 
 export type PreheatedWaterStorageData = z.infer<typeof preheatedWaterStorageDataZod>;
 
@@ -1788,17 +1800,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = NonNullable<EcaasFormPaths<EcaasState>>;
