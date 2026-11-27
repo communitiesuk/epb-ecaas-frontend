@@ -21,7 +21,7 @@ describe("domestic hot water mapper", () => {
 	afterEach(() => {
 		store.$reset();
 	});
-	
+
 	const coldWaterSourceMainsWater: Pick<FhsInputSchema, "ColdWaterSource"> = {
 		ColdWaterSource: {
 			["mains water"]: defaultColdWaterSourceData,
@@ -254,6 +254,7 @@ describe("domestic hot water mapper", () => {
 			storageCylinderVolume: { amount: 30, unit: "litres" },
 			dailyEnergyLoss: 40,
 			heaterPosition: 0.2,
+			areaOfHeatExchanger: unitValue(1, "metres square"),
 			thermostatPosition: 0.8,
 			coldWaterSource: wwhrs.data.id,
 			heatSourceId: heatPump.data.id,
@@ -1412,7 +1413,7 @@ describe("domestic hot water mapper", () => {
 						.toThrow("Selected hot water heat source requires water storage - no water storage present");
 				},
 			);
-			
+
 		});
 
 		it("throws an explicit error when a DHW heat source reference cannot find its Space Heating heat source", async () => {
@@ -1529,7 +1530,7 @@ describe("domestic hot water mapper", () => {
 						coldWaterSource: storageTank.data.id,
 						packagedProductReference: heatPumpHWOnly.data.id,
 						energySupply: "mains_gas",
-					}, 
+					},
 					complete: true,
 				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
@@ -1860,7 +1861,7 @@ describe("domestic hot water mapper", () => {
 					HotWaterSource: "hw cylinder",
 					WWHRS: wwhrs.data.name,
 				};
-			
+
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-a"]).toEqual(expectedShower);
 				expect(result.WWHRS?.[wwhrs.data.name]).toEqual({
 					product_reference: "1000",

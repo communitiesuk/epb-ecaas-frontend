@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
 import { unitValue } from "~/utils/units";
+import { metresSquare } from "~/utils/units/area.ts";
 import { celsius } from "~/utils/units/temperature";
 import { litre } from "~/utils/units/volume";
 import PreheatedWaterStorage from "./index.vue";
@@ -23,12 +24,12 @@ describe("preheated water storage", () => {
 	beforeEach(() => {
 		store = useEcaasStore();
 	});
-	
+
 	const user = userEvent.setup();
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-	const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
+	const preheatedWaterCylinder: EcaasForm<Extract<PreheatedWaterStorageData, { typeOfWaterStorage: "hotWaterCylinder" }>> = {
 		data: {
 			name: "Standard water cylinder 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
@@ -39,6 +40,7 @@ describe("preheated water storage", () => {
 			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatPumpId,
+			areaOfHeatExchanger: unitValue(1, metresSquare),
 		},
 	};
 
@@ -79,6 +81,7 @@ describe("preheated water storage", () => {
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
+		await user.type(screen.getByTestId("areaOfHeatExchanger"), "1");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
 		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
@@ -229,15 +232,15 @@ describe("preheated water storage", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 			.toBe("Standard water cylinder");
 	});
-	describe("Validation",() => {
-		describe("Thermostat position validation", () => { 
+	describe("Validation", () => {
+		describe("Thermostat position validation", () => {
 			async function renderWithThermostatPosition(value: string) {
 				await renderSuspended(PreheatedWaterStorage);
 				await user.type(screen.getByTestId("thermostatPosition"), value);
 				await user.tab();
 			}
 
-			test("Thermostat position is is valid between 0 and 1", async () => { 
+			test("Thermostat position is is valid between 0 and 1", async () => {
 				await renderWithThermostatPosition("0.5");
 				expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe("0.5");
 				const error = screen.queryByTestId("thermostatPosition_error");

@@ -35,6 +35,7 @@ const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
 		storageCylinderVolume: unitValue(5, litre),
 		dailyEnergyLoss: 1,
 		heaterPosition: 0.8,
+		areaOfHeatExchanger: unitValue(1, "metres square"),
 		thermostatPosition: 0.5,
 		coldWaterSource: "mainsWater",
 		heatSourceId: "d9d03976-0827-4c3c-997e-ee63b340e5c5",
@@ -107,16 +108,16 @@ describe("Pipework form", () => {
 				},
 			},
 		});
-		
+
 		await renderSuspended(PipeworkForm, {
 			route: {
 				params: { pipework: "create" },
 			},
 		});
-		
+
 		await populateValidForm(pipework1);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
 		const pipeworkItem = store.domesticHotWater.pipework.data[0];
@@ -184,7 +185,7 @@ describe("Pipework form", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(PipeworkForm);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("waterStorage_error"))).toBeDefined();
@@ -206,7 +207,7 @@ describe("Pipework form", () => {
 			},
 		});
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 		expect((await screen.findByTestId("pipeworkErrorSummary"))).toBeDefined();
 	});
 
@@ -279,7 +280,7 @@ describe("partially saving data", () => {
 		await user.click(screen.getByTestId("saveProgress"));
 
 		const pipeworkItem = store.domesticHotWater.pipework.data[0];
-	
+
 		expect(pipeworkItem?.data.name).toBe("Pipework");
 	});
 
@@ -322,7 +323,7 @@ describe("partially saving data", () => {
 					data: [pipework1, pipework2],
 				},
 			},
-		});    
+		});
 		await renderSuspended(PipeworkForm, {
 			route: {
 				params: { pipework: "1" },
@@ -331,7 +332,7 @@ describe("partially saving data", () => {
 
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("internalDiameter"));
-		
+
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink 2");
 		await user.type(screen.getByTestId("internalDiameter"), "1");
 		await user.tab();

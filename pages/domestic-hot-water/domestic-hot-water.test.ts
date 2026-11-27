@@ -21,7 +21,7 @@ describe("Domestic hot water", () => {
 	beforeEach(() => {
 		store = useEcaasStore();
 	});
-	
+
 	const user = userEvent.setup();
 
 	mockNuxtImport("navigateTo", () => {
@@ -59,6 +59,7 @@ describe("Domestic hot water", () => {
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
 			heaterPosition: 0.8,
+			areaOfHeatExchanger: unitValue(1, "metres square"),
 			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatSource1.data.id,
@@ -1217,7 +1218,7 @@ describe("Domestic hot water", () => {
 						data: [solarThermalSystem],
 					},
 					waterStorage: {
-						data: [], 
+						data: [],
 					},
 				},
 			});
@@ -1289,7 +1290,7 @@ describe("Domestic hot water", () => {
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
-			
+
 			const dhwWithExistingHeatPump = {
 				data: {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
@@ -1393,7 +1394,7 @@ describe("Domestic hot water", () => {
 			} as const satisfies EcaasForm<HeatSourceData>;
 
 
-			
+
 			const dhwWithExistingRegularBoiler = {
 				data: {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c6k",
@@ -1491,7 +1492,7 @@ describe("Domestic hot water", () => {
 			} as const satisfies EcaasForm<HeatSourceData>;
 
 
-			
+
 			const dhwWithExistingCombiBoiler = {
 				data: {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c6l",
@@ -1900,7 +1901,7 @@ describe("Domestic hot water", () => {
 					productReference: "42",
 					typeOfHeatNetwork: "communalHeatNetwork",
 				},
-	
+
 			};
 
 			store.$patch({
@@ -2003,8 +2004,8 @@ describe("Domestic hot water", () => {
 		// 			},
 		// 		});
 
-	// 		await renderSuspended(DomesticHotWater);
-	// 		expect(screen.queryByTestId("heatSources_add")).toBeNull();
-	// 	});
+		// 		await renderSuspended(DomesticHotWater);
+		// 		expect(screen.queryByTestId("heatSources_add")).toBeNull();
+		// 	});
 	});
 });

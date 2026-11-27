@@ -140,6 +140,7 @@ describe("Domestic hot water summary", () => {
 			},
 			dailyEnergyLoss: 1,
 			heaterPosition: 0.8,
+			areaOfHeatExchanger: unitValue(1, "metres square"),
 			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatPumpId,
@@ -245,7 +246,8 @@ describe("Domestic hot water summary", () => {
 			};
 
 			store.$patch(state => {
-				state.domesticHotWater.preheatedWaterStorage.data[0]!.data.coldWaterSource = wwhrs.data.id;
+				const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage.data[0]!.data as Extract<PreheatedWaterStorageData, { coldWaterSource?: string }>;
+				preheatedWaterStorage.coldWaterSource = wwhrs.data.id;
 				state.domesticHotWater.wwhrs.data.push(wwhrs);
 			});
 
@@ -442,6 +444,7 @@ describe("Domestic hot water summary", () => {
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
 					heaterPosition: 0.8,
+					areaOfHeatExchanger: { amount: 1, unit: "metres square" },
 					thermostatPosition: 0.5,
 					coldWaterSource: "mainsWater",
 					heatSourceId: heatPumpId,

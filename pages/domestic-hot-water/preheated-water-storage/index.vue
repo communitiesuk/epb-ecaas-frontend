@@ -3,6 +3,7 @@ import { hasPackagedProduct } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { fraction, type PreheatedWaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
+import { metresSquare } from "~/utils/units/area";
 import { litre, type Volume } from "~/utils/units/volume";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
@@ -31,19 +32,33 @@ const saveForm = (fields: PreheatedWaterStorageData) => {
 			name: fields.name,
 			id,
 			heaterPosition: fields.heaterPosition,
-			thermostatPosition: fields.thermostatPosition,
-			coldWaterSource: fields.coldWaterSource,
+			heatSourceId: fields.heatSourceId,
 		};
 
-		const waterStorageItem: EcaasForm<PreheatedWaterStorageData> = {
-			data: {
+		let data: PreheatedWaterStorageData;
+
+		if (fields.typeOfWaterStorage === "hotWaterCylinder") {
+			data = {
 				...commonFields,
 				typeOfWaterStorage: fields.typeOfWaterStorage,
 				storageCylinderVolume: fields.storageCylinderVolume,
 				dailyEnergyLoss: fields.dailyEnergyLoss,
 				packagedProductReference: fields.packagedProductReference,
-				heatSourceId: fields.heatSourceId,
-			},
+				coldWaterSource: fields.coldWaterSource,
+				areaOfHeatExchanger: fields.areaOfHeatExchanger,
+				thermostatPosition: fields.thermostatPosition,
+			} satisfies Extract<PreheatedWaterStorageData, { typeOfWaterStorage: "hotWaterCylinder" }>;
+		} else {
+			data = {
+				...commonFields,
+				typeOfWaterStorage: fields.typeOfWaterStorage,
+				dailyEnergyLoss: fields.dailyEnergyLoss,
+				packagedProductReference: fields.packagedProductReference,
+			} satisfies Extract<PreheatedWaterStorageData, { typeOfWaterStorage: "smartHotWaterTank" }>;
+		}
+
+		const waterStorageItem: EcaasForm<PreheatedWaterStorageData> = {
+			data,
 			complete: true,
 		};
 
@@ -126,6 +141,32 @@ const wwhrsMap = new Map(wwhrs);
 					:disabled="hasPackagedProduct(model)"
 				/>
 			</template>
+			<FieldsHotWaterHeatSources
+				id="heatSourceId"
+				name="heatSourceId"
+				label="Heat source"
+				help="Select the relevant heat source that has been added previously"
+				validation="required"
+				:exclude-types="['combiBoiler', 'pointOfUse']"
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage !== undefined"
+				id="coldWaterSource"
+				type="govRadios"
+				label="Cold water source"
+				:options="new Map([...wwhrsMap, ...coldWaterSourcesMap])"
+				name="coldWaterSource"
+				validation="required"
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+				id="areaOfHeatExchanger"
+				type="govInputWithUnit"
+				:unit="metresSquare"
+				label="Area of heat exchanger"
+				name="areaOfHeatExchanger"
+				validation="required"
+			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"
 				id="heaterPosition"
@@ -143,23 +184,6 @@ const wwhrsMap = new Map(wwhrs);
 				name="thermostatPosition"
 				:validation="zodTypeAsFormKitValidation(fraction)"
 				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
-			/>
-			<FieldsHotWaterHeatSources
-				id="heatSourceId"
-				name="heatSourceId"
-				label="Heat source"
-				help="Select the relevant heat source that has been added previously"
-				validation="required"
-				:exclude-types="['combiBoiler', 'pointOfUse']"
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage !== undefined"
-				id="coldWaterSource"
-				type="govRadios"
-				label="Cold water source"
-				:options="new Map([...wwhrsMap, ...coldWaterSourcesMap])"
-				name="coldWaterSource"
-				validation="required"
 			/>
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

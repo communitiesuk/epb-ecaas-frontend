@@ -44,6 +44,7 @@ describe("water storage events", () => {
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
 			heaterPosition: 0.8,
+			areaOfHeatExchanger: unitValue(1, "metres square"),
 			thermostatPosition: 0.5,
 			coldWaterSource: wwhrs1.data.id,
 			heatSourceId: heatPump.data.id,
@@ -120,7 +121,7 @@ describe("water storage events", () => {
 
 			expect(preheatedWaterStorage.complete).toBe(false);
 			expect(preheatedWaterStorage.data[0]?.complete).toBe(false);
-			expect(preheatedWaterStorage.data[0]?.data.coldWaterSource).toBeUndefined();
+			expect((preheatedWaterStorage.data[0]?.data as { coldWaterSource?: string }).coldWaterSource).toBeUndefined();
 		}, 100);
 	});
 
