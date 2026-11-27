@@ -43,7 +43,7 @@ describe("preheated water storage products", () => {
 			},
 		});
 		mockRoute.mockReturnValue({
-			params: { waterstorage: "1", products: "smart-hot-water-tank", id: "42" },
+			params: { waterstorage: "0", products: "smart-hot-water-tank", id: "42" },
 			path: "/0/smart-hot-water-tank",
 			query: {},
 		});
