@@ -159,106 +159,105 @@ const wwhrsMap = new Map(wwhrs);
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
 			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage !== undefined"
-				id="name"
-				type="govInputText"
-				label="Name"
-				help="Provide a name for this element so that it can be identified later"
-				name="name"
-				validation="required"
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"
-				id="selectSmartHotWaterTank"
-				type="govPcdbProduct"
-				label="Select a smart hot water tank"
-				name="productReference"
-				:validation-rules="{ isProductSelected }"
-				validation="required | isProductSelected"
-				help="Select the smart hot water tank from the PCDB using the button below"
-				:selected-product-reference="model.productReference"
-				:selected-product-type="model.typeOfWaterStorage"
-				:page-url="`${route.path}/${index}`"
-				:page-index="index"
-				:on-product-loaded="handleProductLoaded"
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-				id="storageCylinderVolume"
-				name="storageCylinderVolume"
-				label="Storage cylinder volume"
-				help="Enter the total internal capacity of the tank"
-				type="govInputWithUnit"
-				:unit="litre"
-				:validation-rules="{ withinMinAndMaxVolume }"
-				validation="required | withinMinAndMaxVolume:1,1000"
-				:validation-messages="{
-					withinMinAndMaxVolume: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
-				}"
-				data-field="PreHeatedWaterSource['preheated tank'].volume"
-				:disabled="hasPackagedProduct(model)"
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-				id="dailyEnergyLoss"
-				type="govInputWithSuffix"
-				label="Daily standing loss"
-				help="Enter the estimated energy lost from the tank per day"
-				name="dailyEnergyLoss"
-				validation="required | number | min:0 | max:200"
-				suffix-text="kWh/day"
-				data-field="PreHeatedWaterSource['preheated tank'].daily_losses"
-				:disabled="hasPackagedProduct(model)"
-			/>
-			<FormKit type="hidden" name="areaOfHeatExchangerInPcdb" />
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && heatSourceIsHeatPump() && !model.areaOfHeatExchangerInPcdb"
-				id="areaOfHeatExchanger"
-				type="govInputWithUnit"
-				:unit="metresSquare"
-				label="Area of heat exchanger installed"
-				name="areaOfHeatExchanger"
-				validation="required"
-				data-field="PreHeatedWaterSource['preheated tank'].heat_exchanger_surface_area"
-			/>
-			<FieldsHotWaterHeatSources
-				v-if="model.typeOfWaterStorage !== undefined"
-				id="heatSourceId"
-				name="heatSourceId"
-				label="Heat source"
-				help="Select the relevant heat source that has been added previously"
-				validation="required"
-				:exclude-types="['combiBoiler', 'pointOfUse']"
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage !== undefined"
-				id="heaterPosition"
-				type="govInputFloat"
-				label="Heater position in the cylinder"
-				name="heaterPosition"
-				validation="required | number | min:0 | max:1"
-				help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-				id="thermostatPosition"
-				type="govInputFloat"
-				label="Thermostat position in the cylinder"
-				name="thermostatPosition"
-				validation="required | number | min:0 | max:1"
-				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage !== undefined"
-				id="coldWaterSource"
-				type="govRadios"
-				label="Cold water source"
-				:options="new Map([ ...wwhrsMap, ...coldWaterSourcesMap])"
-				name="coldWaterSource"
-				validation="required"
-			/>
-			<HemDefaultProductWarning :brand-names="[productBrandName]" />
+			<template v-if="model.typeOfWaterStorage !== undefined">
+				<FormKit
+					id="name"
+					type="govInputText"
+					label="Name"
+					help="Provide a name for this element so that it can be identified later"
+					name="name"
+					validation="required"
+				/>
+				<FormKit
+					v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"
+					id="selectSmartHotWaterTank"
+					type="govPcdbProduct"
+					label="Select a smart hot water tank"
+					name="productReference"
+					:validation-rules="{ isProductSelected }"
+					validation="required | isProductSelected"
+					help="Select the smart hot water tank from the PCDB using the button below"
+					:selected-product-reference="model.productReference"
+					:selected-product-type="model.typeOfWaterStorage"
+					:page-url="`${route.path}/${index}`"
+					:page-index="index"
+					:on-product-loaded="handleProductLoaded"
+				/>
+				<FormKit
+					v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+					id="storageCylinderVolume"
+					name="storageCylinderVolume"
+					label="Storage cylinder volume"
+					help="Enter the total internal capacity of the tank"
+					type="govInputWithUnit"
+					:unit="litre"
+					:validation-rules="{ withinMinAndMaxVolume }"
+					validation="required | withinMinAndMaxVolume:1,1000"
+					:validation-messages="{
+						withinMinAndMaxVolume: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
+					}"
+					data-field="PreHeatedWaterSource['preheated tank'].volume"
+					:disabled="hasPackagedProduct(model)"
+				/>
+				<FormKit
+					v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+					id="dailyEnergyLoss"
+					type="govInputWithSuffix"
+					label="Daily standing loss"
+					help="Enter the estimated energy lost from the tank per day"
+					name="dailyEnergyLoss"
+					validation="required | number | min:0 | max:200"
+					suffix-text="kWh/day"
+					data-field="PreHeatedWaterSource['preheated tank'].daily_losses"
+					:disabled="hasPackagedProduct(model)"
+				/>
+				<FormKit type="hidden" name="areaOfHeatExchangerInPcdb" />
+				<FormKit
+					v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && heatSourceIsHeatPump() && !model.areaOfHeatExchangerInPcdb"
+					id="areaOfHeatExchanger"
+					type="govInputWithUnit"
+					:unit="metresSquare"
+					label="Area of heat exchanger installed"
+					name="areaOfHeatExchanger"
+					validation="required"
+					data-field="PreHeatedWaterSource['preheated tank'].heat_exchanger_surface_area"
+				/>
+				<FieldsHotWaterHeatSources
+					id="heatSourceId"
+					name="heatSourceId"
+					label="Heat source"
+					help="Select the relevant heat source that has been added previously"
+					validation="required"
+					:exclude-types="['combiBoiler', 'pointOfUse']"
+				/>
+				<FormKit
+					id="coldWaterSource"
+					type="govRadios"
+					label="Cold water source"
+					:options="new Map([ ...wwhrsMap, ...coldWaterSourcesMap])"
+					name="coldWaterSource"
+					validation="required"
+				/>
+				<FormKit
+					id="heaterPosition"
+					type="govInputFloat"
+					label="Heater position in the cylinder"
+					name="heaterPosition"
+					validation="required | number | min:0 | max:1"
+					help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
+				/>
+				<FormKit
+					v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+					id="thermostatPosition"
+					type="govInputFloat"
+					label="Thermostat position in the cylinder"
+					name="thermostatPosition"
+					validation="required | number | min:0 | max:1"
+					help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
+				/>
+
+				<HemDefaultProductWarning :brand-names="[productBrandName]" />
+			</template>
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 				<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
