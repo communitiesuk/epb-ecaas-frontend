@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { isHotWaterHeatSource, isNewHeatSource } from "~/utils/heatSources";
+import { unitValue } from "~/utils/units";
+import { metresSquare } from "~/utils/units/area";
 
 export function useHeatSources() {
 	const store = useEcaasStore();
@@ -145,6 +147,10 @@ export function useHeatSources() {
 						storageCylinderVolume: unitValue(heatSource.tankVolumeDeclared, "litres"),
 					} : {}),
 					dailyEnergyLoss: heatSource.dailyLossesDeclared,
+					areaOfHeatExchangerInPcdb: heatSource.heatExchangerSurfaceAreaDeclared !== undefined,
+					...(heatSource.heatExchangerSurfaceAreaDeclared !== undefined ? {
+						areaOfHeatExchanger: unitValue(heatSource.heatExchangerSurfaceAreaDeclared, metresSquare),
+					} : {}),
 					packagedProductReference: heatSource.productReference,
 				};
 

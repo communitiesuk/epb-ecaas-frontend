@@ -1495,6 +1495,7 @@ describe("domestic hot water mapper", () => {
 							volume: 30,
 							init_temp: 20,
 							daily_losses: 40,
+							heat_exchanger_surface_area: preheatedTank.data.areaOfHeatExchanger.amount,
 							HeatSource: {
 								[heatPumpHWOnly.data.name]: {
 									heater_position: preheatedTank.data.heaterPosition,
@@ -1520,6 +1521,55 @@ describe("domestic hot water mapper", () => {
 				};
 
 				expect(result).toEqual(expected);
+			});
+
+			it("maps pre-heated smart hot water tanks", () => {
+				const preheatedSmartTank: EcaasForm<Extract<PreheatedWaterStorageData, { typeOfWaterStorage: "smartHotWaterTank" }>> = {
+					data: {
+						name: "Pre-heated Smart Hot Water Tank",
+						id: "a1ccebb7-0c1a-4f52-a1ae-1ea9c10f6132",
+						typeOfWaterStorage: "smartHotWaterTank",
+						productReference: "SHWT-123",
+						heaterPosition: 0.8,
+						coldWaterSource: "mainsWater",
+						heatSourceId: heatPumpHWOnly.data.id,
+					},
+					complete: true,
+				};
+
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPumpHWOnly],
+							complete: true,
+						},
+						preheatedWaterStorage: {
+							data: [preheatedSmartTank],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				const result = mapPreheatedWaterSourceData(resolveState(store.$state));
+
+				expect(result?.PreHeatedWaterSource?.["preheated tank"]).toEqual({
+					type: "SmartHotWaterTank",
+					ColdWaterSource: "mains water",
+					product_reference: "SHWT-123",
+					EnergySupply_pump: defaultElectricityEnergySupplyName,
+					init_temp: 20,
+					HeatSource: {
+						[heatPumpHWOnly.data.name]: {
+							heater_position: 0.8,
+							type: "HeatPump_HWOnly",
+							product_reference: heatPumpHWOnly.data.productReference,
+						},
+					},
+				});
 			});
 
 			it("maps pre-heated water cylinder cold water source to hot water cylinder", () => {

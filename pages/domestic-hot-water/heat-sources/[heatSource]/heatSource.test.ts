@@ -1133,7 +1133,12 @@ describe("Heat pump section", () => {
 		store.$patch({
 			domesticHotWater: {
 				heatSources: {
-					data: [{ data: heatPumpWithCylinder }],
+					data: [{
+						data: {
+							...heatPumpWithCylinder,
+							heatExchangerSurfaceAreaDeclared: 1,
+						},
+					}],
 				},
 			},
 		});
@@ -1152,6 +1157,8 @@ describe("Heat pump section", () => {
 			name: "Preheated water cylinder",
 			typeOfWaterStorage: "hotWaterCylinder",
 			packagedProductReference: heatPumpProductWithCylinder.id,
+			areaOfHeatExchangerInPcdb: true,
+			areaOfHeatExchanger: unitValue(1, "metres square"),
 		};
 
 		expect(waterStorageData.length).toBe(1);
