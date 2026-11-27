@@ -103,6 +103,31 @@ describe("preheated water storage", () => {
 		await user.tab();
 	};
 
+	test("only shows type of water storage question initially", async () => {
+
+		await renderSuspended(PreheatedWaterStorage);
+
+		expect(screen.getByTestId<HTMLInputElement>("typeOfWaterStorage_hotWaterCylinder").checked).toBe(false);
+		expect(screen.getByTestId<HTMLInputElement>("typeOfWaterStorage_smartHotWaterTank").checked).toBe(false);
+		expect(screen.queryByTestId("name")).toBeNull();
+		expect(screen.queryByTestId("storageCylinderVolume")).toBeNull();
+		expect(screen.queryByTestId("selectSmartHotWaterTank")).toBeNull();
+		expect(screen.queryByTestId("heaterPosition")).toBeNull();
+		expect(screen.queryByTestId("coldWaterSource_mainsWater")).toBeNull();
+	});
+
+	test("shows only questions for the selected storage type", async () => {
+		await renderSuspended(PreheatedWaterStorage);
+
+		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
+		expect(await screen.findByTestId("chooseAProductButton")).toBeDefined();
+		expect(screen.queryByTestId("storageCylinderVolume")).toBeNull();
+
+		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
+		expect(await screen.findByTestId("storageCylinderVolume")).toBeDefined();
+		expect(screen.queryByTestId("chooseAProductButton")).toBeNull();
+	});
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(PreheatedWaterStorage);
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
@@ -283,7 +308,7 @@ describe("preheated water storage", () => {
 
 		addHeatPumpStoreData();
 		await renderSuspended(PreheatedWaterStorage);
-		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
+		expect(screen.getByTestId<HTMLInputElement>("typeOfWaterStorage_hotWaterCylinder").checked).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(preheatedWaterCylinder.data.name);
 		expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe(
 			preheatedWaterCylinder.data.storageCylinderVolume.amount.toString(),

@@ -18,7 +18,7 @@ const { mounted } = useMounted();
 
 const preheatedStoreData = store.domesticHotWater.preheatedWaterStorage.data;
 const preheatedData = preheatedStoreData[0] as EcaasForm<PreheatedWaterStorageData>;
-const preheatedType = preheatedData?.data.typeOfWaterStorage ?? "hotWaterCylinder";
+const preheatedType = preheatedData?.data.typeOfWaterStorage;
 const model = ref<PreheatedWaterStorageData>({
 	...preheatedData?.data,
 	typeOfWaterStorage: preheatedType,
