@@ -585,6 +585,18 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Pick<FhsInput
 	const pipework = state.domesticHotWater.pipework?.filter(x => x.waterStorage === preheatedWaterStorage.id);
 
 	if (preheatedWaterStorage.typeOfWaterStorage === "hotWaterCylinder") {
+		const hasHeatExSurfaceArea = actualHeatSource.typeOfHeatSource === "heatPump"
+			&& actualHeatSource.typeOfHeatPump === "hotWaterOnly";
+		const areaOfHeatExchanger = preheatedWaterStorage.areaOfHeatExchanger;
+
+		const heatExchangerRequiredParams = hasHeatExSurfaceArea && areaOfHeatExchanger
+			? { heat_exchanger_surface_area: areaOfHeatExchanger.amount }
+			: {};
+
+		if (hasHeatExSurfaceArea && !areaOfHeatExchanger) {
+			throw new Error("Area of heat exchanger must be provided when using a hot water only heat pump");
+		}
+
 		return {
 			PreHeatedWaterSource: {
 				"preheated tank": {
@@ -594,6 +606,7 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Pick<FhsInput
 					type: "StorageTank", // TODO - presume we will need to add possibility of smart tank here
 					daily_losses: preheatedWaterStorage.dailyEnergyLoss,
 					HeatSource: mappedWSHeatSource,
+					...heatExchangerRequiredParams,
 					...mapPipework(pipework),
 				},
 			},
@@ -601,8 +614,20 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Pick<FhsInput
 		};
 	}
 
-	// TODO: Map smart pre-heated water cylinders
-	return undefined;
+	return {
+		PreHeatedWaterSource: {
+			"preheated tank": {
+				type: "SmartHotWaterTank",
+				ColdWaterSource: coldWaterSource,
+				product_reference: preheatedWaterStorage.productReference,
+				EnergySupply_pump: defaultElectricityEnergySupplyName,
+				init_temp: 20,
+				HeatSource: mappedWSHeatSource,
+				...mapPipework(pipework),
+			},
+		},
+		...mappedHeatSourceWet,
+	};
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {

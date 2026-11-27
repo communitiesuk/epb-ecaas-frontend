@@ -1548,7 +1548,13 @@ describe("domestic hot water mapper", () => {
 							complete: true,
 						},
 						pipework: {
-							data: [],
+							data: [{
+								data: {
+									...pipework.data,
+									waterStorage: preheatedSmartTank.data.id,
+								},
+								complete: true,
+							}],
 							complete: true,
 						},
 					},
@@ -1569,6 +1575,18 @@ describe("domestic hot water mapper", () => {
 							product_reference: heatPumpHWOnly.data.productReference,
 						},
 					},
+					primary_pipework: [
+						{
+							location: "internal",
+							internal_diameter_mm: 10,
+							external_diameter_mm: 10,
+							pipe_contents: "water",
+							length: 3,
+							insulation_thickness_mm: 5,
+							insulation_thermal_conductivity: 1,
+							surface_reflectivity: true,
+						},
+					],
 				});
 			});
 
